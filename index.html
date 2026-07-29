@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Antesigna | Live positioning of 100 screened Hyperliquid traders</title>
+<meta name="description" content="Antesigna tracks a screened cohort of 100 high-signal Hyperliquid traders and publishes their aggregate positioning every hour. Before the signal.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://antesigna.io/">
+<meta name="theme-color" content="#07070F">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Antesigna">
+<meta property="og:url" content="https://antesigna.io/">
+<meta property="og:title" content="Antesigna — live positioning of 100 screened Hyperliquid traders">
+<meta property="og:description" content="One aggregate read of how 100 screened Hyperliquid traders are positioned, refreshed hourly. Before the signal.">
+<meta property="og:image" content="https://antesigna.io/assets/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Antesigna">
+<meta name="twitter:title" content="Antesigna — live positioning of 100 screened Hyperliquid traders">
+<meta name="twitter:description" content="One aggregate read of how 100 screened Hyperliquid traders are positioned, refreshed hourly.">
+<meta name="twitter:image" content="https://antesigna.io/assets/img/og.jpg">
+
+<link rel="icon" type="image/png" href="/assets/img/favicon.png">
+<link rel="apple-touch-icon" href="/assets/img/favicon.png">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrainsmono-400.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/silkscreen-700.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/antesigna.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://antesigna.io/#org",
+      "name": "Antesigna",
+      "url": "https://antesigna.io/",
+      "logo": "https://antesigna.io/assets/img/og.jpg",
+      "sameAs": ["https://x.com/Antesigna"],
+      "parentOrganization": {"@type": "Organization", "name": "Randolph Ventures LLC"}
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://antesigna.io/#site",
+      "url": "https://antesigna.io/",
+      "name": "Antesigna",
+      "publisher": {"@id": "https://antesigna.io/#org"}
+    },
+    {
+      "@type": "Product",
+      "name": "Antesigna — The Watch",
+      "description": "Hourly monitoring of the aggregate positioning of 100 screened Hyperliquid traders, with an alert only when the aggregate state materially changes.",
+      "brand": {"@id": "https://antesigna.io/#org"},
+      "offers": [
+        {"@type": "Offer", "price": "14.00", "priceCurrency": "USD", "name": "Monthly", "availability": "https://schema.org/InStock"},
+        {"@type": "Offer", "price": "119.00", "priceCurrency": "USD", "name": "Annual", "availability": "https://schema.org/InStock"}
+      ]
+    },
+    {
+      "@type": "Dataset",
+      "name": "Antesigna — aggregate Hyperliquid positioning",
+      "description": "Hourly aggregate perp positioning of a screened cohort of 100 Hyperliquid traders: Signum, per-market net exposure, tilt, conviction and trader counts. No wallet addresses are published.",
+      "creator": {"@id": "https://antesigna.io/#org"},
+      "isAccessibleForFree": true,
+      "temporalCoverage": "2026-01-17/.."
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#app">Skip to the read</a>
+
+<!-- The static introduction is indexable and is replaced with the current
+     live read after the wallet-safe public JSON has loaded. -->
+<main id="app" aria-busy="true">
+  <div class="wrap"><section class="hero preload-shell">
+    <div class="eyeb"><span class="id">Live positioning of 100 screened Hyperliquid traders</span><span class="n">Refreshed hourly</span></div>
+    <h1>See how the Hundred are positioned.</h1>
+    <p class="sub">Antesigna compresses the aggregate long and short exposure of 100 screened traders into one directional read, then shows the markets, breadth, leverage, and history behind it.</p>
+    <p class="lore"><b>ante signa</b> — “before the standards.” A top-down view of the formation, before the signal.</p>
+    <div class="cta"><a class="btn b-ghost btn-lg" href="/method/">Read the method</a><a class="btn b-ghost btn-lg" href="/ledger/">Audit the ledger</a></div>
+  </section></div>
+</main>
+
+<noscript>
+  <div class="wrap" style="padding:40px 26px">
+    <h1 class="px" style="font-size:20px">Antesigna</h1>
+    <p style="margin-top:14px;color:#8A8DA8;max-width:60ch;line-height:1.8">
+      Live positioning of 100 screened Hyperliquid traders, refreshed hourly.
+      The read needs JavaScript to draw. The underlying data is public JSON:
+      <a href="data/index_latest.json">index_latest.json</a> and
+      <a href="data/history.json">history.json</a>.
+    </p>
+  </div>
+</noscript>
+
+<script src="/assets/config.js"></script>
+<script src="/assets/antesigna.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Method — Antesigna</title>
+  <meta name="description" content="What Antesigna measures, how the Hundred are maintained, and how to interpret Signum and Watch alerts.">
+  <link rel="canonical" href="https://antesigna.io/method/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Method — Antesigna">
+  <meta property="og:description" content="The production approach, metric definitions, integrity controls, and known limitations.">
+  <meta property="og:image" content="https://antesigna.io/assets/img/og.jpg">
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+  <link rel="stylesheet" href="/assets/antesigna.css">
+  <link rel="stylesheet" href="/assets/page.css">
+</head>
+<body class="page-shell">
+  <a class="skip" href="#content">Skip to the Method</a>
+  <header class="page-head"><div class="wrap"><nav class="nav" aria-label="Primary">
+    <a class="brand" href="/"><img src="/assets/img/mark.webp" alt="" width="130" height="69"><span class="bname">Ante<i>signa</i></span></a>
+    <div class="page-links"><a href="/">The Read</a><a href="/ledger/">Ledger</a><a href="/method/" aria-current="page">Method</a></div>
+  </nav></div><div class="rail"></div></header>
+  <main class="page-main" id="content">
+    <div class="page-kicker">Production approach</div>
+    <h1>The Method</h1>
+    <p class="page-lede">Antesigna turns the visible positions of 100 screened Hyperliquid traders into a single aggregate market read. It measures positioning; it does not predict returns or expose individual traders.</p>
+    <div class="page-meta">Current production method · July 28, 2026</div>
+    <div class="status" id="cohortStatus" aria-live="polite"><i></i> Loading tracker status</div>
+    <div class="page-grid">
+      <div class="page-stat"><strong id="cohortSize">—</strong><span>accounts tracked</span></div>
+      <div class="page-stat"><strong id="cohortDate">—</strong><span>latest effective set</span></div>
+      <div class="page-stat"><strong>Hourly</strong><span>production cadence</span></div>
+    </div>
+
+    <section class="page-section">
+      <h2>1. The Hundred, not a leaderboard</h2>
+      <p>The tracked set is selected by a proprietary multi-signal process that evaluates performance context and observed trading behavior across multiple time horizons. Its job is to distinguish accounts expressing durable directional information from activity that could create a misleading picture of conviction.</p>
+      <p>No single rank, position, or recent win is enough. Selection inputs, transformations, weights, thresholds, internal scores, and wallet identities remain private. We publish what the product measures, how to interpret it, and its limitations—not a recipe for reproducing the tracker.</p>
+    </section>
+
+    <section class="page-section">
+      <h2>2. Tracker integrity</h2>
+      <p>The Hundred are reconsidered weekly and must pass automated checks for data sufficiency, set stability, structural integrity, and aggregate sanity. If a proposed refresh fails those controls, the previous accepted set remains live.</p>
+      <p>Accepted changes are deployed atomically. Movement comparisons are clamped at a cohort change, so selection turnover is not presented as trader activity.</p>
+    </section>
+
+    <section class="page-section">
+      <h2>3. Metric definitions</h2>
+      <h3>Gross and net exposure</h3>
+      <p>Gross exposure is the sum of absolute long and short notionals. Net exposure is long notional minus short notional.</p>
+      <h3>Tilt and conviction</h3>
+      <p>Asset tilt is asset net exposure divided by asset gross exposure: +1 is entirely long, −1 entirely short, and values near zero are balanced. Conviction is a normalized aggregate measure of directional agreement among active positions.</p>
+      <h3>Signum</h3>
+      <p>Signum is a normalized summary of aggregate direction and exposure. Positive readings indicate net-long positioning and negative readings net-short positioning. Magnitude reflects positioning intensity—not a probability, price target, or forecast. Exact transformations and weighting are proprietary.</p>
+    </section>
+
+    <section class="page-section">
+      <h2>4. Public privacy boundary</h2>
+      <p>The dashboard publishes market-level aggregates and fixed, broad distribution buckets. It does not publish wallet addresses or exact per-wallet position/equity pairs. Position and equity buckets are separate and cannot be joined into account profiles.</p>
+    </section>
+
+    <section class="page-section">
+      <h2>5. Cadence and alerts</h2>
+      <p>The public dashboard refreshes hourly. The free Telegram feed publishes scheduled reads. The Watch evaluates the complete tracked market universe after each successful refresh and contacts subscribers only when an aggregate regime, net exposure, tilt, or conviction change clears its materiality threshold.</p>
+      <p><a href="/ledger/">The Ledger</a> is the permanent public record of scheduled aggregate snapshots. Watch notifications are a private subscriber service and are not republished into the public Ledger.</p>
+    </section>
+
+    <section class="page-section">
+      <h2>6. Known limitations</h2>
+      <ul>
+        <li>Hyperliquid-visible positions may be hedged on another venue or in spot.</li>
+        <li>Historical success does not guarantee useful or persistent future signal.</li>
+        <li>On-chain data, third-party APIs, and calculations can be delayed, incomplete, or erroneous.</li>
+        <li>A screened trader or the aggregate read can be early, wrong, squeezed, or liquidated.</li>
+        <li>The methodology and results have not been independently audited.</li>
+      </ul>
+    </section>
+    <div class="legal-note">Questions or data corrections: <a href="mailto:hyperindexapp@proton.me?subject=Antesigna%20method">hyperindexapp@proton.me</a>. This transitional address will remain monitored through the rebrand.</div>
+  </main>
+  <footer class="page-foot"><div class="inner"><nav><a href="/">The Read</a><a href="/ledger/">Ledger</a><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a></nav>Antesigna is a product of Randolph Ventures LLC. Positioning data only. Not financial advice.</div></footer>
+  <script src="/assets/page.js"></script>
+</body>
+</html>

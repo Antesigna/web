@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Ledger — Antesigna</title>
+  <meta name="description" content="The public, timestamped record of Antesigna aggregate positioning snapshots.">
+  <link rel="canonical" href="https://antesigna.io/ledger/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Ledger — Antesigna">
+  <meta property="og:description" content="Scheduled aggregate positioning snapshots, retained whether the read later looks useful or wrong.">
+  <meta property="og:image" content="https://antesigna.io/assets/img/og.jpg">
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+  <link rel="stylesheet" href="/assets/antesigna.css">
+  <link rel="stylesheet" href="/assets/page.css">
+</head>
+<body class="page-shell">
+  <a class="skip" href="#content">Skip to the Ledger</a>
+  <header class="page-head"><div class="wrap"><nav class="nav" aria-label="Primary">
+    <a class="brand" href="/"><img src="/assets/img/mark.webp" alt="" width="130" height="69"><span class="bname">Ante<i>signa</i></span></a>
+    <div class="page-links"><a href="/">The Read</a><a href="/ledger/" aria-current="page">Ledger</a><a href="/method/">Method</a></div>
+  </nav></div><div class="rail"></div></header>
+  <main class="page-main" id="content">
+    <div class="page-kicker">The public record</div>
+    <h1>The Ledger</h1>
+    <p class="page-lede">Timestamped aggregate positioning snapshots. Records are not removed because they were early, wrong, or uncomfortable.</p>
+    <div class="page-meta">Generated <span id="ledgerGenerated">loading…</span> · America/New_York</div>
+
+    <div class="page-callout">Records before July 21, 2026 are labeled as reconstructed from the saved hourly aggregate history. A timestamp proves how the Hundred were positioned—not what price would do next. Wallet identities and exact per-wallet values are never published.</div>
+
+    <div class="page-grid" aria-live="polite">
+      <div class="page-stat"><strong id="snapshotCount">—</strong><span>public snapshots</span></div>
+      <div class="page-stat"><strong>2× daily</strong><span>scheduled public records</span></div>
+      <div class="page-stat"><strong>100</strong><span>latest rows shown</span></div>
+    </div>
+
+    <section class="page-section">
+      <h2>Scheduled aggregate snapshots</h2>
+      <p>The table shows the latest 100 public entries. The complete machine-readable record is available as <a href="/data/proof_ledger.json">JSON</a>.</p>
+      <div class="ledger-table" style="margin-top:16px">
+        <table>
+          <thead><tr><th>Observed</th><th>Signum</th><th>Regime</th><th>Net</th><th>Short share</th><th>BTC</th><th>ETH</th><th>SOL</th><th>HYPE</th></tr></thead>
+          <tbody id="snapshotRows"><tr><td colspan="9">Loading the public Ledger…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="page-foot"><div class="inner"><nav><a href="/">The Read</a><a href="/method/">Method</a><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a></nav>Antesigna is a product of Randolph Ventures LLC. Positioning data only. Not financial advice.</div></footer>
+  <script src="/assets/page.js"></script>
+</body>
+</html>

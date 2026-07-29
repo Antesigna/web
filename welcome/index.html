@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Activate The Watch — Antesigna</title>
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+  <link rel="stylesheet" href="/assets/antesigna.css">
+  <link rel="stylesheet" href="/assets/page.css">
+</head>
+<body class="page-shell">
+  <header class="page-head"><div class="wrap"><nav class="nav" aria-label="Primary">
+    <a class="brand" href="/"><img src="/assets/img/mark.webp" alt="" width="130" height="69"><span class="bname">Ante<i>signa</i></span></a>
+  </nav></div><div class="rail"></div></header>
+  <main class="page-main" id="content">
+    <div class="page-kicker">Antesigna · The Watch</div>
+    <h1>You’re in. Activate your alerts.</h1>
+    <p class="page-lede">Your payment was received. The operating Telegram bot verifies this exact Stripe checkout and creates a private one-person invite.</p>
+    <p style="margin-top:24px"><a id="activateWatch" class="btn b-gold btn-lg" href="https://t.me/HyperIndexSignalsBot" rel="noopener" hidden>Activate in Telegram</a></p>
+    <p id="activationStatus" class="page-meta" aria-live="polite"></p>
+
+    <section class="page-section"><h2>What happens now</h2><ul>
+      <li>Open the bot from the Telegram account entered at checkout.</li>
+      <li>The bot verifies the paid session and matches your Telegram username.</li>
+      <li>You receive a one-person invite that expires after one hour.</li>
+      <li>Once you join, the bot confirms that Watch access is active.</li>
+    </ul></section>
+    <div class="page-callout gold">If the activation button is missing, the username does not match, or Telegram cannot create the invite, keep your Stripe receipt and email <a href="mailto:hyperindexapp@proton.me?subject=Antesigna%20Watch%20activation">hyperindexapp@proton.me</a>. Manual fallback remains available within 12 hours.</div>
+    <section class="page-section"><h2>While you wait</h2><p>Return to <a href="/">the current aggregate read</a> or open the <a id="publicTelegram" href="https://t.me/HyperIndexSignals" target="_blank" rel="noopener">free Telegram feed</a>.</p></section>
+    <p class="page-meta">The Watch reports aggregate positioning changes. It does not execute trades or provide personalized financial advice.</p>
+  </main>
+  <script src="/assets/config.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var cfg = window.ANTESIGNA_CONFIG || {};
+      var button = document.getElementById("activateWatch");
+      var status = document.getElementById("activationStatus");
+      var publicLink = document.getElementById("publicTelegram");
+      if (cfg.telegramPublic) publicLink.href = cfg.telegramPublic;
+      var sessionId = new URLSearchParams(window.location.search).get("session_id") || "";
+      var match = sessionId.match(/^cs_(live|test)_([A-Za-z0-9]+)$/);
+      if (!match || !cfg.telegramBot) {
+        status.textContent = "The secure activation reference is missing. Use the support fallback above.";
+        return;
+      }
+      var payload = (match[1] === "live" ? "l" : "t") + "_" + match[2];
+      if (payload.length > 64) {
+        status.textContent = "This checkout reference needs manual activation. Use the support fallback above.";
+        return;
+      }
+      button.href = cfg.telegramBot + "?start=" + encodeURIComponent(payload);
+      button.hidden = false;
+      status.textContent = "Use the same Telegram username you entered during checkout.";
+    }());
+  </script>
+</body>
+</html>
