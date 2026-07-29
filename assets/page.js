@@ -73,8 +73,32 @@
       });
   }
 
+  function loadWelcome() {
+    var button = document.getElementById("activateWatch");
+    if (!button) return;
+    var cfg = window.ANTESIGNA_CONFIG || {};
+    var status = document.getElementById("activationStatus");
+    var publicLink = document.getElementById("publicTelegram");
+    if (cfg.telegramPublic) publicLink.href = cfg.telegramPublic;
+    var sessionId = new URLSearchParams(window.location.search).get("session_id") || "";
+    var match = sessionId.match(/^cs_(live|test)_([A-Za-z0-9]+)$/);
+    if (!match || !cfg.telegramBot) {
+      status.textContent = "The secure activation reference is missing. Use the support fallback above.";
+      return;
+    }
+    var payload = (match[1] === "live" ? "l" : "t") + "_" + match[2];
+    if (payload.length > 64) {
+      status.textContent = "This checkout reference needs manual activation. Use the support fallback above.";
+      return;
+    }
+    button.href = cfg.telegramBot + "?start=" + encodeURIComponent(payload);
+    button.hidden = false;
+    status.textContent = "Use the same Telegram username you entered during checkout.";
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     loadMethod();
     loadLedger();
+    loadWelcome();
   });
 }());

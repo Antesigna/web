@@ -33,6 +33,10 @@
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Content-Security-Policy-Report-Only",
+          "value": "default-src 'self'; script-src 'self' 'sha256-Yci6krrY+aMMewUG0Nn5PaTkBPY+LL4Agum87KK2Z+0=' https://subscribe-forms.beehiiv.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://subscribe-forms.beehiiv.com; frame-src https://subscribe-forms.beehiiv.com https://embeds.beehiiv.com; form-action 'self' https://buy.stripe.com https://subscribe-forms.beehiiv.com; base-uri 'none'; object-src 'none'; frame-ancestors 'self'"
         }
       ]
     }
