@@ -737,7 +737,8 @@
 
   /* tooltip: one node at body root so scroll containers cannot clip it */
   (function () {
-    var tip = document.createElement("div"); tip.id = "tip"; tip.setAttribute("role", "tooltip"); document.body.appendChild(tip);
+    var tip = document.createElement("div"), pinned = null;
+    tip.id = "tip"; tip.setAttribute("role", "tooltip"); document.body.appendChild(tip);
     function show(t) {
       tip.textContent = t.getAttribute("data-tip"); tip.classList.add("on");
       var r = t.getBoundingClientRect();
@@ -750,21 +751,37 @@
     document.addEventListener("mouseout", function (e) {
       var from = e.target.closest("[data-tip]"); if (!from) return;
       var to = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest("[data-tip]") : null;
-      if (to !== from) tip.classList.remove("on");
+      if (to !== from && pinned !== from) tip.classList.remove("on");
     });
     document.addEventListener("focusin", function (e) { var t = e.target.closest("[data-tip]"); if (t) show(t); });
-    document.addEventListener("focusout", function () { tip.classList.remove("on"); });
+    document.addEventListener("focusout", function (e) {
+      if (pinned !== e.target.closest("[data-tip]")) tip.classList.remove("on");
+    });
     document.addEventListener("click", function (e) {
       var t = e.target.closest("[data-tip]");
-      if (!t) { tip.classList.remove("on"); return; }
-      if (tip.classList.contains("on") && tip.textContent === t.getAttribute("data-tip")) {
+      if (!t) { pinned = null; tip.classList.remove("on"); return; }
+      if (pinned === t) {
+        pinned = null;
         tip.classList.remove("on");
       } else {
+        pinned = t;
         show(t);
       }
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") tip.classList.remove("on");
+      if (e.key === "Escape") {
+        pinned = null; tip.classList.remove("on");
+        return;
+      }
+      var t = e.target.closest("[data-tip]");
+      if (t && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        if (pinned === t) {
+          pinned = null; tip.classList.remove("on");
+        } else {
+          pinned = t; show(t);
+        }
+      }
     });
   }());
 
