@@ -101,7 +101,8 @@
       return want;
     }
 
-    ASSETS = idx.assets.map(function (a) {
+    var privateAggregate = idx.assets.filter(function (a) { return a.asset === "OTHER"; })[0];
+    ASSETS = idx.assets.filter(function (a) { return a.asset !== "OTHER"; }).map(function (a) {
       return [a.asset, +(a.net_usd / 1e6).toFixed(2), Math.round(a.tilt * 100), a.position_count, +a.conv_equity.toFixed(2)];
     });
     var shortMk = ASSETS.filter(function (a) { return a[1] < 0; }).length;
@@ -122,6 +123,7 @@
       aggLev: +(cs.gross_notional_usd / cs.total_equity).toFixed(2),
       wallets: cs.active_wallets, totalWallets: cs.total_wallets,
       marketsShown: ASSETS.length, shortMkts: shortMk, longMkts: longMk,
+      suppressedPositions: privateAggregate ? privateAggregate.position_count : 0,
       lo: +Math.min.apply(null, s).toFixed(4), hi: +Math.max.apply(null, s).toFixed(4),
       windowHours: Math.round((now - tstamp(base24)) / 36e5)
     };
@@ -596,7 +598,9 @@
       '<th><span data-tip="Share of the market’s notional leaning one way. −100% means every dollar in it is short.">Tilt</span></th>' +
       '<th><button data-s="4">Conviction</button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
-      '<div class="bfoot"><span>' + D.marketsShown + ' markets above the floor</span><span>Sortable · refreshed hourly</span></div></section></div>' +
+      '<div class="bfoot"><span>' + D.marketsShown + ' markets above the privacy floor' +
+      (D.suppressedPositions ? " · thinner markets combined" : "") +
+      '</span><span>Sortable · refreshed hourly</span></div></section></div>' +
 
       '<div class="wrap"><section class="sec" id="hundred"><div class="shead"><h2>The Hundred</h2>' +
       '<div class="tabs" id="htabs"><button class="on" data-h="size">By size</button><button data-h="trader">By trader</button></div></div>' +
