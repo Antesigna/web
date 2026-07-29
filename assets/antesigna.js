@@ -45,7 +45,7 @@
 
   /* ── 1 · load ──────────────────────────────────────────────────────── */
   function boot() {
-    var bust = "?v=" + Math.floor(Date.now() / 60000);
+    var bust = "?v=" + Math.floor(Date.now() / 3600000);
     Promise.all([
       fetch("data/index_latest.json" + bust).then(okJson),
       fetch("data/history.json" + bust).then(okJson),
@@ -126,8 +126,13 @@
       marketsShown: ASSETS.length, shortMkts: shortMk, longMkts: longMk,
       suppressedPositions: privateAggregate ? privateAggregate.position_count : 0,
       lo: +Math.min.apply(null, s).toFixed(4), hi: +Math.max.apply(null, s).toFixed(4),
-      windowHours: Math.round((now - tstamp(base24)) / 36e5)
+      windowHours: Math.round((now - tstamp(base24)) / 36e5),
+      historyDays: Math.max(1, Math.floor((now - tstamp(H[0])) / 864e5)),
+      historyStart: new Date(tstamp(H[0])).toLocaleDateString("en-US", {
+        timeZone: "America/New_York", month: "short", day: "numeric", year: "numeric"
+      })
     };
+    chartRange = Math.min(90, D.historyDays);
 
     /* The public publisher exposes fixed aggregate buckets only. The position
        and equity views are intentionally not joinable at wallet level. */
@@ -242,8 +247,8 @@
     var shorts = ASSETS.filter(function (a) { return a[1] < 0; }).sort(function (a, b) { return a[1] - b[1]; }),
       longs = ASSETS.filter(function (a) { return a[1] > 0; }).sort(function (a, b) { return b[1] - a[1]; }),
       side = D.net < 0 ? shorts : longs, word = D.net < 0 ? "net short" : "net long";
-    if (D.shorterThanPct >= 90) return "The Hundred are near their deepest short of the last 90 days.";
-    if (D.shorterThanPct <= 10) return "The Hundred are near their strongest long of the last 90 days.";
+    if (D.shorterThanPct >= 90) return "The Hundred are near their deepest short of the last " + D.historyDays + " days.";
+    if (D.shorterThanPct <= 10) return "The Hundred are near their strongest long of the last " + D.historyDays + " days.";
     if (side.length > 1 && Math.abs(side[0][1] + side[1][1]) >= Math.abs(D.net))
       return side[0][0] + " and " + side[1][0] + " carry the whole " + word + ".";
     if (D.net < 0 && D.longMkts > D.shortMkts) return "Net short, but long in " + D.longMkts + " of " + D.marketsShown + " markets.";
@@ -300,7 +305,7 @@
     var zx = ((0 - LO) / (HI - LO)) * W, mx = ((D.signum - LO) / (HI - LO)) * W;
     out += '<rect x="' + (zx - 0.5) + '" y="4" width="1" height="' + (BASE - 1) + '" fill="var(--ink2)" fill-opacity=".5"/>';
     out += '<rect x="' + (mx - 1.5) + '" y="0" width="3" height="' + (BASE + 4) + '" fill="var(--ink)"/>';
-    return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of Signum over the last 90 days, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
+    return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of Signum over the last ' + D.historyDays + ' days, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
   }
 
   var chartMode = "signum", chartRange = 90;
@@ -541,7 +546,8 @@
 
       '<div class="wrap"><section class="hero"><div class="eyeb">' +
       '<span class="id">Live positioning of 100 screened Hyperliquid traders</span><span class="n">' + stamp + " ET</span></div>" +
-      "<h1>" + esc(headline()) + "</h1>" +
+      '<h1 class="product-title">Antesigna — live positioning of 100 screened Hyperliquid traders</h1>' +
+      '<h2 class="headline">' + esc(headline()) + "</h2>" +
       '<p class="sub">100 <b>Hyperliquid</b> wallets, screened for durable edge — track length, consistency, size. The Hundred are net <b class="n">' +
       money(D.net) + "</b>, <b>" + D.grossShortPct + "%</b> of gross short, " +
       (D.longMkts > D.shortMkts ? "yet <b>long in " + D.longMkts + " of " + D.marketsShown + "</b> markets" :
@@ -551,20 +557,20 @@
 
       '<div class="hgrid"><div>' +
       '<div class="big n" style="' + heatStyle(D.signum) + '">' + sgn(D.signum).replace(MINUS, "-") + "</div>" +
-      '<div class="bmeta"><span data-tip="Signum: the aggregate lean of the Hundred, from −1 (all short) to +1 (all long). Size- and conviction-weighted.">SIGNUM</span> · <span class="n">Δ1h ' + sgn(D.d1h, 4) + "</span></div>" +
+      '<div class="bmeta"><span data-tip="Signum: the aggregate lean of the Hundred, from −1 (all short) to +1 (all long). Size- and conviction-weighted." tabindex="0" role="button" aria-describedby="tip">SIGNUM</span> · <span class="n">Δ1h ' + sgn(D.d1h, 4) + "</span></div>" +
       '<div class="bdef">Aggregate lean of the Hundred, −1 to +1.</div>' +
       '<div class="marks">Net <b class="n">' + money(D.net) + "</b> at " + hh +
       ' · current published mark <b class="n ' + (D.net < 0 ? "dn" : "up") + '" id="mk">' + money(D.net) +
       '</b><br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
       "</div><div>" +
-      '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every hourly Signum reading of the last 90 days, stacked into buckets. Taller means more hours spent at that level. The white line is now.">90-day distribution · today marked</span></div>' +
+      '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every hourly Signum reading in the visible history, stacked into buckets. Taller means more hours spent at that level. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.historyDays + '-day distribution · today marked</span></div>' +
       '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
       '<div class="dcap"><span>Max short ' + D.lo.toFixed(2) + '</span><span class="z" style="left:' + dsv.zpct.toFixed(2) + '%">Neutral</span><span>Max long +' + D.hi.toFixed(2) + "</span></div></div>" +
       '<div class="chips">' +
       '<span class="chip">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
-        "More long than " + (100 - D.shorterThanPct)) + "% of the last 90 days</span>" +
+        "More long than " + (100 - D.shorterThanPct)) + "% of the last " + D.historyDays + " days</span>" +
       (D.daysSinceLong !== null ? '<span class="chip n">Net long last seen <b>' + Math.round(D.daysSinceLong) + "d</b> ago</span>" : "") +
-      '<span class="chip"><span data-tip="How many of the tracked markets share the cohort-level lean.">Breadth</span> <b>' + D.longMkts + "/" + D.marketsShown + " long</b></span>" +
+      '<span class="chip"><span data-tip="How many of the tracked markets share the cohort-level lean." tabindex="0" role="button" aria-describedby="tip">Breadth</span> <b>' + D.longMkts + "/" + D.marketsShown + " long</b></span>" +
       '<span class="chip n">Leverage <b>' + D.aggLev.toFixed(2) + "×</b></span></div></div></div>" +
 
       '<div class="cta"><a class="btn b-gold btn-lg" href="#watch">Start the Watch</a>' +
@@ -573,20 +579,21 @@
       '<div class="trust">Positioning only, never advice · Hourly, not real-time</div></section></div>' +
 
       '<div class="strip">' +
-      '<div><div class="v">Hourly</div><div class="k">recording since 17 Jan 2026</div></div>' +
+      '<div><div class="v">Hourly</div><div class="k">recording since ' + esc(D.historyStart) + "</div></div>" +
       '<div><div class="v n">' + D.wallets + " / " + D.totalWallets + '</div><div class="k">accounts resolved this hour</div></div>' +
       '<div><div class="v n">' + D.marketsShown + '</div><div class="k">markets currently held</div></div>' +
-      '<div><div class="v n">90 d</div><div class="k">visible historical context</div></div></div>' +
+      '<div><div class="v n">' + D.historyDays + ' d</div><div class="k">visible historical context</div></div></div>' +
 
       '<div class="wrap"><section class="sec" style="border-top:0" id="chartsec">' +
-      '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">Hourly snapshots with 90-day context</div></div>' +
+      '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">Hourly snapshots with ' + D.historyDays + '-day context</div></div>' +
       '<div class="ctabs"><div class="tabs" id="cmode">' +
       Object.keys(MODES).map(function (k, i) { return '<button data-c="' + k + '"' + (i === 0 ? ' class="on"' : "") + ">" + MODES[k].label + "</button>"; }).join("") +
       '</div><div class="tabs" id="crange">' +
-      [30, 60, 90].map(function (r) { return '<button data-r="' + r + '"' + (r === 90 ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
+      [30, 60, D.historyDays].filter(function (r, i, a) { return r <= D.historyDays && a.indexOf(r) === i; })
+        .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + (r === D.historyDays && r < 90 ? "ALL" : r + "D") + "</button>"; }).join("") +
       "</div></div></div>" +
       '<div id="chart">' + chartSvg() + '</div><div id="clegend">' + chartLegend() + "</div>" +
-      '<div class="bfoot"><span>Rolling window · full archive from 17 Jan 2026</span><span>Unedited — every captured reading is plotted</span></div></section></div>' +
+      '<div class="bfoot"><span>Rolling window · visible archive from ' + esc(D.historyStart) + '</span><span>Unedited — every captured reading is plotted</span></div></section></div>' +
 
       '<div class="wrap"><section class="sec"><div class="shead"><h2>What moved</h2>' +
       '<div class="tabs"><button class="on">' + D.windowHours + "H</button></div></div>" +
@@ -602,7 +609,7 @@
       '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>. Free, permanently.</div>" +
       '<div class="tw"><table><thead><tr>' +
       '<th><button data-s="0">Market</button></th><th><button data-s="1">Net</button></th><th></th>' +
-      '<th><span data-tip="Share of the market’s notional leaning one way. −100% means every dollar in it is short.">Tilt</span></th>' +
+      '<th><span data-tip="Share of the market’s notional leaning one way. −100% means every dollar in it is short." tabindex="0" role="button" aria-describedby="tip">Tilt</span></th>' +
       '<th><button data-s="4">Conviction</button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
       '<div class="bfoot"><span>' + D.marketsShown + ' markets above the privacy floor' +
@@ -660,7 +667,7 @@
       "Long in " + D.longMkts + " of " + D.marketsShown + " markets<br>" +
       esc(headline()) + "<br>" +
       '<span class="mut">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
-        "More long than " + (100 - D.shorterThanPct)) + "% of the last 90 days.</span></div></div>" +
+        "More long than " + (100 - D.shorterThanPct)) + "% of the last " + D.historyDays + " days.</span></div></div>" +
       "</div></section></div>" +
 
       '<div class="wrap"><div class="wire n" id="wire"></div></div>' +
@@ -730,7 +737,7 @@
 
   /* tooltip: one node at body root so scroll containers cannot clip it */
   (function () {
-    var tip = document.createElement("div"); tip.id = "tip"; document.body.appendChild(tip);
+    var tip = document.createElement("div"); tip.id = "tip"; tip.setAttribute("role", "tooltip"); document.body.appendChild(tip);
     function show(t) {
       tip.textContent = t.getAttribute("data-tip"); tip.classList.add("on");
       var r = t.getBoundingClientRect();
@@ -747,6 +754,18 @@
     });
     document.addEventListener("focusin", function (e) { var t = e.target.closest("[data-tip]"); if (t) show(t); });
     document.addEventListener("focusout", function () { tip.classList.remove("on"); });
+    document.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-tip]");
+      if (!t) { tip.classList.remove("on"); return; }
+      if (tip.classList.contains("on") && tip.textContent === t.getAttribute("data-tip")) {
+        tip.classList.remove("on");
+      } else {
+        show(t);
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") tip.classList.remove("on");
+    });
   }());
 
   /* ── 8 · liveness ──────────────────────────────────────────────────── */
@@ -758,7 +777,7 @@
       var s = Math.max(0, Math.floor((nx - now) / 1000));
       cd.textContent = reduced ? "NEXT " + two(nx.getHours()) + ":00"
         : "NEXT T−" + two(Math.floor(s / 60)) + ":" + two(s % 60);
-      if (s === 0) setTimeout(boot, 20000);   /* a new read should be up — reload it */
+      if (s === 0) setTimeout(boot, 20000 + Math.random() * 40000);
     }
     if (D.ageMinutes > STALE_MINUTES) {
       cd.textContent = "NEXT —";

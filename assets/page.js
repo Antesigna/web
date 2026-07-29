@@ -24,10 +24,14 @@
     });
   }
 
+  function hourlyVersion() {
+    return Math.floor(Date.now() / 3600000);
+  }
+
   function loadMethod() {
     var status = document.getElementById("cohortStatus");
     if (!status) return;
-    fetch("/data/cohort_change_latest.json?v=" + Date.now(), { cache: "no-store" })
+    fetch("/data/cohort_change_latest.json?v=" + hourlyVersion())
       .then(function (response) {
         if (!response.ok) throw new Error("status unavailable");
         return response.json();
@@ -57,7 +61,7 @@
   function loadLedger() {
     var table = document.getElementById("snapshotRows");
     if (!table) return;
-    fetch("/data/proof_ledger.json?v=" + Date.now(), { cache: "no-store" })
+    fetch("/data/proof_ledger.json?v=" + hourlyVersion())
       .then(function (response) {
         if (!response.ok) throw new Error("ledger unavailable");
         return response.json();
