@@ -54,6 +54,7 @@ img{max-width:100%;display:block}
 /* ── loading / error ── */
 .boot{padding:80px 26px;text-align:center;color:var(--ink2);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 .boot.err{color:#ffb3ba}
+.stale{margin:18px 0 0;padding:12px 14px;border:1px solid var(--short);background:rgba(255,79,102,.08);color:#ffb3ba;font-size:12px;line-height:1.6}
 .boot .again{margin-top:14px;display:inline-block;border:1px solid var(--cyan);color:var(--cyan);
   padding:9px 15px;font-size:10.5px;letter-spacing:.14em}
 

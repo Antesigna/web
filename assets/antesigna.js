@@ -19,7 +19,7 @@
   var timers = [];
 
   /* ── 0 · small helpers ─────────────────────────────────────────────── */
-  var MINUS = "−", ARR = "→";
+  var MINUS = "−", ARR = "→", STALE_MINUTES = 90;
   function money(m) {
     var a = Math.abs(m), s = a >= 1 ? a.toFixed(1) : a.toFixed(2);
     return (m < 0 ? MINUS + "$" : "+$") + s + "M";
@@ -111,6 +111,7 @@
     var base24 = comparable(1), base7 = comparable(7);
     D = {
       generatedAt: new Date(idx.generated_at),
+      ageMinutes: (Date.now() - new Date(idx.generated_at).getTime()) / 60000,
       signum: +cur.toFixed(4),
       d1h: +(cur - s[s.length - 2]).toFixed(4),
       d24h: +(cur - base24.index_score).toFixed(4),
@@ -532,6 +533,12 @@
       '<a class="btn b-ghost" href="#read">Get the read</a><a class="btn b-gold" href="#watch">Start the Watch</a></div>' +
       "</nav></div><div class=\"rail\"></div>" +
 
+      (D.ageMinutes > STALE_MINUTES
+        ? '<div class="wrap"><div class="stale" role="alert">This read is ' +
+          Math.max(2, Math.floor(D.ageMinutes / 60)) +
+          " hours old. The hourly refresh has not completed since " + hh + " ET.</div></div>"
+        : "") +
+
       '<div class="wrap"><section class="hero"><div class="eyeb">' +
       '<span class="id">Live positioning of 100 screened Hyperliquid traders</span><span class="n">' + stamp + " ET</span></div>" +
       "<h1>" + esc(headline()) + "</h1>" +
@@ -753,9 +760,14 @@
         : "NEXT T−" + two(Math.floor(s / 60)) + ":" + two(s % 60);
       if (s === 0) setTimeout(boot, 20000);   /* a new read should be up — reload it */
     }
-    tick();
+    if (D.ageMinutes > STALE_MINUTES) {
+      cd.textContent = "NEXT —";
+      timers.push(setInterval(boot, 300000));
+    } else {
+      tick();
+      if (!reduced) timers.push(setInterval(tick, 1000));
+    }
     if (reduced) return;
-    timers.push(setInterval(tick, 1000));
 
     var ul = el("lu"), i = 0, n = ul.children.length - 1;
     timers.push(setInterval(function () {
