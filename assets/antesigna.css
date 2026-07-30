@@ -195,6 +195,8 @@ th .arw{color:var(--cyan)}
 td{padding:9px 12px;font-size:13px;font-variant-numeric:tabular-nums;text-align:right;border-bottom:1px solid #12131F;color:var(--ink2);white-space:nowrap}
 td.m{color:var(--ink);font-weight:700;letter-spacing:.05em}
 .board-delta{display:inline;margin-left:5px;font-size:11px;letter-spacing:.01em}
+.tilt-cell{padding-left:4px!important;text-align:left}
+.tilt-head{padding-left:4px!important}
 tr:last-child td{border-bottom:0}
 .tilt{display:inline-block;width:58px;height:7px;background:#161828;position:relative;vertical-align:middle}
 .tilt i{position:absolute;top:0;bottom:0}

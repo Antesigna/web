@@ -34,8 +34,8 @@
 
     <section class="page-section">
       <h2>1. The Hundred, not a leaderboard</h2>
-      <p>The tracked set is selected by a proprietary multi-signal process that evaluates performance context and observed trading behavior across multiple time horizons. Its job is to distinguish accounts expressing durable directional information from activity that could create a misleading picture of conviction.</p>
-      <p>No single rank, position, or recent win is enough. Selection inputs, transformations, weights, thresholds, internal scores, and wallet identities remain private. We publish what the product measures, how to interpret it, and its limitations.</p>
+      <p>The tracked set is selected through a multi-signal process that looks for durable directional behavior across multiple time horizons.</p>
+      <p>The product is designed around the aggregate read: what it measures, how to interpret it, and its limitations.</p>
     </section>
 
     <section class="page-section">
@@ -48,7 +48,7 @@
       <h2>3. Metric definitions</h2>
       <p>These measures answer different questions. They are meant to be read together; none is a forecast or a trade instruction.</p>
       <div class="metric-grid">
-        <div class="metric-card"><h3>Signum</h3><p>The primary, normalized read of the Hundred’s aggregate positioning, from −1 to +1. Negative is short-leaning, positive is long-leaning, and values near zero mean the aggregate is closely balanced after the measurement’s internal normalization.</p></div>
+        <div class="metric-card"><h3>Signum</h3><p>The primary, normalized read of the Hundred’s aggregate positioning, from −1 to +1. Negative is short-leaning, positive is long-leaning, and values near zero mean overall positioning is closely balanced.</p></div>
         <div class="metric-card"><h3>Net long / short</h3><p>The signed dollar exposure: published long notional less published short notional. It answers “which side has more dollars?” rather than “how balanced is the whole formation?”</p></div>
         <div class="metric-card"><h3>Tilt</h3><p>A market-level measure of directional skew. −100% is wholly short, +100% wholly long, and 0% is balanced. Gross is total long + short notional.</p></div>
         <div class="metric-card"><h3>Conviction</h3><p>The asset’s weighted long-vs-short agreement across the Hundred: +1 is fully long-aligned, −1 fully short-aligned, and 0 balanced.</p></div>
@@ -59,22 +59,16 @@
         <li><strong>The aggregate can be short while most markets are long.</strong> Breadth counts markets; net exposure measures dollars. A few large short markets can outweigh many smaller long ones.</li>
         <li><strong>BTC can be net long while Signum is flat.</strong> Signum reflects the full tracked formation, not a vote on one asset. A notable market move can be offset elsewhere on the Board.</li>
       </ul>
-      <p>Exact transformations, screening weights, and thresholds remain proprietary. The dashboard publishes the resulting aggregate readings and their limits, not a recipe for reconstructing the tracker.</p>
     </section>
 
     <section class="page-section">
-      <h2>4. Public privacy boundary</h2>
-      <p>The dashboard publishes market-level aggregates only when at least three tracked traders hold that market. Thinner markets are combined into a coarsely rounded, symbol-free aggregate. Per-side totals and counts are not published. It does not publish wallet addresses or exact per-wallet position/equity pairs; position and equity distributions use separate fixed, broad buckets.</p>
-    </section>
-
-    <section class="page-section">
-      <h2>5. Cadence and alerts</h2>
+      <h2>4. Cadence and alerts</h2>
       <p>The public dashboard refreshes hourly. The free Telegram feed publishes scheduled reads. The Watch evaluates the complete tracked market universe after each successful refresh and contacts subscribers only when an aggregate regime, net exposure, tilt, or conviction change clears its materiality threshold.</p>
-      <p><a href="/ledger/">The Ledger</a> is the permanent public record of scheduled aggregate snapshots. Watch notifications are a private subscriber service and are not republished into the public Ledger.</p>
+      <p><a href="/ledger/">The Ledger</a> records scheduled aggregate snapshots. The Watch delivers material alerts directly to subscribers.</p>
     </section>
 
     <section class="page-section">
-      <h2>6. Known limitations</h2>
+      <h2>5. Known limitations</h2>
       <ul>
         <li>Hyperliquid-visible positions may be hedged on another venue or in spot.</li>
         <li>Historical success does not guarantee useful or persistent future signal.</li>
@@ -83,7 +77,7 @@
         <li>The methodology and results have not been independently audited.</li>
       </ul>
     </section>
-    <div class="legal-note">Questions or data corrections: <a href="mailto:hyperindexapp@proton.me?subject=Antesigna%20method">hyperindexapp@proton.me</a>. This transitional address will remain monitored through the rebrand.</div>
+    <div class="legal-note">Questions or data corrections: <a href="mailto:hyperindexapp@proton.me?subject=Antesigna%20method">hyperindexapp@proton.me</a>.</div>
   </main>
   <footer class="page-foot"><div class="inner"><nav><a href="/">The Read</a><a href="/ledger/">Ledger</a><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a></nav>Antesigna is a product of Randolph Ventures LLC. Positioning data only. Not financial advice.</div></footer>
   <script src="/assets/page.js"></script>

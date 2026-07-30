@@ -21,6 +21,7 @@
 
   /* ── 0 · small helpers ─────────────────────────────────────────────── */
   var MINUS = "−", ARR = "→", STALE_MINUTES = 90, PUBLIC_HISTORY_DAYS = 90;
+  var TRACKING_STARTED_AT = new Date("2026-01-17T00:44:00-05:00");
   function money(m) {
     var a = Math.abs(m), s = a >= 1 ? a.toFixed(1) : a.toFixed(2);
     return (m < 0 ? MINUS + "$" : "+$") + s + "M";
@@ -141,9 +142,7 @@
       windowHours: Math.round((now - tstamp(base24)) / 36e5),
       historyDays: Math.min(PUBLIC_HISTORY_DAYS, Math.max(1, Math.ceil((now - tstamp(H[0])) / 864e5))),
       publicWindowDays: PUBLIC_HISTORY_DAYS,
-      historyStart: new Date(tstamp(H[0])).toLocaleDateString("en-US", {
-        timeZone: "America/New_York", month: "short", day: "numeric", year: "numeric"
-      })
+      trackedHours: Math.max(0, Math.floor((new Date(idx.generated_at).getTime() - TRACKING_STARTED_AT.getTime()) / 36e5))
     };
     chartRange = PUBLIC_HISTORY_DAYS;
 
@@ -483,8 +482,8 @@
       return "<tr><td class=\"m\">" + esc(sym) + "</td>" +
         '<td class="mut">' + grossText(gross) + "</td>" +
         '<td class="' + (net < 0 ? "dn" : net > 0 ? "up" : "mut") + '">' + money(net) + "</td>" +
-        '<td><span class="tilt">' + bar + "</span></td>" +
         '<td class="mut">' + sgn(tilt, 0) + "%</td>" +
+        '<td class="tilt-cell"><span class="tilt">' + bar + "</span></td>" +
         '<td class="' + (cv < 0 ? "dn" : cv > 0 ? "up" : "mut") + '">' + sgn(cv) +
         (conv24 === null ? "" : '<span class="board-delta ' +
           (conv24 < 0 ? "dn" : conv24 > 0 ? "up" : "mut") + '">(Δ24 ' + sgn(conv24) + ")</span>") +
@@ -537,11 +536,11 @@
   }
   function watchStatus() {
     return {
-      card: '<div class="alert"><div class="h"><span><b>Antesigna</b> · The Watch</span><span>Private delivery</span></div>' +
+      card: '<div class="alert"><div class="h"><span><b>Antesigna</b> · The Watch</span><span>Member delivery</span></div>' +
         '<div class="b"><span class="trig">Alerts only when positioning materially changes</span>' +
         '<div class="m">The complete tracked market universe is evaluated after every successful hourly refresh.</div>' +
-        '<div class="r mut">Qualifying notifications are delivered directly to active subscribers. Watch notifications are not republished into the public Ledger.</div>' +
-        '<div class="f">Aggregate positioning data only, not financial advice. No wallet identities or exact per-wallet values are included.</div></div></div>'
+        '<div class="r mut">Qualifying alerts are delivered directly to active subscribers.</div>' +
+        '<div class="f">Aggregate positioning data.</div></div></div>'
     };
   }
 
@@ -610,7 +609,7 @@
       '<div class="trust">Positioning only, never advice · Hourly, not real-time</div></section></div>' +
 
       '<div class="strip">' +
-      '<div><div class="v">Hourly</div><div class="k">recording since ' + esc(D.historyStart) + "</div></div>" +
+      '<div><div class="v n">' + D.trackedHours.toLocaleString("en-US") + '</div><div class="k">hours tracked since Jan 17, 2026</div></div>' +
       '<div><div class="v n">' + D.wallets + " / " + D.totalWallets + '</div><div class="k">accounts resolved this hour</div></div>' +
       '<div><div class="v n">' + D.marketsShown + '</div><div class="k">markets currently held</div></div>' +
       '<div><div class="v n">' + D.publicWindowDays + ' d</div><div class="k">rolling public history</div></div></div>' +
@@ -623,8 +622,7 @@
       [30, 60, PUBLIC_HISTORY_DAYS]
         .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
       "</div></div></div>" +
-      '<div id="chart">' + chartSvg() + '</div><div id="clegend">' + chartLegend() + "</div>" +
-      '<div class="bfoot"><span>Rolling 90-day public window · available from ' + esc(D.historyStart) + '</span><span>Unedited — every public-window reading is plotted</span></div></section></div>' +
+      '<div id="chart">' + chartSvg() + '</div><div id="clegend">' + chartLegend() + "</div></section></div>" +
 
       '<div class="wrap"><section class="sec"><div class="shead"><h2>What moved</h2>' +
       '<div class="tabs"><button class="on">' + D.windowHours + "H</button></div></div>" +
@@ -639,8 +637,8 @@
       '<div class="tabs"><button class="on">$250k threshold</button></div></div>' +
       '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>.</div>" +
       '<div class="tw"><table><thead><tr>' +
-      '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="Total long + short notional in this market." tabindex="0" aria-describedby="tip">Gross</span></button></th><th><button data-s="1">Net</button></th><th></th>' +
-      '<th><button data-s="2"><span data-tip="Net exposure as a share of total long + short notional. +100% is all long; −100% is all short." tabindex="0" aria-describedby="tip">Tilt</span></button></th>' +
+      '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="Total long + short notional in this market." tabindex="0" aria-describedby="tip">Gross</span></button></th><th><button data-s="1">Net</button></th>' +
+      '<th><button data-s="2"><span data-tip="Net exposure as a share of total long + short notional. +100% is all long; −100% is all short." tabindex="0" aria-describedby="tip">Tilt</span></button></th><th class="tilt-head"></th>' +
       '<th><button data-s="4"><span data-tip="The asset’s weighted long-vs-short agreement across the Hundred: +1 is fully long-aligned, −1 fully short-aligned, and 0 balanced." tabindex="0" role="button" aria-describedby="tip">Conviction (Δ24)</span></button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
       '<div class="bfoot"><span>' + D.marketsShown + ' assets currently tracked above $250K threshold</span>' +
@@ -658,11 +656,11 @@
       '<button class="on" data-b="position">Position</button><button data-b="equity">Equity</button><button data-b="log">Log</button></div>' +
       '<div id="bars">' + barsSvg() + "</div>" +
       '<div class="bfoot"><span id="bfl">' + D.totalWallets + " anonymous bars ordered by public position band · " + longBars + " long · " + shortBars +
-      ' short</span><span>Range-representative heights · exact values withheld</span></div></div></section></div>' +
+      ' short</span><span>Aggregate range view</span></div></div></section></div>' +
 
       '<div class="wrap"><div class="duo">' +
       '<div><h3>The Ledger</h3><p>Scheduled aggregate positioning snapshots, retained whether the read later looks useful or wrong.</p><a href="/ledger/">Read the Ledger →</a></div>' +
-      '<div><h3>The Method</h3><p>How the Hundred are screened, what earns a seat, when seats rotate, and which details remain private.</p><a href="/method/">Read the Method →</a></div>' +
+      '<div><h3>The Method</h3><p>How the Hundred is screened, when it changes, and how to read the system.</p><a href="/method/">Read the Method →</a></div>' +
       '</div></div><div class="rail"></div>' +
 
       '<div class="wrap"><section class="sec watch" style="border-top:0" id="watch"><div class="wgrid"><div>' +
@@ -680,7 +678,7 @@
       '<div class="f">or $119/year · 7-day refund on the first payment<br>Cancel in one click · Telegram activation after checkout</div>' +
       '<a class="btn b-gold btn-lg" href="' + esc(CFG.checkoutMonthly) + '" rel="noopener">Start the Watch</a>' +
       '<a class="annual" href="' + esc(CFG.checkoutAnnual) + '" rel="noopener">Annual checkout →</a></div>' +
-      '<p class="transition">' + esc(CFG.transitionNote || "") + '</p></div>' +
+      (CFG.transitionNote ? '<p class="transition">' + esc(CFG.transitionNote) + "</p>" : "") + '</div>' +
       '<div>' + WATCH.card + '<p class="after">Review the measurement framework in <a href="/method/">The Method →</a></p></div>' +
       "</div></section></div>" +
 

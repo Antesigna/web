@@ -7,6 +7,5 @@ window.ANTESIGNA_CONFIG = Object.freeze({
   telegramPublic: "https://t.me/AntesignaSignals",
   xProfile: "https://x.com/Antesigna",
   supportEmail: "hyperindexapp@proton.me",
-  newsletterFormId: "fa6d5ef3-8a87-400a-b01b-e8548352000e",
-  transitionNote: "Telegram delivery now operates through the Antesigna channels. Checkout and email remain under the existing Randolph Ventures operating accounts."
+  newsletterFormId: "fa6d5ef3-8a87-400a-b01b-e8548352000e"
 });
