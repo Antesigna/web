@@ -71,7 +71,8 @@ img{max-width:100%;display:block}
 .ttag{color:var(--violet);letter-spacing:.15em;font-size:10px;padding:7px 0;margin-right:30px;white-space:nowrap}
 
 /* ── latest ── */
-.latest{display:flex;background:var(--panel);border-bottom:1px solid var(--line);overflow:hidden}
+.latest{display:flex;background:var(--panel);border-bottom:1px solid var(--line);overflow:hidden;
+  padding:0 max(26px,calc((100vw - 1180px)/2 + 26px))}
 .latest .k{flex:none;padding:9px 13px;font-size:9.5px;letter-spacing:.16em;color:var(--cyan);border-right:1px solid var(--line)}
 .lwin{position:relative;flex:1;height:34px;overflow:hidden;min-width:0}
 .lwin ul{list-style:none;position:absolute;inset:0}
@@ -185,6 +186,10 @@ img{max-width:100%;display:block}
 .tw::-webkit-scrollbar-thumb{background:#242840;border:2px solid var(--void)}
 .tw::-webkit-scrollbar-thumb:hover{background:#33385a}
 .tw::-webkit-scrollbar-corner{background:transparent}
+#board table{min-width:680px;table-layout:fixed}
+#board th:nth-child(1){width:16%} #board th:nth-child(2){width:15%}
+#board th:nth-child(3){width:17%} #board th:nth-child(4){width:20%}
+#board th:nth-child(5){width:21%} #board th:nth-child(6){width:11%}
 table{width:100%;border-collapse:collapse;min-width:680px}
 th{position:sticky;top:0;background:var(--panel);z-index:2;text-align:right;font-size:10px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--ink2);font-weight:400;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -194,9 +199,8 @@ th button:hover{color:var(--ink)}
 th .arw{color:var(--cyan)}
 td{padding:9px 12px;font-size:13px;font-variant-numeric:tabular-nums;text-align:right;border-bottom:1px solid #12131F;color:var(--ink2);white-space:nowrap}
 td.m{color:var(--ink);font-weight:700;letter-spacing:.05em}
-.board-delta{display:inline;margin-left:5px;font-size:11px;letter-spacing:.01em}
-.tilt-cell{padding-left:4px!important;text-align:left}
-.tilt-head{padding-left:4px!important}
+.tilt-cell{white-space:nowrap}
+.tilt-cell .tilt{margin-left:8px}
 tr:last-child td{border-bottom:0}
 .tilt{display:inline-block;width:58px;height:7px;background:#161828;position:relative;vertical-align:middle}
 .tilt i{position:absolute;top:0;bottom:0}

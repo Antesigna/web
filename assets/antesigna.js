@@ -109,13 +109,11 @@
     }
 
     var base24 = comparable(1), base7 = comparable(7), last = H[H.length - 1];
-    var historyKey = { BTC: "btc", ETH: "eth", SOL: "sol", HYPE: "hype" };
     var privateAggregate = idx.assets.filter(function (a) { return a.asset === "OTHER"; })[0];
     ASSETS = idx.assets.filter(function (a) { return a.asset !== "OTHER"; }).map(function (a) {
-      var net = +(a.net_usd / 1e6).toFixed(2), key = historyKey[a.asset];
-      var conv24 = key ? +(last[key + "_conv"] - base24[key + "_conv"]).toFixed(2) : null;
+      var net = +(a.net_usd / 1e6).toFixed(2);
       return [a.asset, net, Math.round(a.tilt * 100), a.position_count, +a.conv_equity.toFixed(2),
-        READ.grossScale(net, a.tilt), conv24];
+        READ.grossScale(net, a.tilt)];
     });
     var shortMk = ASSETS.filter(function (a) { return a[1] < 0; }).length;
     var longMk = ASSETS.filter(function (a) { return a[1] > 0; }).length;
@@ -475,19 +473,15 @@
   function boardRows() {
     var rows = READ.sortBoard(ASSETS, sortKey, sortDir);
     return rows.map(function (a) {
-      var sym = a[0], net = a[1], tilt = a[2], tr = a[3], cv = a[4], gross = a[5], conv24 = a[6];
+      var sym = a[0], net = a[1], tilt = a[2], tr = a[3], cv = a[4], gross = a[5];
       var mag = Math.min(100, Math.abs(tilt)) / 100 * 29;
       var bar = tilt < 0 ? '<i style="right:50%;width:' + mag.toFixed(1) + 'px;background:var(--short)"></i>'
         : '<i style="left:50%;width:' + mag.toFixed(1) + 'px;background:var(--long)"></i>';
       return "<tr><td class=\"m\">" + esc(sym) + "</td>" +
         '<td class="mut">' + grossText(gross) + "</td>" +
         '<td class="' + (net < 0 ? "dn" : net > 0 ? "up" : "mut") + '">' + money(net) + "</td>" +
-        '<td class="mut">' + sgn(tilt, 0) + "%</td>" +
-        '<td class="tilt-cell"><span class="tilt">' + bar + "</span></td>" +
-        '<td class="' + (cv < 0 ? "dn" : cv > 0 ? "up" : "mut") + '">' + sgn(cv) +
-        (conv24 === null ? "" : '<span class="board-delta ' +
-          (conv24 < 0 ? "dn" : conv24 > 0 ? "up" : "mut") + '">(Δ24 ' + sgn(conv24) + ")</span>") +
-        "</td>" +
+        '<td class="tilt-cell mut">' + sgn(tilt, 0) + '%<span class="tilt">' + bar + "</span></td>" +
+        '<td class="' + (cv < 0 ? "dn" : cv > 0 ? "up" : "mut") + '">' + sgn(cv) + "</td>" +
         "<td>" + tr + "</td></tr>";
     }).join("");
   }
@@ -638,11 +632,11 @@
       '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>.</div>" +
       '<div class="tw"><table><thead><tr>' +
       '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="Total long + short notional in this market." tabindex="0" aria-describedby="tip">Gross</span></button></th><th><button data-s="1">Net</button></th>' +
-      '<th><button data-s="2"><span data-tip="Net exposure as a share of total long + short notional. +100% is all long; −100% is all short." tabindex="0" aria-describedby="tip">Tilt</span></button></th><th class="tilt-head"></th>' +
-      '<th><button data-s="4"><span data-tip="The asset’s weighted long-vs-short agreement across the Hundred: +1 is fully long-aligned, −1 fully short-aligned, and 0 balanced." tabindex="0" role="button" aria-describedby="tip">Conviction (Δ24)</span></button></th><th><button data-s="3">Traders</button></th>' +
+      '<th><button data-s="2"><span data-tip="Net exposure as a share of total long + short notional. +100% is all long; −100% is all short." tabindex="0" aria-describedby="tip">Tilt</span></button></th>' +
+      '<th><button data-s="4"><span data-tip="The asset’s weighted long-vs-short agreement across the Hundred: +1 is fully long-aligned, −1 fully short-aligned, and 0 balanced." tabindex="0" role="button" aria-describedby="tip">Conviction</span></button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
       '<div class="bfoot"><span>' + D.marketsShown + ' assets currently tracked above $250K threshold</span>' +
-      '<span>Δ24 available on BTC · ETH · SOL · HYPE · sortable · refreshed hourly</span></div></section></div>' +
+      '<span>Sortable · refreshed hourly</span></div></section></div>' +
 
       '<div class="wrap"><section class="sec" id="hundred"><div class="shead"><h2>The Hundred</h2>' +
       '<div class="tabs" id="htabs"><button class="on" data-h="size">By size</button><button data-h="trader">By trader</button></div></div>' +
