@@ -186,20 +186,20 @@ img{max-width:100%;display:block}
 .tw::-webkit-scrollbar-thumb:hover{background:#33385a}
 .tw::-webkit-scrollbar-corner{background:transparent}
 table{width:100%;border-collapse:collapse;min-width:680px}
-th{position:sticky;top:0;background:var(--panel);z-index:2;text-align:right;font-size:9px;letter-spacing:.14em;
+th{position:sticky;top:0;background:var(--panel);z-index:2;text-align:right;font-size:10px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--ink2);font-weight:400;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
 th:first-child,td:first-child{text-align:left}
 th button{font-size:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit}
 th button:hover{color:var(--ink)}
 th .arw{color:var(--cyan)}
-td{padding:8px 12px;font-size:12px;font-variant-numeric:tabular-nums;text-align:right;border-bottom:1px solid #12131F;color:var(--ink2);white-space:nowrap}
+td{padding:9px 12px;font-size:13px;font-variant-numeric:tabular-nums;text-align:right;border-bottom:1px solid #12131F;color:var(--ink2);white-space:nowrap}
 td.m{color:var(--ink);font-weight:700;letter-spacing:.05em}
-.board-delta{display:block;margin-top:2px;font-size:9.5px;letter-spacing:.02em}
+.board-delta{display:inline;margin-left:5px;font-size:11px;letter-spacing:.01em}
 tr:last-child td{border-bottom:0}
 .tilt{display:inline-block;width:58px;height:7px;background:#161828;position:relative;vertical-align:middle}
 .tilt i{position:absolute;top:0;bottom:0}
 .tilt::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink2);opacity:.5}
-.bfoot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.bfoot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
 
 /* ── the hundred ── */
 .tier{display:grid;grid-template-columns:1fr;gap:5px 14px;padding:13px 0;border-top:1px solid #12131F}

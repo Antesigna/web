@@ -486,8 +486,9 @@
         '<td><span class="tilt">' + bar + "</span></td>" +
         '<td class="mut">' + sgn(tilt, 0) + "%</td>" +
         '<td class="' + (cv < 0 ? "dn" : cv > 0 ? "up" : "mut") + '">' + sgn(cv) +
-        '<small class="board-delta ' + (conv24 === null ? "mut" : conv24 < 0 ? "dn" : conv24 > 0 ? "up" : "mut") + '">' +
-        (conv24 === null ? "Δ24 —" : "Δ24 " + sgn(conv24)) + "</small></td>" +
+        (conv24 === null ? "" : '<span class="board-delta ' +
+          (conv24 < 0 ? "dn" : conv24 > 0 ? "up" : "mut") + '">(Δ24 ' + sgn(conv24) + ")</span>") +
+        "</td>" +
         "<td>" + tr + "</td></tr>";
     }).join("");
   }
@@ -587,7 +588,7 @@
       '<p class="lore"><b>ante signa</b> — “before the standards.” The <em>antesignani</em> were elite legionaries who fought ahead of the line, scouting for what the formation could not yet see.</p>' +
 
       '<div class="hgrid"><div>' +
-      '<div class="signal-label" data-tip="Signum is the normalized aggregate lean of the Hundred, from −1 (fully short) to +1 (fully long). It is a positioning measure, not a price forecast." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
+      '<div class="signal-label" data-tip="Signum is the normalized aggregate lean of the Hundred, from −1 (fully short) to +1 (fully long)." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
       '<div class="big n" style="' + heatStyle(D.signum) + '">' + sgn(D.signum).replace(MINUS, "-") + "</div>" +
       '<div class="bmeta"><span class="n">Δ1h ' + sgn(D.d1h, 4) + "</span> · aggregate lean, −1 to +1</div>" +
       '<div class="marks">Net exposure <b class="n ' + (D.net < 0 ? "dn" : "up") + '">' + money(D.net) +
@@ -635,16 +636,15 @@
       '</div><div class="quiet">◆ The Watch checks for material aggregate changes after every successful hourly refresh.</div></section></div>' +
 
       '<div class="wrap"><section class="sec" id="board"><div class="shead"><h2>The Board</h2>' +
-      '<div class="tabs"><button class="on">$100k floor</button></div></div>' +
-      '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>. Free, permanently.</div>" +
+      '<div class="tabs"><button class="on">$250k threshold</button></div></div>' +
+      '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>.</div>" +
       '<div class="tw"><table><thead><tr>' +
-      '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="A coarse display scale derived from already-public Net and Tilt, rounded to the nearest $5M. It is withheld when Tilt is too close to zero to estimate stably." tabindex="0" aria-describedby="tip">Gross*</span></button></th><th><button data-s="1">Net</button></th><th></th>' +
-      '<th><button data-s="2"><span data-tip="Share of the market’s notional leaning one way. −100% means every dollar in it is short." tabindex="0" aria-describedby="tip">Tilt</span></button></th>' +
-      '<th><button data-s="4"><span data-tip="A normalized reading of directional agreement among active positions, from −1 to +1. It describes how consistently the market is positioned, not a return forecast." tabindex="0" aria-describedby="tip">Conviction · Δ24</span></button></th><th><button data-s="3">Traders</button></th>' +
+      '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="Total long + short notional in this market." tabindex="0" aria-describedby="tip">Gross</span></button></th><th><button data-s="1">Net</button></th><th></th>' +
+      '<th><button data-s="2"><span data-tip="Net exposure as a share of total long + short notional. +100% is all long; −100% is all short." tabindex="0" aria-describedby="tip">Tilt</span></button></th>' +
+      '<th><button data-s="4"><span data-tip="The asset’s weighted long-vs-short agreement across the Hundred: +1 is fully long-aligned, −1 fully short-aligned, and 0 balanced." tabindex="0" role="button" aria-describedby="tip">Conviction (Δ24)</span></button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
-      '<div class="bfoot"><span>' + D.marketsShown + ' markets above the privacy floor' +
-      (D.suppressedPositions ? " · thinner markets combined" : "") +
-      '</span><span>* derived, coarse scale · Δ24 on benchmark markets · sortable · refreshed hourly</span></div></section></div>' +
+      '<div class="bfoot"><span>' + D.marketsShown + ' assets currently tracked above $250K threshold</span>' +
+      '<span>Δ24 available on BTC · ETH · SOL · HYPE · sortable · refreshed hourly</span></div></section></div>' +
 
       '<div class="wrap"><section class="sec" id="hundred"><div class="shead"><h2>The Hundred</h2>' +
       '<div class="tabs" id="htabs"><button class="on" data-h="size">By size</button><button data-h="trader">By trader</button></div></div>' +
