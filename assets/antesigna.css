@@ -72,7 +72,7 @@ img{max-width:100%;display:block}
 
 /* ── latest ── */
 .latest{display:flex;background:var(--panel);border-bottom:1px solid var(--line);overflow:hidden;
-  padding:0 max(26px,calc((100vw - 1180px)/2 + 26px))}
+  padding:0 max(13px,calc((100% - 1180px)/2 + 13px))}
 .latest .k{flex:none;padding:9px 13px;font-size:9.5px;letter-spacing:.16em;color:var(--cyan);border-right:1px solid var(--line)}
 .lwin{position:relative;flex:1;height:34px;overflow:hidden;min-width:0}
 .lwin ul{list-style:none;position:absolute;inset:0}
