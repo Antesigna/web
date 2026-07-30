@@ -107,14 +107,18 @@
       return want;
     }
 
+    var base24 = comparable(1), base7 = comparable(7), last = H[H.length - 1];
+    var historyKey = { BTC: "btc", ETH: "eth", SOL: "sol", HYPE: "hype" };
     var privateAggregate = idx.assets.filter(function (a) { return a.asset === "OTHER"; })[0];
     ASSETS = idx.assets.filter(function (a) { return a.asset !== "OTHER"; }).map(function (a) {
-      return [a.asset, +(a.net_usd / 1e6).toFixed(2), Math.round(a.tilt * 100), a.position_count, +a.conv_equity.toFixed(2)];
+      var net = +(a.net_usd / 1e6).toFixed(2), key = historyKey[a.asset];
+      var conv24 = key ? +(last[key + "_conv"] - base24[key + "_conv"]).toFixed(2) : null;
+      return [a.asset, net, Math.round(a.tilt * 100), a.position_count, +a.conv_equity.toFixed(2),
+        READ.grossScale(net, a.tilt), conv24];
     });
     var shortMk = ASSETS.filter(function (a) { return a[1] < 0; }).length;
     var longMk = ASSETS.filter(function (a) { return a[1] > 0; }).length;
 
-    var base24 = comparable(1), base7 = comparable(7);
     D = {
       generatedAt: new Date(idx.generated_at),
       ageMinutes: (Date.now() - new Date(idx.generated_at).getTime()) / 60000,
@@ -190,7 +194,7 @@
     };
 
     /* movers — the four markets the history file carries per-asset */
-    var last = H[H.length - 1], look = { BTC: "btc", ETH: "eth", SOL: "sol", HYPE: "hype" };
+    var look = { BTC: "btc", ETH: "eth", SOL: "sol", HYPE: "hype" };
     MOVERS = Object.keys(look).map(function (sym) {
       var k = look[sym], row = ASSETS.filter(function (a) { return a[0] === sym; })[0];
       return [sym, +(base24[k + "_net_usd"] / M).toFixed(2), +(last[k + "_net_usd"] / M).toFixed(2),
@@ -286,10 +290,11 @@
     var longCount = POSITION_BUCKETS.filter(function (b) { return b.direction === "long"; })
       .reduce(function (sum, b) { return sum + b.count; }, 0);
     var largest = EQUITY_TIERS.slice().sort(function (a, b) { return b.wallet_count - a.wallet_count; })[0];
-    return "A Signum of " + B(sgn(D.signum)) + " is not the Hundred agreeing. The public distribution shows " +
-      B(shortCount + " net short") + " and " + B(longCount + " net long") + " accounts; the most populated equity band is " +
-      B(largest.label) + " with " + B(largest.wallet_count) + " accounts. Tier direction is published only as an aggregate, " +
-      "and the 100-bar view uses fixed public ranges, so no individual account can be reconstructed.";
+    return "Signum is the Hundred’s aggregate lean—not a headcount or a single-market call. Today’s " +
+      B(sgn(D.signum)) + " sits alongside " + B(shortCount + " net-short") + " and " + B(longCount +
+      " net-long") + " accounts. The largest equity tier is " + B(largest.label) + " with " +
+      B(largest.wallet_count) + " accounts. Large long and short exposures can offset, leaving Signum near flat; " +
+      '<a href="/method/">see how the measures differ →</a>';
   }
 
   function latestFeed() {
@@ -471,15 +476,18 @@
   function boardRows() {
     var rows = READ.sortBoard(ASSETS, sortKey, sortDir);
     return rows.map(function (a) {
-      var sym = a[0], net = a[1], tilt = a[2], tr = a[3], cv = a[4];
+      var sym = a[0], net = a[1], tilt = a[2], tr = a[3], cv = a[4], gross = a[5], conv24 = a[6];
       var mag = Math.min(100, Math.abs(tilt)) / 100 * 29;
       var bar = tilt < 0 ? '<i style="right:50%;width:' + mag.toFixed(1) + 'px;background:var(--short)"></i>'
         : '<i style="left:50%;width:' + mag.toFixed(1) + 'px;background:var(--long)"></i>';
       return "<tr><td class=\"m\">" + esc(sym) + "</td>" +
+        '<td class="mut">' + (gross === null ? "—" : "$" + gross.toFixed(0) + "M") + "</td>" +
         '<td class="' + (net < 0 ? "dn" : net > 0 ? "up" : "mut") + '">' + money(net) + "</td>" +
         '<td><span class="tilt">' + bar + "</span></td>" +
         '<td class="mut">' + sgn(tilt, 0) + "%</td>" +
-        '<td class="' + (cv < 0 ? "dn" : cv > 0 ? "up" : "mut") + '">' + sgn(cv) + "</td>" +
+        '<td class="' + (cv < 0 ? "dn" : cv > 0 ? "up" : "mut") + '">' + sgn(cv) +
+        '<small class="board-delta ' + (conv24 === null ? "mut" : conv24 < 0 ? "dn" : conv24 > 0 ? "up" : "mut") + '">' +
+        (conv24 === null ? "Δ24 —" : "Δ24 " + sgn(conv24)) + "</small></td>" +
         "<td>" + tr + "</td></tr>";
     }).join("");
   }
@@ -575,12 +583,11 @@
       '<p class="lore"><b>ante signa</b> — “before the standards.” The <em>antesignani</em> were elite legionaries who fought ahead of the line, scouting for what the formation could not yet see.</p>' +
 
       '<div class="hgrid"><div>' +
+      '<div class="signal-label" data-tip="Signum is the normalized aggregate lean of the Hundred, from −1 (fully short) to +1 (fully long). It is a positioning measure, not a price forecast." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
       '<div class="big n" style="' + heatStyle(D.signum) + '">' + sgn(D.signum).replace(MINUS, "-") + "</div>" +
-      '<div class="bmeta"><span data-tip="Signum: the aggregate lean of the Hundred, from −1 (all short) to +1 (all long). Size- and conviction-weighted." tabindex="0" role="button" aria-describedby="tip">SIGNUM</span> · <span class="n">Δ1h ' + sgn(D.d1h, 4) + "</span></div>" +
-      '<div class="bdef">Aggregate lean of the Hundred, −1 to +1.</div>' +
-      '<div class="marks">Net <b class="n">' + money(D.net) + "</b> at " + hh +
-      ' · current published mark <b class="n ' + (D.net < 0 ? "dn" : "up") + '" id="mk">' + money(D.net) +
-      '</b><br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
+      '<div class="bmeta"><span class="n">Δ1h ' + sgn(D.d1h, 4) + "</span> · aggregate lean, −1 to +1</div>" +
+      '<div class="marks">Net exposure <b class="n ' + (D.net < 0 ? "dn" : "up") + '">' + money(D.net) +
+      '</b> · updated ' + hh + ' ET<br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
       "</div><div>" +
       '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every hourly Signum reading in the rolling public window, stacked into buckets. Taller means more hours spent at that level. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.publicWindowDays + '-day public distribution · today marked</span></div>' +
       '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
@@ -627,13 +634,13 @@
       '<div class="tabs"><button class="on">$100k floor</button></div></div>' +
       '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>. Free, permanently.</div>" +
       '<div class="tw"><table><thead><tr>' +
-      '<th><button data-s="0">Market</button></th><th><button data-s="1">Net</button></th><th></th>' +
+      '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="A coarse display scale derived from already-public Net and Tilt, rounded to the nearest $5M. It is withheld when Tilt is too close to zero to estimate stably." tabindex="0" aria-describedby="tip">Gross*</span></button></th><th><button data-s="1">Net</button></th><th></th>' +
       '<th><button data-s="2"><span data-tip="Share of the market’s notional leaning one way. −100% means every dollar in it is short." tabindex="0" aria-describedby="tip">Tilt</span></button></th>' +
-      '<th><button data-s="4">Conviction</button></th><th><button data-s="3">Traders</button></th>' +
+      '<th><button data-s="4"><span data-tip="A normalized reading of directional agreement among active positions, from −1 to +1. It describes how consistently the market is positioned, not a return forecast." tabindex="0" aria-describedby="tip">Conviction · Δ24</span></button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
       '<div class="bfoot"><span>' + D.marketsShown + ' markets above the privacy floor' +
       (D.suppressedPositions ? " · thinner markets combined" : "") +
-      '</span><span>Sortable · refreshed hourly</span></div></section></div>' +
+      '</span><span>* derived, coarse scale · Δ24 on benchmark markets · sortable · refreshed hourly</span></div></section></div>' +
 
       '<div class="wrap"><section class="sec" id="hundred"><div class="shead"><h2>The Hundred</h2>' +
       '<div class="tabs" id="htabs"><button class="on" data-h="size">By size</button><button data-h="trader">By trader</button></div></div>' +

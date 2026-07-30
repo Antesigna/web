@@ -46,12 +46,20 @@
 
     <section class="page-section">
       <h2>3. Metric definitions</h2>
-      <h3>Gross and net exposure</h3>
-      <p>Gross exposure is the sum of absolute long and short notionals. Net exposure is long notional minus short notional.</p>
-      <h3>Tilt and conviction</h3>
-      <p>Asset tilt is asset net exposure divided by asset gross exposure: +1 is entirely long, −1 entirely short, and values near zero are balanced. Conviction is a normalized aggregate measure of directional agreement among active positions.</p>
-      <h3>Signum</h3>
-      <p>Signum is a normalized summary of aggregate direction and exposure. Positive readings indicate net-long positioning and negative readings net-short positioning. Magnitude reflects positioning intensity—not a probability, price target, or forecast. Exact transformations and weighting are proprietary.</p>
+      <p>These measures answer different questions. They are meant to be read together; none is a forecast or a trade instruction.</p>
+      <div class="metric-grid">
+        <div class="metric-card"><h3>Signum</h3><p>The primary, normalized read of the Hundred’s aggregate positioning, from −1 to +1. Negative is short-leaning, positive is long-leaning, and values near zero mean the aggregate is closely balanced after the measurement’s internal normalization.</p></div>
+        <div class="metric-card"><h3>Net long / short</h3><p>The signed dollar exposure: published long notional less published short notional. It answers “which side has more dollars?” rather than “how balanced is the whole formation?”</p></div>
+        <div class="metric-card"><h3>Tilt</h3><p>A market-level measure of directional skew. −100% is wholly short, +100% wholly long, and 0% is balanced. The Board’s Gross* field is only a coarse display scale derived from published Net and Tilt.</p></div>
+        <div class="metric-card"><h3>Conviction</h3><p>A normalized measure of directional agreement in a market. A reading farther from zero means positions are more consistently aligned. It does not say whether price will rise or fall.</p></div>
+      </div>
+      <h3>Why the dashboard can look counterintuitive</h3>
+      <ul class="metric-examples">
+        <li><strong>Signum can be near flat while net exposure is large.</strong> Large long and short books can offset one another, leaving a small normalized aggregate lean even when the remaining dollar difference is meaningful.</li>
+        <li><strong>The aggregate can be short while most markets are long.</strong> Breadth counts markets; net exposure measures dollars. A few large short markets can outweigh many smaller long ones.</li>
+        <li><strong>BTC can be net long while Signum is flat.</strong> Signum reflects the full tracked formation, not a vote on one asset. A notable market move can be offset elsewhere on the Board.</li>
+      </ul>
+      <p>Exact transformations, screening weights, and thresholds remain proprietary. The dashboard publishes the resulting aggregate readings and their limits, not a recipe for reconstructing the tracker.</p>
     </section>
 
     <section class="page-section">

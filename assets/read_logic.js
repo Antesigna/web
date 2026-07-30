@@ -237,15 +237,28 @@
   function sortBoard(rows, key, direction) {
     return rows.slice().sort(function (a, b) {
       var x = a[key], y = b[key];
+      /* A derived public scale or a 24-hour comparison can be unavailable.
+         Keep missing values at the bottom in either sort direction. */
+      if (x === null || x === undefined) return (y === null || y === undefined) ? 0 : 1;
+      if (y === null || y === undefined) return -1;
       if (key === 0) return direction * String(x).localeCompare(String(y));
       return direction * (x - y);
     });
+  }
+
+  /* Gross is not added to the public data contract. It is a coarse client-side
+     display scale derived from already-public net and tilt, and is withheld
+     when a near-zero tilt would make the estimate unstable. */
+  function grossScale(netMillions, tilt) {
+    if (!isFinite(netMillions) || !isFinite(tilt) || Math.abs(tilt) < 0.015) return null;
+    return Math.round((Math.abs(netMillions) / Math.abs(tilt)) / 5) * 5;
   }
 
   return {
     FLAT_LIMIT: FLAT_LIMIT,
     regime: regime,
     selectLeadStory: selectLeadStory,
-    sortBoard: sortBoard
+    sortBoard: sortBoard,
+    grossScale: grossScale
   };
 }));

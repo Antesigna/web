@@ -128,8 +128,8 @@ img{max-width:100%;display:block}
 @media(min-width:940px){.hgrid{grid-template-columns:290px minmax(0,1fr);gap:44px}}
 /* colour + glow are set inline and scale with magnitude — see heatStyle() */
 .big{font-family:var(--px);font-weight:700;font-size:clamp(44px,6vw,62px);line-height:1;font-variant-numeric:tabular-nums}
+.signal-label{margin-bottom:8px;font-family:var(--px);font-size:13px;letter-spacing:.18em;color:var(--ink);line-height:1}
 .bmeta{margin-top:9px;font-size:10.5px;color:var(--ink2);letter-spacing:.06em}
-.bdef{margin-top:5px;font-size:11px;color:var(--ink2);line-height:1.6}
 .marks{margin-top:12px;font-size:11.5px;color:var(--ink2)}
 .marks b{color:var(--ink)}
 .dist{position:relative}
@@ -185,7 +185,7 @@ img{max-width:100%;display:block}
 .tw::-webkit-scrollbar-thumb{background:#242840;border:2px solid var(--void)}
 .tw::-webkit-scrollbar-thumb:hover{background:#33385a}
 .tw::-webkit-scrollbar-corner{background:transparent}
-table{width:100%;border-collapse:collapse;min-width:560px}
+table{width:100%;border-collapse:collapse;min-width:680px}
 th{position:sticky;top:0;background:var(--panel);z-index:2;text-align:right;font-size:9px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--ink2);font-weight:400;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
 th:first-child,td:first-child{text-align:left}
@@ -194,6 +194,7 @@ th button:hover{color:var(--ink)}
 th .arw{color:var(--cyan)}
 td{padding:8px 12px;font-size:12px;font-variant-numeric:tabular-nums;text-align:right;border-bottom:1px solid #12131F;color:var(--ink2);white-space:nowrap}
 td.m{color:var(--ink);font-weight:700;letter-spacing:.05em}
+.board-delta{display:block;margin-top:2px;font-size:9.5px;letter-spacing:.02em}
 tr:last-child td{border-bottom:0}
 .tilt{display:inline-block;width:58px;height:7px;background:#161828;position:relative;vertical-align:middle}
 .tilt i{position:absolute;top:0;bottom:0}
