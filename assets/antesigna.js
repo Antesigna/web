@@ -481,7 +481,7 @@
       var bar = tilt < 0 ? '<i style="right:50%;width:' + mag.toFixed(1) + 'px;background:var(--short)"></i>'
         : '<i style="left:50%;width:' + mag.toFixed(1) + 'px;background:var(--long)"></i>';
       return "<tr><td class=\"m\">" + esc(sym) + "</td>" +
-        '<td class="mut">' + (gross === null ? "—" : "$" + gross.toFixed(0) + "M") + "</td>" +
+        '<td class="mut">' + grossText(gross) + "</td>" +
         '<td class="' + (net < 0 ? "dn" : net > 0 ? "up" : "mut") + '">' + money(net) + "</td>" +
         '<td><span class="tilt">' + bar + "</span></td>" +
         '<td class="mut">' + sgn(tilt, 0) + "%</td>" +
@@ -490,6 +490,10 @@
         (conv24 === null ? "Δ24 —" : "Δ24 " + sgn(conv24)) + "</small></td>" +
         "<td>" + tr + "</td></tr>";
     }).join("");
+  }
+  function grossText(gross) {
+    if (gross === null) return "—";
+    return gross < 5 ? "&lt;$5M" : "$" + gross.toFixed(0) + "M";
   }
   function tierRows() {
     var maxEquity = Math.max.apply(null, EQUITY_TIERS.map(function (b) { return b.equity_usd_rounded; })) || 1;
