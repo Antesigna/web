@@ -15,11 +15,12 @@
   var RAW = {}, D = {}, ASSETS = [], EQUITY_BUCKETS = [], POSITION_BUCKETS = [],
     EQUITY_TIERS = [], WATCH_ACTIVITY = {}, SER = {}, MOVERS = [];
   var CFG = window.ANTESIGNA_CONFIG || {};
+  var READ = window.ANTESIGNA_READ_LOGIC;
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var timers = [];
 
   /* ── 0 · small helpers ─────────────────────────────────────────────── */
-  var MINUS = "−", ARR = "→", STALE_MINUTES = 90;
+  var MINUS = "−", ARR = "→", STALE_MINUTES = 90, PUBLIC_HISTORY_DAYS = 90;
   function money(m) {
     var a = Math.abs(m), s = a >= 1 ? a.toFixed(1) : a.toFixed(2);
     return (m < 0 ? MINUS + "$" : "+$") + s + "M";
@@ -75,7 +76,12 @@
 
   /* ── 2 · derive everything from the two files ──────────────────────── */
   function derive() {
-    var idx = RAW.index, H = RAW.history.hourly, cs = idx.cohort_stats;
+    if (!READ) throw new Error("Read logic did not load");
+    var idx = RAW.index, allH = RAW.history.hourly, cs = idx.cohort_stats;
+    var newest = tstamp(allH[allH.length - 1]);
+    var H = allH.filter(function (p) {
+      return newest - tstamp(p) <= PUBLIC_HISTORY_DAYS * 864e5;
+    });
     var s = H.map(function (p) { return p.index_score; });
     var now = tstamp(H[H.length - 1]), cur = s[s.length - 1];
 
@@ -121,18 +127,21 @@
       net: +(cs.net_usd / 1e6).toFixed(1),
       grossShortPct: Math.round(100 * cs.gross_short_usd / (cs.gross_long_usd + cs.gross_short_usd)),
       equity: +(cs.total_equity / 1e6).toFixed(1),
+      grossLong: +(cs.gross_long_usd / 1e6).toFixed(1),
+      grossShort: +(cs.gross_short_usd / 1e6).toFixed(1),
       aggLev: +(cs.gross_notional_usd / cs.total_equity).toFixed(2),
       wallets: cs.active_wallets, totalWallets: cs.total_wallets,
       marketsShown: ASSETS.length, shortMkts: shortMk, longMkts: longMk,
       suppressedPositions: privateAggregate ? privateAggregate.position_count : 0,
       lo: +Math.min.apply(null, s).toFixed(4), hi: +Math.max.apply(null, s).toFixed(4),
       windowHours: Math.round((now - tstamp(base24)) / 36e5),
-      historyDays: Math.max(1, Math.floor((now - tstamp(H[0])) / 864e5)),
+      historyDays: Math.min(PUBLIC_HISTORY_DAYS, Math.max(1, Math.ceil((now - tstamp(H[0])) / 864e5))),
+      publicWindowDays: PUBLIC_HISTORY_DAYS,
       historyStart: new Date(tstamp(H[0])).toLocaleDateString("en-US", {
         timeZone: "America/New_York", month: "short", day: "numeric", year: "numeric"
       })
     };
-    chartRange = Math.min(90, D.historyDays);
+    chartRange = PUBLIC_HISTORY_DAYS;
 
     /* The public publisher exposes fixed aggregate buckets only. The position
        and equity views are intentionally not joinable at wallet level. */
@@ -188,6 +197,30 @@
       +base24[k + "_conv"].toFixed(2), +last[k + "_conv"].toFixed(2),
       row ? row[3] : 0, row ? row[2] : 0];
     });
+    D.lead = READ.selectLeadStory({
+      signum: D.signum,
+      signum24h: +base24.index_score,
+      signum7d: +base7.index_score,
+      net: D.net,
+      grossLong: D.grossLong,
+      grossShort: D.grossShort,
+      longMarkets: D.longMkts,
+      shortMarkets: D.shortMkts,
+      marketCount: D.marketsShown,
+      historyScores: s,
+      assets: ASSETS.map(function (row) {
+        return {
+          symbol: row[0],
+          net: row[1],
+          tilt: row[2],
+          traders: row[3],
+          conviction: row[4]
+        };
+      }),
+      movers: MOVERS.map(function (row) {
+        return { symbol: row[0], previous: row[1], current: row[2] };
+      })
+    });
   }
 
   /* ── 3 · magnitude encoding for the hero number ────────────────────── */
@@ -241,19 +274,10 @@
       .sort(function (a, b) { return Math.abs(b[1]) - Math.abs(a[1]); });
   }
 
-  /* Headline: the most notable TRUE fact, by fixed priority.
-     Templates carry no adjectives and no intensifiers. */
+  /* The pure read-logic module scores competing true facts by recency,
+     regime significance, historical rarity, and major-market importance. */
   function headline() {
-    var shorts = ASSETS.filter(function (a) { return a[1] < 0; }).sort(function (a, b) { return a[1] - b[1]; }),
-      longs = ASSETS.filter(function (a) { return a[1] > 0; }).sort(function (a, b) { return b[1] - a[1]; }),
-      side = D.net < 0 ? shorts : longs, word = D.net < 0 ? "net short" : "net long";
-    if (D.shorterThanPct >= 90) return "The Hundred are near their deepest short of the last " + D.historyDays + " days.";
-    if (D.shorterThanPct <= 10) return "The Hundred are near their strongest long of the last " + D.historyDays + " days.";
-    if (side.length > 1 && Math.abs(side[0][1] + side[1][1]) >= Math.abs(D.net))
-      return side[0][0] + " and " + side[1][0] + " carry the whole " + word + ".";
-    if (D.net < 0 && D.longMkts > D.shortMkts) return "Net short, but long in " + D.longMkts + " of " + D.marketsShown + " markets.";
-    if (D.daysSinceLong >= 7) return Math.round(D.daysSinceLong) + " days without a net long.";
-    return "The Hundred are " + word + " " + money(D.net).replace(/^[+−]/, "") + ".";
+    return D.lead.headline;
   }
 
   function bucketInsight() {
@@ -305,7 +329,7 @@
     var zx = ((0 - LO) / (HI - LO)) * W, mx = ((D.signum - LO) / (HI - LO)) * W;
     out += '<rect x="' + (zx - 0.5) + '" y="4" width="1" height="' + (BASE - 1) + '" fill="var(--ink2)" fill-opacity=".5"/>';
     out += '<rect x="' + (mx - 1.5) + '" y="0" width="3" height="' + (BASE + 4) + '" fill="var(--ink)"/>';
-    return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of Signum over the last ' + D.historyDays + ' days, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
+    return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of Signum in the rolling ' + D.publicWindowDays + '-day public window, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
   }
 
   var chartMode = "signum", chartRange = 90;
@@ -443,14 +467,9 @@
   }
 
   /* ── 6 · render ────────────────────────────────────────────────────── */
-  var sortKey = 1, sortDir = -1;   /* default: net, descending by magnitude */
+  var sortKey = 1, sortDir = -1;   /* default: signed net, highest to lowest */
   function boardRows() {
-    var rows = ASSETS.slice().sort(function (a, b) {
-      var x = a[sortKey], y = b[sortKey];
-      if (sortKey === 0) return sortDir * String(x).localeCompare(String(y));
-      if (sortKey === 1) return sortDir * (Math.abs(x) - Math.abs(y));
-      return sortDir * (x - y);
-    });
+    var rows = READ.sortBoard(ASSETS, sortKey, sortDir);
     return rows.map(function (a) {
       var sym = a[0], net = a[1], tilt = a[2], tr = a[3], cv = a[4];
       var mag = Math.min(100, Math.abs(tilt)) / 100 * 29;
@@ -548,8 +567,8 @@
       '<span class="id">Live positioning of 100 screened Hyperliquid traders</span><span class="n">' + stamp + " ET</span></div>" +
       '<h1 class="product-title">Antesigna — live positioning of 100 screened Hyperliquid traders</h1>' +
       '<h2 class="headline">' + esc(headline()) + "</h2>" +
-      '<p class="sub">100 <b>Hyperliquid</b> wallets, screened for durable edge — track length, consistency, size. The Hundred are net <b class="n">' +
-      money(D.net) + "</b>, <b>" + D.grossShortPct + "%</b> of gross short, " +
+      '<p class="sub"><b>' + esc(D.lead.detail) + '</b> Across the full board, the Hundred are net <b class="n">' +
+      money(D.net) + "</b>, with <b>" + D.grossShortPct + "%</b> of gross exposure short, " +
       (D.longMkts > D.shortMkts ? "yet <b>long in " + D.longMkts + " of " + D.marketsShown + "</b> markets" :
         "and <b>short in " + D.shortMkts + " of " + D.marketsShown + "</b> markets") +
       '. <a href="/method/">Method →</a></p>' +
@@ -563,12 +582,12 @@
       ' · current published mark <b class="n ' + (D.net < 0 ? "dn" : "up") + '" id="mk">' + money(D.net) +
       '</b><br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
       "</div><div>" +
-      '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every hourly Signum reading in the visible history, stacked into buckets. Taller means more hours spent at that level. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.historyDays + '-day distribution · today marked</span></div>' +
+      '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every hourly Signum reading in the rolling public window, stacked into buckets. Taller means more hours spent at that level. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.publicWindowDays + '-day public distribution · today marked</span></div>' +
       '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
       '<div class="dcap"><span>Max short ' + D.lo.toFixed(2) + '</span><span class="z" style="left:' + dsv.zpct.toFixed(2) + '%">Neutral</span><span>Max long +' + D.hi.toFixed(2) + "</span></div></div>" +
       '<div class="chips">' +
       '<span class="chip">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
-        "More long than " + (100 - D.shorterThanPct)) + "% of the last " + D.historyDays + " days</span>" +
+        "More long than " + (100 - D.shorterThanPct)) + "% of the public window</span>" +
       (D.daysSinceLong !== null ? '<span class="chip n">Net long last seen <b>' + Math.round(D.daysSinceLong) + "d</b> ago</span>" : "") +
       '<span class="chip"><span data-tip="How many of the tracked markets share the cohort-level lean." tabindex="0" role="button" aria-describedby="tip">Breadth</span> <b>' + D.longMkts + "/" + D.marketsShown + " long</b></span>" +
       '<span class="chip n">Leverage <b>' + D.aggLev.toFixed(2) + "×</b></span></div></div></div>" +
@@ -582,18 +601,18 @@
       '<div><div class="v">Hourly</div><div class="k">recording since ' + esc(D.historyStart) + "</div></div>" +
       '<div><div class="v n">' + D.wallets + " / " + D.totalWallets + '</div><div class="k">accounts resolved this hour</div></div>' +
       '<div><div class="v n">' + D.marketsShown + '</div><div class="k">markets currently held</div></div>' +
-      '<div><div class="v n">' + D.historyDays + ' d</div><div class="k">visible historical context</div></div></div>' +
+      '<div><div class="v n">' + D.publicWindowDays + ' d</div><div class="k">rolling public history</div></div></div>' +
 
       '<div class="wrap"><section class="sec" style="border-top:0" id="chartsec">' +
-      '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">Hourly snapshots with ' + D.historyDays + '-day context</div></div>' +
+      '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">Hourly snapshots with a rolling ' + D.publicWindowDays + '-day public window</div></div>' +
       '<div class="ctabs"><div class="tabs" id="cmode">' +
       Object.keys(MODES).map(function (k, i) { return '<button data-c="' + k + '"' + (i === 0 ? ' class="on"' : "") + ">" + MODES[k].label + "</button>"; }).join("") +
       '</div><div class="tabs" id="crange">' +
-      [30, 60, D.historyDays].filter(function (r, i, a) { return r <= D.historyDays && a.indexOf(r) === i; })
-        .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + (r === D.historyDays && r < 90 ? "ALL" : r + "D") + "</button>"; }).join("") +
+      [30, 60, PUBLIC_HISTORY_DAYS]
+        .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
       "</div></div></div>" +
       '<div id="chart">' + chartSvg() + '</div><div id="clegend">' + chartLegend() + "</div>" +
-      '<div class="bfoot"><span>Rolling window · visible archive from ' + esc(D.historyStart) + '</span><span>Unedited — every captured reading is plotted</span></div></section></div>' +
+      '<div class="bfoot"><span>Rolling 90-day public window · available from ' + esc(D.historyStart) + '</span><span>Unedited — every public-window reading is plotted</span></div></section></div>' +
 
       '<div class="wrap"><section class="sec"><div class="shead"><h2>What moved</h2>' +
       '<div class="tabs"><button class="on">' + D.windowHours + "H</button></div></div>" +
@@ -609,7 +628,7 @@
       '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>. Free, permanently.</div>" +
       '<div class="tw"><table><thead><tr>' +
       '<th><button data-s="0">Market</button></th><th><button data-s="1">Net</button></th><th></th>' +
-      '<th><span data-tip="Share of the market’s notional leaning one way. −100% means every dollar in it is short." tabindex="0" role="button" aria-describedby="tip">Tilt</span></th>' +
+      '<th><button data-s="2"><span data-tip="Share of the market’s notional leaning one way. −100% means every dollar in it is short." tabindex="0" aria-describedby="tip">Tilt</span></button></th>' +
       '<th><button data-s="4">Conviction</button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
       '<div class="bfoot"><span>' + D.marketsShown + ' markets above the privacy floor' +
@@ -667,7 +686,7 @@
       "Long in " + D.longMkts + " of " + D.marketsShown + " markets<br>" +
       esc(headline()) + "<br>" +
       '<span class="mut">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
-        "More long than " + (100 - D.shorterThanPct)) + "% of the last " + D.historyDays + " days.</span></div></div>" +
+        "More long than " + (100 - D.shorterThanPct)) + "% of the public window.</span></div></div>" +
       "</div></section></div>" +
 
       '<div class="wrap"><div class="wire n" id="wire"></div></div>' +
