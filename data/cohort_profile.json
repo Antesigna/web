@@ -1,33 +1,33 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-30T22:00:29-04:00",
+  "generated_at": "2026-07-30T23:01:06-04:00",
   "privacy": "aggregate_equity_tiers",
   "total_wallets": 100,
   "flat_threshold_usd": 100000,
   "equity_tiers": [
     {
       "label": "< $250K",
-      "wallet_count": 10,
+      "wallet_count": 9,
       "short_count": 2,
-      "long_count": 1,
+      "long_count": 0,
       "flat_count": 7,
-      "equity_usd_rounded": 700000
+      "equity_usd_rounded": 600000
     },
     {
       "label": "$250K\u2013$1M",
       "wallet_count": 28,
-      "short_count": 23,
-      "long_count": 5,
+      "short_count": 22,
+      "long_count": 6,
       "flat_count": 0,
-      "equity_usd_rounded": 15000000
+      "equity_usd_rounded": 14400000
     },
     {
       "label": "$1M\u2013$5M",
-      "wallet_count": 43,
-      "short_count": 19,
+      "wallet_count": 44,
+      "short_count": 20,
       "long_count": 24,
       "flat_count": 0,
-      "equity_usd_rounded": 100500000
+      "equity_usd_rounded": 101000000
     },
     {
       "label": "$5M\u2013$25M",
@@ -35,7 +35,7 @@
       "short_count": 5,
       "long_count": 11,
       "flat_count": 0,
-      "equity_usd_rounded": 196000000
+      "equity_usd_rounded": 194000000
     },
     {
       "label": "$25M+",
@@ -43,7 +43,7 @@
       "short_count": 3,
       "long_count": 0,
       "flat_count": 0,
-      "equity_usd_rounded": 140000000
+      "equity_usd_rounded": 135000000
     }
   ],
   "disclosure": "Direction counts are aggregated by equity tier. Equity totals are coarsely rounded and no tier row identifies a wallet."
