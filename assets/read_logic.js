@@ -246,11 +246,10 @@
     });
   }
 
-  /* Gross is not added to the public data contract. It is a coarse client-side
-     display scale derived from already-public net and tilt, and is withheld
-     when a near-zero tilt would make the estimate unstable. */
+  /* Tilt is net divided by gross, so net divided by tilt recovers total long
+     plus short notional. Round the Board display to the nearest $5M. */
   function grossScale(netMillions, tilt) {
-    if (!isFinite(netMillions) || !isFinite(tilt) || Math.abs(tilt) < 0.015) return null;
+    if (!isFinite(netMillions) || !isFinite(tilt) || Math.abs(tilt) < 0.000001) return null;
     return Math.round((Math.abs(netMillions) / Math.abs(tilt)) / 5) * 5;
   }
 

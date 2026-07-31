@@ -631,7 +631,7 @@
       '<div class="tabs"><button class="on">$250k threshold</button></div></div>' +
       '<div class="ssub">Every market the Hundred currently hold — <b class="dn">' + D.shortMkts + ' short</b> · <b class="up">' + D.longMkts + " long</b>.</div>" +
       '<div class="tw"><table><thead><tr>' +
-      '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="Total long + short notional in this market." tabindex="0" aria-describedby="tip">Gross</span></button></th><th><button data-s="1">Net</button></th>' +
+      '<th><button data-s="0">Market</button></th><th><button data-s="5"><span data-tip="Total long + short notional across the Hundred." tabindex="0" aria-describedby="tip">Gross</span></button></th><th><button data-s="1">Net</button></th>' +
       '<th><button data-s="2"><span data-tip="Net exposure as a share of total long + short notional. +100% is all long; −100% is all short." tabindex="0" aria-describedby="tip">Tilt</span></button></th>' +
       '<th><button data-s="4"><span data-tip="The asset’s weighted long-vs-short agreement across the Hundred: +1 is fully long-aligned, −1 fully short-aligned, and 0 balanced." tabindex="0" role="button" aria-describedby="tip">Conviction</span></button></th><th><button data-s="3">Traders</button></th>' +
       '</tr></thead><tbody id="tbody">' + boardRows() + "</tbody></table></div>" +
