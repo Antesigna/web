@@ -247,6 +247,14 @@
     });
   }
 
+  function msUntilNextHourlyRefresh(nowMs) {
+    var now = new Date(nowMs === undefined ? Date.now() : nowMs);
+    var next = new Date(now.getTime());
+    next.setMinutes(5, 0, 0);
+    if (next.getTime() <= now.getTime()) next.setHours(next.getHours() + 1);
+    return next.getTime() - now.getTime();
+  }
+
   /* Tilt is net divided by gross, so net divided by tilt recovers total long
      plus short notional. Round the Board display to the nearest $5M. */
   function grossScale(netMillions, tilt) {
@@ -260,6 +268,7 @@
     regime: regime,
     selectLeadStory: selectLeadStory,
     sortBoard: sortBoard,
+    msUntilNextHourlyRefresh: msUntilNextHourlyRefresh,
     grossScale: grossScale
   };
 }));

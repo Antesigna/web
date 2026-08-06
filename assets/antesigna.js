@@ -817,13 +817,13 @@
       var s = Math.max(0, Math.floor((nx - now) / 1000));
       cd.textContent = reduced ? "NEXT " + two(nx.getHours()) + ":00"
         : "NEXT T−" + two(Math.floor(s / 60)) + ":" + two(s % 60);
-      if (s === 0) setTimeout(boot, 20000 + Math.random() * 40000);
     }
     if (D.ageMinutes > STALE_MINUTES) {
       cd.textContent = "NEXT —";
       timers.push(setInterval(boot, 300000));
     } else {
       tick();
+      timers.push(setTimeout(boot, READ.msUntilNextHourlyRefresh(Date.now())));
       if (!reduced) timers.push(setInterval(tick, 1000));
     }
     if (reduced) return;
