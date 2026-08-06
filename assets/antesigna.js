@@ -469,7 +469,8 @@
   }
 
   /* ── 6 · render ────────────────────────────────────────────────────── */
-  var sortKey = 1, sortDir = -1;   /* default: signed net, highest to lowest */
+  var sortKey = READ.DEFAULT_BOARD_SORT.key,
+    sortDir = READ.DEFAULT_BOARD_SORT.direction;   /* default: gross exposure, highest first */
   function boardRows() {
     var rows = READ.sortBoard(ASSETS, sortKey, sortDir);
     return rows.map(function (a) {

@@ -11,6 +11,7 @@
 
   var FLAT_LIMIT = 0.05;
   var MAJORS = ["BTC", "ETH", "HYPE", "SOL"];
+  var DEFAULT_BOARD_SORT = { key: 5, direction: -1 };
 
   function regime(value) {
     if (value > FLAT_LIMIT) return "long";
@@ -255,6 +256,7 @@
 
   return {
     FLAT_LIMIT: FLAT_LIMIT,
+    DEFAULT_BOARD_SORT: DEFAULT_BOARD_SORT,
     regime: regime,
     selectLeadStory: selectLeadStory,
     sortBoard: sortBoard,
