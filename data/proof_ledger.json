@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-08-11T09:00:38-04:00",
+  "schema_version": 2,
+  "generated_at": "2026-08-11T11:11:04-04:00",
   "ledger_launched_at": "2026-07-21T10:00:00-04:00",
   "timezone": "America/New_York",
   "snapshot_hours_et": [
@@ -10,9 +10,24 @@
   "disclosure": "Snapshots before the ledger launch are backfilled from recorded hourly aggregate history. Positioning data is descriptive, not predictive. Watch notifications are private and are not part of the public Ledger.",
   "snapshots": [
     {
+      "observed_at": "2026-08-11T10:10:56-04:00",
+      "backfilled": false,
+      "signum": 0.189874,
+      "restated": false,
+      "regime": "Net Long",
+      "net_usd": 167600749.4,
+      "gross_usd": 1503911980.12,
+      "short_share": 0.4443,
+      "btc_net_usd": 36654487.61,
+      "eth_net_usd": 166376630.33,
+      "sol_net_usd": 24145100.53,
+      "hype_net_usd": -123014821.15
+    },
+    {
       "observed_at": "2026-08-10T18:01:11-04:00",
       "backfilled": false,
-      "heat_score": 0.180481,
+      "signum": 0.180481,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 159843024.3,
       "gross_usd": 1507901829.82,
@@ -25,7 +40,8 @@
     {
       "observed_at": "2026-08-10T10:01:15-04:00",
       "backfilled": false,
-      "heat_score": 0.176723,
+      "signum": 0.176723,
+      "restated": true,
       "regime": "Net Long",
       "net_usd": 153937413.97,
       "gross_usd": 1549916031.39,
@@ -38,7 +54,8 @@
     {
       "observed_at": "2026-08-09T18:00:51-04:00",
       "backfilled": false,
-      "heat_score": 0.178558,
+      "signum": 0.178558,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 128452377.51,
       "gross_usd": 1806668084.95,
@@ -51,7 +68,8 @@
     {
       "observed_at": "2026-08-09T10:01:03-04:00",
       "backfilled": false,
-      "heat_score": 0.183884,
+      "signum": 0.183884,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 139205532.54,
       "gross_usd": 1797021083.04,
@@ -64,7 +82,8 @@
     {
       "observed_at": "2026-08-08T18:00:55-04:00",
       "backfilled": false,
-      "heat_score": 0.187464,
+      "signum": 0.187464,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 147556657.04,
       "gross_usd": 1786964104.26,
@@ -77,7 +96,8 @@
     {
       "observed_at": "2026-08-08T10:00:43-04:00",
       "backfilled": false,
-      "heat_score": 0.197606,
+      "signum": 0.197606,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 157638792.62,
       "gross_usd": 1775719539.38,
@@ -90,7 +110,8 @@
     {
       "observed_at": "2026-08-07T18:01:22-04:00",
       "backfilled": false,
-      "heat_score": 0.190431,
+      "signum": 0.190431,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 147896001.72,
       "gross_usd": 1762033652.88,
@@ -103,7 +124,8 @@
     {
       "observed_at": "2026-08-07T10:00:38-04:00",
       "backfilled": false,
-      "heat_score": 0.170501,
+      "signum": 0.170501,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 133075031.51,
       "gross_usd": 1801230501.71,
@@ -116,7 +138,8 @@
     {
       "observed_at": "2026-08-06T18:00:53-04:00",
       "backfilled": false,
-      "heat_score": 0.20314,
+      "signum": 0.20314,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 158814758.37,
       "gross_usd": 2047029418.53,
@@ -129,7 +152,8 @@
     {
       "observed_at": "2026-08-06T10:00:54-04:00",
       "backfilled": false,
-      "heat_score": 0.211708,
+      "signum": 0.211708,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 170554110.79,
       "gross_usd": 2046494154.96,
@@ -142,7 +166,8 @@
     {
       "observed_at": "2026-08-05T18:01:40-04:00",
       "backfilled": false,
-      "heat_score": 0.209255,
+      "signum": 0.209255,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 170207675.41,
       "gross_usd": 2061414014.99,
@@ -155,7 +180,8 @@
     {
       "observed_at": "2026-08-05T10:00:59-04:00",
       "backfilled": false,
-      "heat_score": 0.177701,
+      "signum": 0.177701,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 118911418.63,
       "gross_usd": 2064616131.77,
@@ -168,7 +194,8 @@
     {
       "observed_at": "2026-08-04T18:00:53-04:00",
       "backfilled": false,
-      "heat_score": 0.160044,
+      "signum": 0.160044,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 98047309.19,
       "gross_usd": 2032807125.53,
@@ -181,7 +208,8 @@
     {
       "observed_at": "2026-08-04T10:00:42-04:00",
       "backfilled": false,
-      "heat_score": 0.148562,
+      "signum": 0.148562,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 76732751.17,
       "gross_usd": 2001932617.29,
@@ -194,7 +222,8 @@
     {
       "observed_at": "2026-08-03T18:00:55-04:00",
       "backfilled": false,
-      "heat_score": 0.135745,
+      "signum": 0.135745,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 72694247.53,
       "gross_usd": 2005352815.52,
@@ -207,7 +236,8 @@
     {
       "observed_at": "2026-08-03T10:00:53-04:00",
       "backfilled": false,
-      "heat_score": 0.112438,
+      "signum": 0.112438,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 40077358.86,
       "gross_usd": 2042555201.48,
@@ -220,7 +250,8 @@
     {
       "observed_at": "2026-08-02T18:01:34-04:00",
       "backfilled": false,
-      "heat_score": 0.037427,
+      "signum": 0.037427,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -30392702.63,
       "gross_usd": 2117253652.65,
@@ -233,7 +264,8 @@
     {
       "observed_at": "2026-08-02T10:00:46-04:00",
       "backfilled": false,
-      "heat_score": 0.037293,
+      "signum": 0.037293,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -36668554.7,
       "gross_usd": 2039033146.77,
@@ -246,7 +278,8 @@
     {
       "observed_at": "2026-08-01T18:01:10-04:00",
       "backfilled": false,
-      "heat_score": 0.019591,
+      "signum": 0.019591,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -49194333.52,
       "gross_usd": 2049145089.18,
@@ -259,7 +292,8 @@
     {
       "observed_at": "2026-08-01T10:00:48-04:00",
       "backfilled": false,
-      "heat_score": 9.4e-05,
+      "signum": 9.4e-05,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -79351647.76,
       "gross_usd": 2085131356.96,
@@ -272,7 +306,8 @@
     {
       "observed_at": "2026-07-31T18:01:08-04:00",
       "backfilled": false,
-      "heat_score": 0.000965,
+      "signum": 0.000965,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -78302946.2,
       "gross_usd": 2087192349.74,
@@ -285,7 +320,8 @@
     {
       "observed_at": "2026-07-31T10:01:08-04:00",
       "backfilled": false,
-      "heat_score": -0.013594,
+      "signum": -0.013594,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -94393139.14,
       "gross_usd": 2115073295.42,
@@ -298,7 +334,8 @@
     {
       "observed_at": "2026-07-30T18:00:50-04:00",
       "backfilled": false,
-      "heat_score": -0.037435,
+      "signum": -0.037435,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -118599099.73,
       "gross_usd": 2205984965.37,
@@ -311,7 +348,8 @@
     {
       "observed_at": "2026-07-30T10:00:51-04:00",
       "backfilled": false,
-      "heat_score": -0.032309,
+      "signum": -0.032309,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -114470014.91,
       "gross_usd": 2196546165.17,
@@ -324,7 +362,8 @@
     {
       "observed_at": "2026-07-29T18:00:56-04:00",
       "backfilled": false,
-      "heat_score": -0.034831,
+      "signum": -0.034831,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -106376527.24,
       "gross_usd": 2189934792.68,
@@ -337,7 +376,8 @@
     {
       "observed_at": "2026-07-29T10:01:15-04:00",
       "backfilled": false,
-      "heat_score": -0.089001,
+      "signum": -0.089001,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -197865822.62,
       "gross_usd": 2319800730.86,
@@ -350,7 +390,8 @@
     {
       "observed_at": "2026-07-28T18:01:06-04:00",
       "backfilled": false,
-      "heat_score": -0.09363,
+      "signum": -0.09363,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -174828943.1,
       "gross_usd": 2390730450.9,
@@ -363,7 +404,8 @@
     {
       "observed_at": "2026-07-28T10:01:02-04:00",
       "backfilled": false,
-      "heat_score": -0.073505,
+      "signum": -0.073505,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -141399806.54,
       "gross_usd": 2393993427.58,
@@ -376,7 +418,8 @@
     {
       "observed_at": "2026-07-27T18:01:09-04:00",
       "backfilled": false,
-      "heat_score": -0.074986,
+      "signum": -0.074986,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -147322629.07,
       "gross_usd": 2522522175.53,
@@ -389,7 +432,8 @@
     {
       "observed_at": "2026-07-27T10:01:18-04:00",
       "backfilled": false,
-      "heat_score": -0.074001,
+      "signum": -0.074001,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -152233816.64,
       "gross_usd": 2556612001.5,
@@ -402,7 +446,8 @@
     {
       "observed_at": "2026-07-26T18:00:53-04:00",
       "backfilled": false,
-      "heat_score": -0.273718,
+      "signum": -0.273718,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -508702635.81,
       "gross_usd": 2018683298.37,
@@ -415,7 +460,8 @@
     {
       "observed_at": "2026-07-26T10:00:27-04:00",
       "backfilled": false,
-      "heat_score": -0.267768,
+      "signum": -0.267768,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -488994286.68,
       "gross_usd": 1944996330.79,
@@ -428,7 +474,8 @@
     {
       "observed_at": "2026-07-25T18:00:33-04:00",
       "backfilled": false,
-      "heat_score": -0.26739,
+      "signum": -0.26739,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -485735827.9,
       "gross_usd": 1916967037.28,
@@ -441,7 +488,8 @@
     {
       "observed_at": "2026-07-25T10:01:08-04:00",
       "backfilled": false,
-      "heat_score": -0.270877,
+      "signum": -0.270877,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -498207069.19,
       "gross_usd": 1921837789.43,
@@ -454,7 +502,8 @@
     {
       "observed_at": "2026-07-24T18:00:25-04:00",
       "backfilled": false,
-      "heat_score": -0.276527,
+      "signum": -0.276527,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -508213600.36,
       "gross_usd": 1923711015.12,
@@ -467,7 +516,8 @@
     {
       "observed_at": "2026-07-24T10:00:49-04:00",
       "backfilled": false,
-      "heat_score": -0.296771,
+      "signum": -0.296771,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -537580959.51,
       "gross_usd": 1955614549.59,
@@ -480,7 +530,8 @@
     {
       "observed_at": "2026-07-23T18:01:12-04:00",
       "backfilled": false,
-      "heat_score": -0.285972,
+      "signum": -0.285972,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -541264594.79,
       "gross_usd": 1966757289.2,
@@ -493,7 +544,8 @@
     {
       "observed_at": "2026-07-23T10:00:32-04:00",
       "backfilled": false,
-      "heat_score": -0.276881,
+      "signum": -0.276881,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -529524649.3,
       "gross_usd": 1967424909.06,
@@ -506,7 +558,8 @@
     {
       "observed_at": "2026-07-22T18:00:34-04:00",
       "backfilled": false,
-      "heat_score": -0.264431,
+      "signum": -0.264431,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -518740354.7,
       "gross_usd": 1987243119.06,
@@ -519,7 +572,8 @@
     {
       "observed_at": "2026-07-22T10:00:38-04:00",
       "backfilled": false,
-      "heat_score": -0.266805,
+      "signum": -0.266805,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -523865673.87,
       "gross_usd": 1971674873.79,
@@ -532,7 +586,8 @@
     {
       "observed_at": "2026-07-21T18:00:43-04:00",
       "backfilled": false,
-      "heat_score": -0.248399,
+      "signum": -0.248399,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -496669664.78,
       "gross_usd": 1934587558.19,
@@ -545,7 +600,8 @@
     {
       "observed_at": "2026-07-21T10:00:28-04:00",
       "backfilled": false,
-      "heat_score": -0.261807,
+      "signum": -0.261807,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -518177351.33,
       "gross_usd": 1974328810.33,
@@ -558,7 +614,8 @@
     {
       "observed_at": "2026-07-20T18:00:50-04:00",
       "backfilled": true,
-      "heat_score": -0.254767,
+      "signum": -0.254767,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -514785162.52,
       "gross_usd": 1969844485.56,
@@ -571,7 +628,8 @@
     {
       "observed_at": "2026-07-20T10:01:18-04:00",
       "backfilled": true,
-      "heat_score": -0.23617,
+      "signum": -0.23617,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -488390422.78,
       "gross_usd": 2003479784.59,
@@ -584,7 +642,8 @@
     {
       "observed_at": "2026-07-19T18:00:59-04:00",
       "backfilled": true,
-      "heat_score": -0.189348,
+      "signum": -0.189348,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -407559625.28,
       "gross_usd": 2263425675.9,
@@ -597,7 +656,8 @@
     {
       "observed_at": "2026-07-19T10:01:13-04:00",
       "backfilled": true,
-      "heat_score": -0.186528,
+      "signum": -0.186528,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -399992979.85,
       "gross_usd": 2266978481.73,
@@ -610,7 +670,8 @@
     {
       "observed_at": "2026-07-18T18:00:50-04:00",
       "backfilled": true,
-      "heat_score": -0.191854,
+      "signum": -0.191854,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -400195410.43,
       "gross_usd": 2247673546.37,
@@ -623,7 +684,8 @@
     {
       "observed_at": "2026-07-18T10:00:35-04:00",
       "backfilled": true,
-      "heat_score": -0.181742,
+      "signum": -0.181742,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -385353045.72,
       "gross_usd": 2206224108.34,
@@ -636,7 +698,8 @@
     {
       "observed_at": "2026-07-17T18:00:58-04:00",
       "backfilled": true,
-      "heat_score": -0.159908,
+      "signum": -0.159908,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -355800575.31,
       "gross_usd": 2195426755.94,
@@ -649,7 +712,8 @@
     {
       "observed_at": "2026-07-17T10:01:03-04:00",
       "backfilled": true,
-      "heat_score": -0.157057,
+      "signum": -0.157057,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -349437653.91,
       "gross_usd": 2187115110.7,
@@ -662,7 +726,8 @@
     {
       "observed_at": "2026-07-16T18:00:34-04:00",
       "backfilled": true,
-      "heat_score": -0.139993,
+      "signum": -0.139993,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -343390097.01,
       "gross_usd": 2188890004.43,
@@ -675,7 +740,8 @@
     {
       "observed_at": "2026-07-16T10:01:17-04:00",
       "backfilled": true,
-      "heat_score": -0.145308,
+      "signum": -0.145308,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -364274079.28,
       "gross_usd": 2193789383.98,
@@ -688,7 +754,8 @@
     {
       "observed_at": "2026-07-15T18:01:19-04:00",
       "backfilled": true,
-      "heat_score": -0.15081,
+      "signum": -0.15081,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -371430694.17,
       "gross_usd": 2216199305.84,
@@ -701,7 +768,8 @@
     {
       "observed_at": "2026-07-15T10:01:24-04:00",
       "backfilled": true,
-      "heat_score": -0.131155,
+      "signum": -0.131155,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -352604029.12,
       "gross_usd": 2173860529.99,
@@ -714,7 +782,8 @@
     {
       "observed_at": "2026-07-14T18:00:32-04:00",
       "backfilled": true,
-      "heat_score": -0.15402,
+      "signum": -0.15402,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -376673007.63,
       "gross_usd": 2123662720.59,
@@ -727,7 +796,8 @@
     {
       "observed_at": "2026-07-14T10:00:41-04:00",
       "backfilled": true,
-      "heat_score": -0.146713,
+      "signum": -0.146713,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -372040381.64,
       "gross_usd": 2127390847.0,
@@ -740,7 +810,8 @@
     {
       "observed_at": "2026-07-13T18:01:02-04:00",
       "backfilled": true,
-      "heat_score": -0.128929,
+      "signum": -0.128929,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -329555173.13,
       "gross_usd": 2041370574.32,
@@ -753,7 +824,8 @@
     {
       "observed_at": "2026-07-13T10:00:41-04:00",
       "backfilled": true,
-      "heat_score": -0.100387,
+      "signum": -0.100387,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -261300657.4,
       "gross_usd": 2126107056.69,
@@ -766,7 +838,8 @@
     {
       "observed_at": "2026-07-12T18:00:52-04:00",
       "backfilled": true,
-      "heat_score": 0.031265,
+      "signum": 0.031265,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": 14347849.59,
       "gross_usd": 1971155671.34,
@@ -779,7 +852,8 @@
     {
       "observed_at": "2026-07-12T10:01:17-04:00",
       "backfilled": true,
-      "heat_score": 0.021461,
+      "signum": 0.021461,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -2195270.92,
       "gross_usd": 1968379674.06,
@@ -792,7 +866,8 @@
     {
       "observed_at": "2026-07-11T18:01:32-04:00",
       "backfilled": true,
-      "heat_score": 0.010909,
+      "signum": 0.010909,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -23295550.65,
       "gross_usd": 1980135127.46,
@@ -805,7 +880,8 @@
     {
       "observed_at": "2026-07-11T10:00:51-04:00",
       "backfilled": true,
-      "heat_score": 0.010773,
+      "signum": 0.010773,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -20580944.22,
       "gross_usd": 1962013852.5,
@@ -818,7 +894,8 @@
     {
       "observed_at": "2026-07-10T18:01:26-04:00",
       "backfilled": true,
-      "heat_score": 0.022699,
+      "signum": 0.022699,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": 5515392.75,
       "gross_usd": 1942935814.39,
@@ -831,7 +908,8 @@
     {
       "observed_at": "2026-07-10T10:01:02-04:00",
       "backfilled": true,
-      "heat_score": 0.022109,
+      "signum": 0.022109,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": 4932612.44,
       "gross_usd": 1959407039.32,
@@ -844,7 +922,8 @@
     {
       "observed_at": "2026-07-09T18:00:49-04:00",
       "backfilled": true,
-      "heat_score": -0.020426,
+      "signum": -0.020426,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -74598059.86,
       "gross_usd": 1950082346.2,
@@ -857,7 +936,8 @@
     {
       "observed_at": "2026-07-09T10:00:48-04:00",
       "backfilled": true,
-      "heat_score": -0.016615,
+      "signum": -0.016615,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -70161512.65,
       "gross_usd": 1962907454.47,
@@ -870,7 +950,8 @@
     {
       "observed_at": "2026-07-08T18:01:21-04:00",
       "backfilled": true,
-      "heat_score": -0.011448,
+      "signum": -0.011448,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -63029629.45,
       "gross_usd": 1923948164.71,
@@ -883,7 +964,8 @@
     {
       "observed_at": "2026-07-08T10:00:32-04:00",
       "backfilled": true,
-      "heat_score": -0.016983,
+      "signum": -0.016983,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -69880870.08,
       "gross_usd": 1914259666.0,
@@ -896,7 +978,8 @@
     {
       "observed_at": "2026-07-07T18:01:50-04:00",
       "backfilled": true,
-      "heat_score": 0.023106,
+      "signum": 0.023106,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -6007463.89,
       "gross_usd": 1886332104.5,
@@ -909,7 +992,8 @@
     {
       "observed_at": "2026-07-07T10:00:48-04:00",
       "backfilled": true,
-      "heat_score": 0.019629,
+      "signum": 0.019629,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -10129911.84,
       "gross_usd": 1918250143.61,
@@ -922,7 +1006,8 @@
     {
       "observed_at": "2026-07-06T18:01:05-04:00",
       "backfilled": true,
-      "heat_score": 0.024354,
+      "signum": 0.024354,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": -1242118.98,
       "gross_usd": 1952510565.33,
@@ -935,7 +1020,8 @@
     {
       "observed_at": "2026-07-06T10:01:21-04:00",
       "backfilled": true,
-      "heat_score": 0.035223,
+      "signum": 0.035223,
+      "restated": false,
       "regime": "Neutral",
       "net_usd": 22153630.35,
       "gross_usd": 1878076858.03,
@@ -948,7 +1034,8 @@
     {
       "observed_at": "2026-07-05T18:01:32-04:00",
       "backfilled": true,
-      "heat_score": -0.168678,
+      "signum": -0.168678,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -397575078.13,
       "gross_usd": 1607209941.61,
@@ -961,7 +1048,8 @@
     {
       "observed_at": "2026-07-05T10:00:33-04:00",
       "backfilled": true,
-      "heat_score": -0.165574,
+      "signum": -0.165574,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -381230665.38,
       "gross_usd": 1580095575.18,
@@ -974,7 +1062,8 @@
     {
       "observed_at": "2026-07-04T18:01:02-04:00",
       "backfilled": true,
-      "heat_score": -0.186531,
+      "signum": -0.186531,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -413213972.7,
       "gross_usd": 1559937004.38,
@@ -987,7 +1076,8 @@
     {
       "observed_at": "2026-07-04T10:01:26-04:00",
       "backfilled": true,
-      "heat_score": -0.179075,
+      "signum": -0.179075,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -400401344.56,
       "gross_usd": 1564977979.84,
@@ -1000,7 +1090,8 @@
     {
       "observed_at": "2026-07-03T18:00:52-04:00",
       "backfilled": true,
-      "heat_score": -0.172518,
+      "signum": -0.172518,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -356007411.68,
       "gross_usd": 1596157761.98,
@@ -1013,7 +1104,8 @@
     {
       "observed_at": "2026-07-03T10:00:40-04:00",
       "backfilled": true,
-      "heat_score": -0.173091,
+      "signum": -0.173091,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -333991072.61,
       "gross_usd": 1553360253.05,
@@ -1026,7 +1118,8 @@
     {
       "observed_at": "2026-07-02T18:00:34-04:00",
       "backfilled": true,
-      "heat_score": -0.1801,
+      "signum": -0.1801,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -311637266.53,
       "gross_usd": 1491516025.61,
@@ -1039,7 +1132,8 @@
     {
       "observed_at": "2026-07-02T10:01:10-04:00",
       "backfilled": true,
-      "heat_score": -0.222505,
+      "signum": -0.222505,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -364653899.94,
       "gross_usd": 1448072639.58,
@@ -1052,7 +1146,8 @@
     {
       "observed_at": "2026-07-01T18:01:22-04:00",
       "backfilled": true,
-      "heat_score": -0.310081,
+      "signum": -0.310081,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -448326854.48,
       "gross_usd": 1478478936.9,
@@ -1065,7 +1160,8 @@
     {
       "observed_at": "2026-07-01T10:01:13-04:00",
       "backfilled": true,
-      "heat_score": -0.313897,
+      "signum": -0.313897,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -471456784.06,
       "gross_usd": 1476373654.38,
@@ -1078,7 +1174,8 @@
     {
       "observed_at": "2026-06-30T18:00:50-04:00",
       "backfilled": true,
-      "heat_score": -0.271963,
+      "signum": -0.271963,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -419409781.03,
       "gross_usd": 1423681503.05,
@@ -1091,7 +1188,8 @@
     {
       "observed_at": "2026-06-30T10:00:54-04:00",
       "backfilled": true,
-      "heat_score": -0.241386,
+      "signum": -0.241386,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -394438391.07,
       "gross_usd": 1397486171.97,
@@ -1104,7 +1202,8 @@
     {
       "observed_at": "2026-06-29T18:01:18-04:00",
       "backfilled": true,
-      "heat_score": -0.226106,
+      "signum": -0.226106,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -369010073.63,
       "gross_usd": 1428205120.6,
@@ -1117,7 +1216,8 @@
     {
       "observed_at": "2026-06-29T10:00:44-04:00",
       "backfilled": true,
-      "heat_score": -0.222357,
+      "signum": -0.222357,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -350803127.8,
       "gross_usd": 1372160135.82,
@@ -1130,7 +1230,8 @@
     {
       "observed_at": "2026-06-28T18:01:14-04:00",
       "backfilled": true,
-      "heat_score": -0.185267,
+      "signum": -0.185267,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -284095425.69,
       "gross_usd": 1223423144.74,
@@ -1143,7 +1244,8 @@
     {
       "observed_at": "2026-06-28T10:00:41-04:00",
       "backfilled": true,
-      "heat_score": -0.174389,
+      "signum": -0.174389,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -278453527.5,
       "gross_usd": 1220286011.61,
@@ -1156,7 +1258,8 @@
     {
       "observed_at": "2026-06-27T18:00:36-04:00",
       "backfilled": true,
-      "heat_score": -0.1763,
+      "signum": -0.1763,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -286514705.19,
       "gross_usd": 1219951851.65,
@@ -1169,7 +1272,8 @@
     {
       "observed_at": "2026-06-27T10:00:35-04:00",
       "backfilled": true,
-      "heat_score": -0.169832,
+      "signum": -0.169832,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -280658873.51,
       "gross_usd": 1239122552.57,
@@ -1182,7 +1286,8 @@
     {
       "observed_at": "2026-06-26T18:01:27-04:00",
       "backfilled": true,
-      "heat_score": -0.168219,
+      "signum": -0.168219,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -282291665.38,
       "gross_usd": 1245748664.4,
@@ -1195,7 +1300,8 @@
     {
       "observed_at": "2026-06-26T10:00:50-04:00",
       "backfilled": true,
-      "heat_score": -0.189061,
+      "signum": -0.189061,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -306116346.23,
       "gross_usd": 1240900113.03,
@@ -1208,7 +1314,8 @@
     {
       "observed_at": "2026-06-25T18:01:04-04:00",
       "backfilled": true,
-      "heat_score": -0.228338,
+      "signum": -0.228338,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -378184936.77,
       "gross_usd": 1248144807.04,
@@ -1221,7 +1328,8 @@
     {
       "observed_at": "2026-06-25T10:01:41-04:00",
       "backfilled": true,
-      "heat_score": -0.253514,
+      "signum": -0.253514,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -413760100.26,
       "gross_usd": 1215474986.32,
@@ -1234,7 +1342,8 @@
     {
       "observed_at": "2026-06-24T18:00:52-04:00",
       "backfilled": true,
-      "heat_score": -0.312296,
+      "signum": -0.312296,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -474870822.82,
       "gross_usd": 1341259238.97,
@@ -1247,7 +1356,8 @@
     {
       "observed_at": "2026-06-24T10:01:15-04:00",
       "backfilled": true,
-      "heat_score": -0.319653,
+      "signum": -0.319653,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -507162709.09,
       "gross_usd": 1302938827.13,
@@ -1260,7 +1370,8 @@
     {
       "observed_at": "2026-06-23T18:01:17-04:00",
       "backfilled": true,
-      "heat_score": -0.304897,
+      "signum": -0.304897,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -501989440.59,
       "gross_usd": 1308026706.75,
@@ -1273,7 +1384,8 @@
     {
       "observed_at": "2026-06-23T10:01:14-04:00",
       "backfilled": true,
-      "heat_score": -0.295095,
+      "signum": -0.295095,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -502182367.1,
       "gross_usd": 1309372186.98,
@@ -1286,7 +1398,8 @@
     {
       "observed_at": "2026-06-22T18:00:43-04:00",
       "backfilled": true,
-      "heat_score": -0.323204,
+      "signum": -0.323204,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -535568981.27,
       "gross_usd": 1412593484.67,
@@ -1299,7 +1412,8 @@
     {
       "observed_at": "2026-06-22T10:00:53-04:00",
       "backfilled": true,
-      "heat_score": -0.343717,
+      "signum": -0.343717,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -562354377.55,
       "gross_usd": 1480028905.57,
@@ -1312,7 +1426,8 @@
     {
       "observed_at": "2026-06-21T18:00:41-04:00",
       "backfilled": true,
-      "heat_score": -0.243465,
+      "signum": -0.243465,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -436938110.81,
       "gross_usd": 1521777894.17,
@@ -1325,7 +1440,8 @@
     {
       "observed_at": "2026-06-21T10:00:47-04:00",
       "backfilled": true,
-      "heat_score": -0.282871,
+      "signum": -0.282871,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -484749015.98,
       "gross_usd": 1582431474.65,
@@ -1338,7 +1454,8 @@
     {
       "observed_at": "2026-06-20T18:01:26-04:00",
       "backfilled": true,
-      "heat_score": -0.230579,
+      "signum": -0.230579,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -403224586.93,
       "gross_usd": 1591085365.02,
@@ -1351,7 +1468,8 @@
     {
       "observed_at": "2026-06-20T10:01:05-04:00",
       "backfilled": true,
-      "heat_score": -0.19785,
+      "signum": -0.19785,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -349892474.44,
       "gross_usd": 1533771455.14,
@@ -1364,7 +1482,8 @@
     {
       "observed_at": "2026-06-19T18:01:28-04:00",
       "backfilled": true,
-      "heat_score": -0.182978,
+      "signum": -0.182978,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -327735372.73,
       "gross_usd": 1547552108.3,
@@ -1377,7 +1496,8 @@
     {
       "observed_at": "2026-06-19T10:00:43-04:00",
       "backfilled": true,
-      "heat_score": -0.166034,
+      "signum": -0.166034,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -303851709.12,
       "gross_usd": 1539160497.1,
@@ -1390,7 +1510,8 @@
     {
       "observed_at": "2026-06-18T18:01:23-04:00",
       "backfilled": true,
-      "heat_score": -0.181162,
+      "signum": -0.181162,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -337165190.22,
       "gross_usd": 1533048233.52,
@@ -1403,7 +1524,8 @@
     {
       "observed_at": "2026-06-18T10:00:56-04:00",
       "backfilled": true,
-      "heat_score": -0.248538,
+      "signum": -0.248538,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -468453699.13,
       "gross_usd": 1667141413.51,
@@ -1416,7 +1538,8 @@
     {
       "observed_at": "2026-06-17T18:00:59-04:00",
       "backfilled": true,
-      "heat_score": -0.279558,
+      "signum": -0.279558,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -535147270.54,
       "gross_usd": 1765696222.02,
@@ -1429,7 +1552,8 @@
     {
       "observed_at": "2026-06-17T10:00:55-04:00",
       "backfilled": true,
-      "heat_score": -0.318813,
+      "signum": -0.318813,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -596180429.65,
       "gross_usd": 1784847073.2,
@@ -1442,7 +1566,8 @@
     {
       "observed_at": "2026-06-16T18:01:12-04:00",
       "backfilled": true,
-      "heat_score": -0.32884,
+      "signum": -0.32884,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -617843506.52,
       "gross_usd": 1812096095.82,
@@ -1455,7 +1580,8 @@
     {
       "observed_at": "2026-06-16T10:01:30-04:00",
       "backfilled": true,
-      "heat_score": -0.333953,
+      "signum": -0.333953,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -630274335.54,
       "gross_usd": 1855600105.94,
@@ -1468,7 +1594,8 @@
     {
       "observed_at": "2026-06-15T18:00:54-04:00",
       "backfilled": true,
-      "heat_score": -0.403549,
+      "signum": -0.403549,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -696108623.43,
       "gross_usd": 1881826747.67,
@@ -1481,7 +1608,8 @@
     {
       "observed_at": "2026-06-15T10:01:08-04:00",
       "backfilled": true,
-      "heat_score": -0.40947,
+      "signum": -0.40947,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -684516345.08,
       "gross_usd": 1870060639.02,
@@ -1494,7 +1622,8 @@
     {
       "observed_at": "2026-06-14T18:00:59-04:00",
       "backfilled": true,
-      "heat_score": -0.515563,
+      "signum": -0.515563,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -733686370.62,
       "gross_usd": 1481004337.45,
@@ -1507,7 +1636,8 @@
     {
       "observed_at": "2026-06-14T10:00:55-04:00",
       "backfilled": true,
-      "heat_score": -0.465682,
+      "signum": -0.465682,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -680144725.74,
       "gross_usd": 1443643370.72,
@@ -1520,7 +1650,8 @@
     {
       "observed_at": "2026-06-13T18:00:36-04:00",
       "backfilled": true,
-      "heat_score": -0.460013,
+      "signum": -0.460013,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -659818622.96,
       "gross_usd": 1458667654.94,
@@ -1533,7 +1664,8 @@
     {
       "observed_at": "2026-06-13T10:01:21-04:00",
       "backfilled": true,
-      "heat_score": -0.459844,
+      "signum": -0.459844,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -658177222.83,
       "gross_usd": 1422097365.69,
@@ -1546,7 +1678,8 @@
     {
       "observed_at": "2026-06-12T18:01:00-04:00",
       "backfilled": true,
-      "heat_score": -0.445503,
+      "signum": -0.445503,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -636067683.02,
       "gross_usd": 1404328956.48,
@@ -1559,7 +1692,8 @@
     {
       "observed_at": "2026-06-12T10:01:08-04:00",
       "backfilled": true,
-      "heat_score": -0.41546,
+      "signum": -0.41546,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -603687284.03,
       "gross_usd": 1380298875.79,
@@ -1572,7 +1706,8 @@
     {
       "observed_at": "2026-06-11T18:00:34-04:00",
       "backfilled": true,
-      "heat_score": -0.410048,
+      "signum": -0.410048,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -599054208.01,
       "gross_usd": 1369595449.83,
@@ -1585,7 +1720,8 @@
     {
       "observed_at": "2026-06-11T10:01:06-04:00",
       "backfilled": true,
-      "heat_score": -0.399798,
+      "signum": -0.399798,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -579227686.14,
       "gross_usd": 1335113219.44,
@@ -1598,7 +1734,8 @@
     {
       "observed_at": "2026-06-10T18:00:52-04:00",
       "backfilled": true,
-      "heat_score": -0.364192,
+      "signum": -0.364192,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -530870484.13,
       "gross_usd": 1255941552.95,
@@ -1611,7 +1748,8 @@
     {
       "observed_at": "2026-06-10T10:00:39-04:00",
       "backfilled": true,
-      "heat_score": -0.366406,
+      "signum": -0.366406,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -540281283.24,
       "gross_usd": 1301642072.07,
@@ -1624,7 +1762,8 @@
     {
       "observed_at": "2026-06-09T18:00:34-04:00",
       "backfilled": true,
-      "heat_score": -0.358442,
+      "signum": -0.358442,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -559496581.13,
       "gross_usd": 1313281199.91,
@@ -1637,7 +1776,8 @@
     {
       "observed_at": "2026-06-09T10:01:14-04:00",
       "backfilled": true,
-      "heat_score": -0.350581,
+      "signum": -0.350581,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -558445232.84,
       "gross_usd": 1337926998.3,
@@ -1650,7 +1790,8 @@
     {
       "observed_at": "2026-06-08T18:01:08-04:00",
       "backfilled": true,
-      "heat_score": -0.364225,
+      "signum": -0.364225,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -571599333.75,
       "gross_usd": 1354408536.21,
@@ -1663,7 +1804,8 @@
     {
       "observed_at": "2026-06-08T10:01:05-04:00",
       "backfilled": true,
-      "heat_score": -0.354394,
+      "signum": -0.354394,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -546769466.17,
       "gross_usd": 1387874714.17,
@@ -1676,7 +1818,8 @@
     {
       "observed_at": "2026-06-07T18:01:21-04:00",
       "backfilled": true,
-      "heat_score": -0.214932,
+      "signum": -0.214932,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -227209222.1,
       "gross_usd": 1221457596.7,
@@ -1689,7 +1832,8 @@
     {
       "observed_at": "2026-06-07T10:01:22-04:00",
       "backfilled": true,
-      "heat_score": -0.186512,
+      "signum": -0.186512,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -193106233.81,
       "gross_usd": 1204896236.83,
@@ -1702,7 +1846,8 @@
     {
       "observed_at": "2026-06-06T18:00:31-04:00",
       "backfilled": true,
-      "heat_score": -0.181092,
+      "signum": -0.181092,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -190927310.27,
       "gross_usd": 1176376654.43,
@@ -1715,7 +1860,8 @@
     {
       "observed_at": "2026-06-06T10:01:29-04:00",
       "backfilled": true,
-      "heat_score": -0.173847,
+      "signum": -0.173847,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -182501724.07,
       "gross_usd": 1198130654.63,
@@ -1728,7 +1874,8 @@
     {
       "observed_at": "2026-06-05T18:00:33-04:00",
       "backfilled": true,
-      "heat_score": -0.148125,
+      "signum": -0.148125,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -173031010.26,
       "gross_usd": 1208100731.74,
@@ -1741,7 +1888,8 @@
     {
       "observed_at": "2026-06-05T10:00:51-04:00",
       "backfilled": true,
-      "heat_score": -0.197393,
+      "signum": -0.197393,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -243378693.16,
       "gross_usd": 1145153416.02,
@@ -1754,7 +1902,8 @@
     {
       "observed_at": "2026-06-04T18:01:27-04:00",
       "backfilled": true,
-      "heat_score": -0.205087,
+      "signum": -0.205087,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -288765538.48,
       "gross_usd": 1227669451.76,
@@ -1767,7 +1916,8 @@
     {
       "observed_at": "2026-06-04T10:00:43-04:00",
       "backfilled": true,
-      "heat_score": -0.214638,
+      "signum": -0.214638,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -318592378.66,
       "gross_usd": 1277967080.4,
@@ -1780,7 +1930,8 @@
     {
       "observed_at": "2026-06-03T18:01:03-04:00",
       "backfilled": true,
-      "heat_score": -0.225115,
+      "signum": -0.225115,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -401691556.22,
       "gross_usd": 1366650215.57,
@@ -1793,7 +1944,8 @@
     {
       "observed_at": "2026-06-03T10:01:24-04:00",
       "backfilled": true,
-      "heat_score": -0.212002,
+      "signum": -0.212002,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -395363665.39,
       "gross_usd": 1335961035.57,
@@ -1806,7 +1958,8 @@
     {
       "observed_at": "2026-06-02T18:01:20-04:00",
       "backfilled": true,
-      "heat_score": -0.225089,
+      "signum": -0.225089,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -427133094.09,
       "gross_usd": 1286759962.45,
@@ -1819,7 +1972,8 @@
     {
       "observed_at": "2026-06-02T10:01:13-04:00",
       "backfilled": true,
-      "heat_score": -0.18142,
+      "signum": -0.18142,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -370901137.72,
       "gross_usd": 1341075829.21,
@@ -1832,7 +1986,8 @@
     {
       "observed_at": "2026-06-01T18:00:49-04:00",
       "backfilled": true,
-      "heat_score": -0.248395,
+      "signum": -0.248395,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -451397897.77,
       "gross_usd": 1442241712.37,
@@ -1845,7 +2000,8 @@
     {
       "observed_at": "2026-06-01T10:01:03-04:00",
       "backfilled": true,
-      "heat_score": -0.239769,
+      "signum": -0.239769,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -449291038.61,
       "gross_usd": 1421854658.93,
@@ -1858,7 +2014,8 @@
     {
       "observed_at": "2026-05-31T18:00:35-04:00",
       "backfilled": true,
-      "heat_score": -0.183916,
+      "signum": -0.183916,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -292178047.0,
       "gross_usd": 1307581459.96,
@@ -1871,7 +2028,8 @@
     {
       "observed_at": "2026-05-31T10:00:36-04:00",
       "backfilled": true,
-      "heat_score": -0.179986,
+      "signum": -0.179986,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -284801918.92,
       "gross_usd": 1292430605.16,
@@ -1884,7 +2042,8 @@
     {
       "observed_at": "2026-05-30T18:01:04-04:00",
       "backfilled": true,
-      "heat_score": -0.170926,
+      "signum": -0.170926,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -260138018.46,
       "gross_usd": 1288135706.65,
@@ -1897,7 +2056,8 @@
     {
       "observed_at": "2026-05-30T10:01:08-04:00",
       "backfilled": true,
-      "heat_score": -0.171323,
+      "signum": -0.171323,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -254337530.69,
       "gross_usd": 1281591169.39,
@@ -1910,7 +2070,8 @@
     {
       "observed_at": "2026-05-29T18:01:19-04:00",
       "backfilled": true,
-      "heat_score": -0.162057,
+      "signum": -0.162057,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -242925732.85,
       "gross_usd": 1261416843.83,
@@ -1923,7 +2084,8 @@
     {
       "observed_at": "2026-05-29T10:01:22-04:00",
       "backfilled": true,
-      "heat_score": -0.143513,
+      "signum": -0.143513,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -215695962.02,
       "gross_usd": 1242071137.83,
@@ -1936,7 +2098,8 @@
     {
       "observed_at": "2026-05-28T18:00:43-04:00",
       "backfilled": true,
-      "heat_score": -0.158734,
+      "signum": -0.158734,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -232029558.16,
       "gross_usd": 1245111995.42,
@@ -1949,7 +2112,8 @@
     {
       "observed_at": "2026-05-28T10:22:39-04:00",
       "backfilled": true,
-      "heat_score": -0.156128,
+      "signum": -0.156128,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -226064620.48,
       "gross_usd": 1252567240.82,
@@ -1962,7 +2126,8 @@
     {
       "observed_at": "2026-05-27T18:01:29-04:00",
       "backfilled": true,
-      "heat_score": -0.148761,
+      "signum": -0.148761,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -266032798.73,
       "gross_usd": 1245026848.62,
@@ -1975,7 +2140,8 @@
     {
       "observed_at": "2026-05-27T10:01:20-04:00",
       "backfilled": true,
-      "heat_score": -0.183254,
+      "signum": -0.183254,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -307432928.42,
       "gross_usd": 1296142508.72,
@@ -1988,7 +2154,8 @@
     {
       "observed_at": "2026-05-26T18:01:16-04:00",
       "backfilled": true,
-      "heat_score": -0.213666,
+      "signum": -0.213666,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -350683776.54,
       "gross_usd": 1312543213.25,
@@ -2001,7 +2168,8 @@
     {
       "observed_at": "2026-05-26T10:01:02-04:00",
       "backfilled": true,
-      "heat_score": -0.208764,
+      "signum": -0.208764,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -354878384.89,
       "gross_usd": 1326394866.69,
@@ -2014,7 +2182,8 @@
     {
       "observed_at": "2026-05-25T18:00:51-04:00",
       "backfilled": true,
-      "heat_score": -0.177291,
+      "signum": -0.177291,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -333889523.1,
       "gross_usd": 1327166066.44,
@@ -2027,7 +2196,8 @@
     {
       "observed_at": "2026-05-25T10:00:53-04:00",
       "backfilled": true,
-      "heat_score": -0.169687,
+      "signum": -0.169687,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -325325021.69,
       "gross_usd": 1335488337.25,
@@ -2040,7 +2210,8 @@
     {
       "observed_at": "2026-05-24T18:01:09-04:00",
       "backfilled": true,
-      "heat_score": -0.353549,
+      "signum": -0.353549,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -570627962.85,
       "gross_usd": 1421704546.89,
@@ -2053,7 +2224,8 @@
     {
       "observed_at": "2026-05-24T10:01:10-04:00",
       "backfilled": true,
-      "heat_score": -0.337562,
+      "signum": -0.337562,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -614823147.9,
       "gross_usd": 1422480076.3,
@@ -2066,7 +2238,8 @@
     {
       "observed_at": "2026-05-23T18:01:07-04:00",
       "backfilled": true,
-      "heat_score": -0.324198,
+      "signum": -0.324198,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -613767817.29,
       "gross_usd": 1373800031.75,
@@ -2079,7 +2252,8 @@
     {
       "observed_at": "2026-05-23T10:01:27-04:00",
       "backfilled": true,
-      "heat_score": -0.278651,
+      "signum": -0.278651,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -579615031.51,
       "gross_usd": 1356857262.79,
@@ -2092,7 +2266,8 @@
     {
       "observed_at": "2026-05-22T18:01:03-04:00",
       "backfilled": true,
-      "heat_score": -0.271757,
+      "signum": -0.271757,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -591412855.91,
       "gross_usd": 1340761081.68,
@@ -2105,7 +2280,8 @@
     {
       "observed_at": "2026-05-22T10:01:18-04:00",
       "backfilled": true,
-      "heat_score": -0.299495,
+      "signum": -0.299495,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -629976025.19,
       "gross_usd": 1412701120.51,
@@ -2118,7 +2294,8 @@
     {
       "observed_at": "2026-05-21T18:01:26-04:00",
       "backfilled": true,
-      "heat_score": -0.28588,
+      "signum": -0.28588,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -606427486.36,
       "gross_usd": 1355771598.66,
@@ -2131,7 +2308,8 @@
     {
       "observed_at": "2026-05-21T10:01:11-04:00",
       "backfilled": true,
-      "heat_score": -0.305429,
+      "signum": -0.305429,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -586752749.53,
       "gross_usd": 1332505044.53,
@@ -2144,7 +2322,8 @@
     {
       "observed_at": "2026-05-20T18:00:38-04:00",
       "backfilled": true,
-      "heat_score": -0.281425,
+      "signum": -0.281425,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -565173498.95,
       "gross_usd": 1304483214.45,
@@ -2157,7 +2336,8 @@
     {
       "observed_at": "2026-05-20T10:00:56-04:00",
       "backfilled": true,
-      "heat_score": -0.300068,
+      "signum": -0.300068,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -574322145.7,
       "gross_usd": 1262124638.44,
@@ -2170,7 +2350,8 @@
     {
       "observed_at": "2026-05-19T18:00:52-04:00",
       "backfilled": true,
-      "heat_score": -0.276971,
+      "signum": -0.276971,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -546198129.66,
       "gross_usd": 1206164128.77,
@@ -2183,7 +2364,8 @@
     {
       "observed_at": "2026-05-19T10:01:21-04:00",
       "backfilled": true,
-      "heat_score": -0.276124,
+      "signum": -0.276124,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -530577203.61,
       "gross_usd": 1210746610.41,
@@ -2196,7 +2378,8 @@
     {
       "observed_at": "2026-05-18T18:01:31-04:00",
       "backfilled": true,
-      "heat_score": -0.358004,
+      "signum": -0.358004,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -691864279.31,
       "gross_usd": 1087326903.21,
@@ -2209,7 +2392,8 @@
     {
       "observed_at": "2026-05-18T10:00:50-04:00",
       "backfilled": true,
-      "heat_score": -0.326444,
+      "signum": -0.326444,
+      "restated": false,
       "regime": "Net Short",
       "net_usd": -671408597.28,
       "gross_usd": 1084816281.64,
@@ -2222,7 +2406,8 @@
     {
       "observed_at": "2026-05-17T18:00:58-04:00",
       "backfilled": true,
-      "heat_score": 0.128808,
+      "signum": 0.128808,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 182671160.97,
       "gross_usd": 1437500559.47,
@@ -2235,7 +2420,8 @@
     {
       "observed_at": "2026-05-17T10:01:15-04:00",
       "backfilled": true,
-      "heat_score": 0.137933,
+      "signum": 0.137933,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 188004794.82,
       "gross_usd": 1434231821.08,
@@ -2248,7 +2434,8 @@
     {
       "observed_at": "2026-05-16T18:00:48-04:00",
       "backfilled": true,
-      "heat_score": 0.148533,
+      "signum": 0.148533,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 196540440.3,
       "gross_usd": 1451083658.28,
@@ -2261,7 +2448,8 @@
     {
       "observed_at": "2026-05-16T10:01:06-04:00",
       "backfilled": true,
-      "heat_score": 0.137694,
+      "signum": 0.137694,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 180460084.77,
       "gross_usd": 1423626616.4,
@@ -2274,7 +2462,8 @@
     {
       "observed_at": "2026-05-15T18:00:34-04:00",
       "backfilled": true,
-      "heat_score": 0.148627,
+      "signum": 0.148627,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 185439796.1,
       "gross_usd": 1583252812.12,
@@ -2287,7 +2476,8 @@
     {
       "observed_at": "2026-05-15T10:00:48-04:00",
       "backfilled": true,
-      "heat_score": 0.162044,
+      "signum": 0.162044,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 214914946.86,
       "gross_usd": 1583041461.94,
@@ -2300,7 +2490,8 @@
     {
       "observed_at": "2026-05-14T18:00:40-04:00",
       "backfilled": true,
-      "heat_score": 0.155197,
+      "signum": 0.155197,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 204110266.54,
       "gross_usd": 1600778322.66,
@@ -2313,7 +2504,8 @@
     {
       "observed_at": "2026-05-14T10:00:59-04:00",
       "backfilled": true,
-      "heat_score": 0.101308,
+      "signum": 0.101308,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 130600067.65,
       "gross_usd": 1481922368.82,
@@ -2326,7 +2518,8 @@
     {
       "observed_at": "2026-05-13T18:00:48-04:00",
       "backfilled": true,
-      "heat_score": 0.097779,
+      "signum": 0.097779,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 127408688.84,
       "gross_usd": 1411187466.05,
@@ -2339,7 +2532,8 @@
     {
       "observed_at": "2026-05-13T10:01:10-04:00",
       "backfilled": true,
-      "heat_score": 0.120203,
+      "signum": 0.120203,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 152392898.96,
       "gross_usd": 1434273147.58,
@@ -2352,7 +2546,8 @@
     {
       "observed_at": "2026-05-12T18:00:52-04:00",
       "backfilled": true,
-      "heat_score": 0.165795,
+      "signum": 0.165795,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 220433123.47,
       "gross_usd": 1486984163.23,
@@ -2365,7 +2560,8 @@
     {
       "observed_at": "2026-05-12T10:01:20-04:00",
       "backfilled": true,
-      "heat_score": 0.160352,
+      "signum": 0.160352,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 214305289.0,
       "gross_usd": 1474202513.1,
@@ -2378,7 +2574,8 @@
     {
       "observed_at": "2026-05-11T18:01:29-04:00",
       "backfilled": true,
-      "heat_score": 0.182121,
+      "signum": 0.182121,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 266439121.2,
       "gross_usd": 1522936270.95,
@@ -2391,7 +2588,8 @@
     {
       "observed_at": "2026-05-11T10:01:00-04:00",
       "backfilled": true,
-      "heat_score": 0.139501,
+      "signum": 0.139501,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 202404224.0,
       "gross_usd": 1467966497.72,
@@ -2404,7 +2602,8 @@
     {
       "observed_at": "2026-05-10T18:00:45-04:00",
       "backfilled": true,
-      "heat_score": 0.183064,
+      "signum": 0.183064,
+      "restated": false,
       "regime": "Net Long",
       "net_usd": 302708778.38,
       "gross_usd": 1540282855.86,

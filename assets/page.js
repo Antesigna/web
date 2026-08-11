@@ -49,9 +49,11 @@
   function snapshotRow(row) {
     return "<tr><td>" + esc(dateTime(row.observed_at)) +
       '<br><span class="badge ' + (row.backfilled ? "" : "live") + '">' +
-      (row.backfilled ? "Recorded history" : "Live ledger") + "</span></td>" +
-      '<td class="' + (row.heat_score < 0 ? "dn" : row.heat_score > 0 ? "up" : "mut") + '">' +
-      (row.heat_score > 0 ? "+" : "") + Number(row.heat_score).toFixed(4) + "</td>" +
+      (row.backfilled ? "Recorded history" : "Live ledger") + "</span>" +
+      (row.restated ? '<span class="badge" title="Restated after a methodology defect">Restated</span>' : "") +
+      "</td>" +
+      '<td class="' + (row.signum < 0 ? "dn" : row.signum > 0 ? "up" : "mut") + '">' +
+      (row.signum > 0 ? "+" : "") + Number(row.signum).toFixed(4) + "</td>" +
       "<td>" + esc(row.regime) + "</td><td>" + money(row.net_usd) + "</td>" +
       "<td>" + Math.round(Number(row.short_share) * 100) + "%</td>" +
       "<td>" + money(row.btc_net_usd) + "</td><td>" + money(row.eth_net_usd) + "</td>" +

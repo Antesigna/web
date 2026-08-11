@@ -488,7 +488,7 @@
   }
   function grossText(gross) {
     if (gross === null) return "—";
-    return gross < 5 ? "&lt;$5M" : "$" + gross.toFixed(0) + "M";
+    return gross < 1 ? "&lt;$1M" : "$" + gross.toFixed(0) + "M";
   }
   function tierRows() {
     var maxEquity = Math.max.apply(null, EQUITY_TIERS.map(function (b) { return b.equity_usd_rounded; })) || 1;

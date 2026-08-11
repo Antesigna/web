@@ -256,10 +256,10 @@
   }
 
   /* Tilt is net divided by gross, so net divided by tilt recovers total long
-     plus short notional. Round the Board display to the nearest $5M. */
+     plus short notional. Round the Board display to the nearest $1M. */
   function grossScale(netMillions, tilt) {
     if (!isFinite(netMillions) || !isFinite(tilt) || Math.abs(tilt) < 0.000001) return null;
-    return Math.round((Math.abs(netMillions) / Math.abs(tilt)) / 5) * 5;
+    return Math.round(Math.abs(netMillions) / Math.abs(tilt));
   }
 
   return {
