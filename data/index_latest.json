@@ -1,284 +1,291 @@
 {
-  "generated_at": "2026-08-21T18:01:04-04:00",
+  "generated_at": "2026-08-21T19:01:07-04:00",
   "cohort_rebalanced_at": "2026-08-20",
   "cohort_rebalanced_timestamp": "2026-08-20T10:55:33-04:00",
-  "index_score": -0.05665,
+  "index_score": -0.053374,
   "leverage_dampening": false,
   "cohort_stats": {
-    "total_equity": 527063808.92,
+    "total_equity": 545035792.78,
     "total_wallets": 100,
     "active_wallets": 100,
-    "gross_long_usd": 983747724.86,
-    "gross_short_usd": 1194537835.52,
-    "net_usd": -210790110.66,
-    "gross_notional_usd": 2178285560.38,
-    "L_cohort_total": 4.1329
+    "gross_long_usd": 982078223.33,
+    "gross_short_usd": 1202742298.41,
+    "net_usd": -220664075.08,
+    "gross_notional_usd": 2184820521.74,
+    "L_cohort_total": 4.0086
   },
   "assets": [
     {
       "asset": "HYPE",
-      "net_usd": -158979657.65,
-      "tilt": -0.418,
-      "conv_equity": -0.2172,
+      "net_usd": -156613144.45,
+      "tilt": -0.4171,
+      "conv_equity": -0.1803,
       "position_count": 44
     },
     {
       "asset": "BTC",
-      "net_usd": -133063438.02,
-      "tilt": -0.2781,
-      "conv_equity": -0.0625,
-      "position_count": 49
+      "net_usd": -132233889.47,
+      "tilt": -0.2764,
+      "conv_equity": -0.0414,
+      "position_count": 51
     },
     {
       "asset": "ETH",
-      "net_usd": 69644067.89,
-      "tilt": 0.0821,
-      "conv_equity": 0.1325,
-      "position_count": 46
+      "net_usd": 69409484.01,
+      "tilt": 0.0816,
+      "conv_equity": 0.173,
+      "position_count": 45
     },
     {
       "asset": "ZEC",
-      "net_usd": 32832137.01,
-      "tilt": 0.365,
-      "conv_equity": 0.3546,
+      "net_usd": 30858310.93,
+      "tilt": 0.3504,
+      "conv_equity": 0.3558,
       "position_count": 27
     },
     {
       "asset": "SOL",
-      "net_usd": -17672950.73,
-      "tilt": -0.1281,
-      "conv_equity": 0.1371,
+      "net_usd": -18185929.22,
+      "tilt": -0.1307,
+      "conv_equity": 0.1388,
       "position_count": 20
     },
     {
       "asset": "XRP",
-      "net_usd": -13127199.1,
-      "tilt": -0.6897,
-      "conv_equity": -0.7173,
-      "position_count": 12
+      "net_usd": -14509133.92,
+      "tilt": -0.7045,
+      "conv_equity": -0.7306,
+      "position_count": 13
     },
     {
       "asset": "PUMP",
-      "net_usd": -10485935.87,
+      "net_usd": -10321275.04,
       "tilt": -0.5105,
-      "conv_equity": -0.4362,
+      "conv_equity": -0.4322,
       "position_count": 15
     },
     {
       "asset": "FARTCOIN",
-      "net_usd": -9220812.0,
-      "tilt": -0.7729,
-      "conv_equity": -0.5276,
+      "net_usd": -9422771.76,
+      "tilt": -0.7734,
+      "conv_equity": -0.5186,
       "position_count": 10
     },
     {
       "asset": "AAVE",
-      "net_usd": 8377965.01,
-      "tilt": 0.4787,
-      "conv_equity": 0.5138,
+      "net_usd": 7833951.83,
+      "tilt": 0.4351,
+      "conv_equity": 0.494,
       "position_count": 17
     },
     {
+      "asset": "DOGE",
+      "net_usd": -7825000,
+      "tilt": -0.6412,
+      "conv_equity": -0.5467,
+      "position_count": 9
+    },
+    {
       "asset": "ZRO",
-      "net_usd": 7603318.81,
-      "tilt": 0.6957,
-      "conv_equity": 0.7531,
+      "net_usd": 7661089.06,
+      "tilt": 0.6958,
+      "conv_equity": 0.7656,
       "position_count": 12
     },
     {
       "asset": "LIT",
-      "net_usd": -4516703.65,
-      "tilt": -0.3523,
-      "conv_equity": -0.5263,
-      "position_count": 10
+      "net_usd": -5079132.21,
+      "tilt": -0.38,
+      "conv_equity": -0.5251,
+      "position_count": 11
     },
     {
       "asset": "SUI",
-      "net_usd": 4258220.9,
-      "tilt": 0.788,
-      "conv_equity": 0.6976,
+      "net_usd": 4273998.51,
+      "tilt": 0.7881,
+      "conv_equity": 0.7045,
       "position_count": 10
     },
     {
       "asset": "BNB",
-      "net_usd": -3325000,
+      "net_usd": -3375000,
       "tilt": -0.9682,
-      "conv_equity": -0.9452,
+      "conv_equity": -0.9454,
       "position_count": 8
     },
     {
       "asset": "WLD",
       "net_usd": -2225000,
-      "tilt": -0.4025,
-      "conv_equity": -0.6728,
+      "tilt": -0.4031,
+      "conv_equity": -0.6804,
       "position_count": 9
     },
     {
       "asset": "BOME",
-      "net_usd": 2200000,
-      "tilt": 0.9981,
+      "net_usd": 2225000,
+      "tilt": 0.998,
       "conv_equity": 0.9989,
-      "position_count": 4
+      "position_count": 3
     },
     {
       "asset": "XPL",
-      "net_usd": 2158541.07,
-      "tilt": 0.4776,
-      "conv_equity": 0.6655,
+      "net_usd": 2125946.89,
+      "tilt": 0.4779,
+      "conv_equity": 0.6721,
       "position_count": 12
     },
     {
       "asset": "PEOPLE",
       "net_usd": 2025000,
-      "tilt": 0.89,
-      "conv_equity": 0.9368,
+      "tilt": 0.8854,
+      "conv_equity": 0.9338,
       "position_count": 3
     },
     {
-      "asset": "DOGE",
-      "net_usd": -1925000,
-      "tilt": -0.3212,
-      "conv_equity": -0.195,
-      "position_count": 9
-    },
-    {
-      "asset": "ENA",
-      "net_usd": 1911297.22,
-      "tilt": 0.3244,
-      "conv_equity": 0.5,
-      "position_count": 15
-    },
-    {
       "asset": "MON",
-      "net_usd": -1850000,
-      "tilt": -0.6001,
-      "conv_equity": -0.3573,
+      "net_usd": -1925000,
+      "tilt": -0.6179,
+      "conv_equity": -0.379,
       "position_count": 8
     },
     {
       "asset": "XMR",
       "net_usd": 1775000,
       "tilt": 0.1122,
-      "conv_equity": 0.4819,
-      "position_count": 8
+      "conv_equity": 0.4972,
+      "position_count": 9
+    },
+    {
+      "asset": "KPEPE",
+      "net_usd": -1450000,
+      "tilt": -0.2566,
+      "conv_equity": -0.1665,
+      "position_count": 7
     },
     {
       "asset": "ASTER",
       "net_usd": 1450000,
       "tilt": 0.8185,
-      "conv_equity": 0.749,
-      "position_count": 9
-    },
-    {
-      "asset": "PURR",
-      "net_usd": 1425000,
-      "tilt": 0.8958,
-      "conv_equity": 0.7959,
-      "position_count": 4
-    },
-    {
-      "asset": "KPEPE",
-      "net_usd": -1400000,
-      "tilt": -0.2564,
-      "conv_equity": -0.1669,
-      "position_count": 7
+      "conv_equity": 0.747,
+      "position_count": 8
     },
     {
       "asset": "WIF",
       "net_usd": 1400000,
-      "tilt": 0.8839,
-      "conv_equity": 0.7529,
+      "tilt": 0.8227,
+      "conv_equity": 0.6316,
       "position_count": 6
     },
     {
+      "asset": "PURR",
+      "net_usd": 1325000,
+      "tilt": 0.8964,
+      "conv_equity": 0.8151,
+      "position_count": 4
+    },
+    {
       "asset": "LTC",
-      "net_usd": 1275000,
-      "tilt": 0.6033,
-      "conv_equity": 0.3206,
+      "net_usd": 1300000,
+      "tilt": 0.6034,
+      "conv_equity": 0.3143,
       "position_count": 7
     },
     {
+      "asset": "ENA",
+      "net_usd": 1222059.11,
+      "tilt": 0.237,
+      "conv_equity": 0.417,
+      "position_count": 14
+    },
+    {
+      "asset": "TRX",
+      "net_usd": 1200000,
+      "tilt": 0.904,
+      "conv_equity": 0.9336,
+      "position_count": 3
+    },
+    {
       "asset": "ONDO",
-      "net_usd": -1025000,
-      "tilt": -0.3867,
-      "conv_equity": -0.2708,
+      "net_usd": -1050000,
+      "tilt": -0.387,
+      "conv_equity": -0.2653,
       "position_count": 5
     },
     {
       "asset": "WLFI",
       "net_usd": -1025000,
-      "tilt": -0.4542,
-      "conv_equity": -0.6895,
+      "tilt": -0.4549,
+      "conv_equity": -0.7199,
       "position_count": 6
     },
     {
       "asset": "AVAX",
-      "net_usd": 1000000,
-      "tilt": 0.3435,
-      "conv_equity": 0.4785,
+      "net_usd": 1025000,
+      "tilt": 0.3437,
+      "conv_equity": 0.4809,
       "position_count": 7
     },
     {
-      "asset": "TRX",
-      "net_usd": 1000000,
-      "tilt": 0.8888,
-      "conv_equity": 0.9216,
-      "position_count": 3
+      "asset": "NEAR",
+      "net_usd": -990944.52,
+      "tilt": -0.0722,
+      "conv_equity": 0.1373,
+      "position_count": 19
     },
     {
       "asset": "KBONK",
       "net_usd": 925000,
       "tilt": 0.9557,
-      "conv_equity": 0.9569,
+      "conv_equity": 0.9571,
       "position_count": 4
     },
     {
       "asset": "EIGEN",
-      "net_usd": 925000,
-      "tilt": 0.7897,
-      "conv_equity": 0.8961,
+      "net_usd": 900000,
+      "tilt": 0.7847,
+      "conv_equity": 0.8941,
       "position_count": 5
     },
     {
       "asset": "LINK",
-      "net_usd": 769261.72,
-      "tilt": 0.054,
-      "conv_equity": 0.0615,
+      "net_usd": 764643.44,
+      "tilt": 0.0536,
+      "conv_equity": 0.1403,
       "position_count": 13
     },
     {
       "asset": "TAO",
-      "net_usd": 757903.34,
-      "tilt": 0.228,
-      "conv_equity": 0.1528,
+      "net_usd": 763373.69,
+      "tilt": 0.2281,
+      "conv_equity": 0.2531,
       "position_count": 10
-    },
-    {
-      "asset": "ETHFI",
-      "net_usd": 700000,
-      "tilt": 0.482,
-      "conv_equity": 0.6258,
-      "position_count": 5
     },
     {
       "asset": "AERO",
       "net_usd": -675000,
       "tilt": -0.9593,
-      "conv_equity": -0.8636,
+      "conv_equity": -0.8625,
       "position_count": 3
+    },
+    {
+      "asset": "ETHFI",
+      "net_usd": 625000,
+      "tilt": 0.4547,
+      "conv_equity": 0.6087,
+      "position_count": 5
     },
     {
       "asset": "UNI",
       "net_usd": 600000,
-      "tilt": 0.2,
-      "conv_equity": 0.4242,
+      "tilt": 0.1985,
+      "conv_equity": 0.4445,
       "position_count": 9
     },
     {
       "asset": "LINEA",
-      "net_usd": 525000,
+      "net_usd": 550000,
       "tilt": 0.7681,
-      "conv_equity": 0.8122,
+      "conv_equity": 0.8125,
       "position_count": 5
     },
     {
@@ -290,31 +297,38 @@
     },
     {
       "asset": "VVV",
-      "net_usd": 442166.8,
-      "tilt": 0.0889,
-      "conv_equity": -0.2883,
+      "net_usd": 442086.92,
+      "tilt": 0.0893,
+      "conv_equity": -0.2498,
       "position_count": 10
-    },
-    {
-      "asset": "ADA",
-      "net_usd": 400000,
-      "tilt": 0.1537,
-      "conv_equity": 0.2088,
-      "position_count": 6
     },
     {
       "asset": "APEX",
       "net_usd": 375000,
-      "tilt": 0.6901,
-      "conv_equity": 0.668,
+      "tilt": 0.697,
+      "conv_equity": 0.6758,
+      "position_count": 6
+    },
+    {
+      "asset": "ADA",
+      "net_usd": 375000,
+      "tilt": 0.1459,
+      "conv_equity": 0.2033,
       "position_count": 6
     },
     {
       "asset": "CHIP",
       "net_usd": -350000,
       "tilt": -0.7745,
-      "conv_equity": -0.4763,
+      "conv_equity": -0.4646,
       "position_count": 7
+    },
+    {
+      "asset": "TRUMP",
+      "net_usd": 350000,
+      "tilt": 0.9248,
+      "conv_equity": 0.9048,
+      "position_count": 4
     },
     {
       "asset": "PENDLE",
@@ -324,95 +338,81 @@
       "position_count": 3
     },
     {
-      "asset": "TRUMP",
-      "net_usd": 325000,
-      "tilt": 0.9247,
-      "conv_equity": 0.8722,
-      "position_count": 4
-    },
-    {
       "asset": "GRAM",
       "net_usd": 325000,
-      "tilt": 0.0598,
-      "conv_equity": 0.095,
+      "tilt": 0.0599,
+      "conv_equity": 0.0991,
       "position_count": 9
     },
     {
       "asset": "POPCAT",
-      "net_usd": 300000,
-      "tilt": 0.9983,
-      "conv_equity": 0.9994,
+      "net_usd": 325000,
+      "tilt": 0.9984,
+      "conv_equity": 0.9995,
       "position_count": 3
-    },
-    {
-      "asset": "NEAR",
-      "net_usd": 211255.62,
-      "tilt": 0.017,
-      "conv_equity": 0.1992,
-      "position_count": 19
     },
     {
       "asset": "HBAR",
       "net_usd": 200000,
-      "tilt": 0.228,
-      "conv_equity": -0.291,
+      "tilt": 0.2287,
+      "conv_equity": -0.2966,
       "position_count": 4
     },
     {
       "asset": "BCH",
       "net_usd": 175000,
-      "tilt": 0.147,
-      "conv_equity": -0.418,
+      "tilt": 0.1466,
+      "conv_equity": -0.4208,
       "position_count": 4
     },
     {
       "asset": "MEGA",
       "net_usd": -175000,
       "tilt": -0.3314,
-      "conv_equity": -0.4384,
+      "conv_equity": -0.4314,
       "position_count": 4
     },
     {
       "asset": "CRV",
       "net_usd": 125000,
-      "tilt": 0.1314,
-      "conv_equity": -0.2697,
+      "tilt": 0.1315,
+      "conv_equity": -0.2726,
       "position_count": 4
     },
     {
       "asset": "FET",
-      "net_usd": -100000,
-      "tilt": -0.0702,
-      "conv_equity": -0.1923,
+      "net_usd": -75000,
+      "tilt": -0.0506,
+      "conv_equity": -0.1756,
       "position_count": 5
     },
     {
       "asset": "CASHCAT",
       "net_usd": 75000,
-      "tilt": 0.0375,
-      "conv_equity": 0.6349,
+      "tilt": 0.0369,
+      "conv_equity": 0.6136,
       "position_count": 7
     },
     {
       "asset": "LDO",
       "net_usd": 25000,
-      "tilt": 0.0281,
-      "conv_equity": -0.2153,
+      "tilt": 0.0315,
+      "conv_equity": -0.217,
       "position_count": 6
     },
     {
       "asset": "SYRUP",
       "net_usd": -25000,
-      "tilt": -0.0404,
-      "conv_equity": 0.3104,
+      "tilt": -0.0408,
+      "conv_equity": 0.3431,
       "position_count": 3
     },
     {
       "asset": "OTHER",
-      "net_usd": 1100000,
-      "tilt": 0.195505,
+      "net_usd": 1250000,
+      "tilt": 0.206434,
       "conv_equity": 0.0,
-      "position_count": 17
+      "position_count": 19
     }
   ],
   "wallet_distribution": {
@@ -442,22 +442,22 @@
       },
       {
         "label": "-$10M to -$5M",
-        "count": 3,
+        "count": 4,
         "direction": "short"
       },
       {
         "label": "-$5M to $0",
-        "count": 20,
+        "count": 18,
         "direction": "short"
       },
       {
         "label": "$0 to $5M",
-        "count": 31,
+        "count": 33,
         "direction": "long"
       },
       {
         "label": "$5M to $10M",
-        "count": 12,
+        "count": 11,
         "direction": "long"
       },
       {
@@ -494,7 +494,7 @@
       },
       {
         "label": "$1M to $2.5M",
-        "count": 25,
+        "count": 24,
         "direction": "equity"
       },
       {
@@ -509,7 +509,7 @@
       },
       {
         "label": "$10M to $25M",
-        "count": 6,
+        "count": 7,
         "direction": "equity"
       },
       {
