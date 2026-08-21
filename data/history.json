@@ -1,47 +1,7 @@
 {
-  "generated_at": "2026-08-21T01:01:14-04:00",
-  "total_raw_points": 2142,
+  "generated_at": "2026-08-21T02:01:19-04:00",
+  "total_raw_points": 2141,
   "hourly": [
-    {
-      "timestamp": "2026-05-23T01:01:16-04:00",
-      "cohort_rebalanced_at": null,
-      "cohort_rebalanced_timestamp": null,
-      "cohort_net_usd": -567696659.62,
-      "gross_long_usd": 381112096.04,
-      "gross_short_usd": 948808755.67,
-      "L_cohort_total": 3.1054,
-      "cohort_total_equity": 428261243.14,
-      "cohort_num_wallets": 100,
-      "btc_net_usd": -134801326.13,
-      "eth_net_usd": -121612689.67,
-      "sol_net_usd": -3397950.43,
-      "hype_net_usd": -168984883.89,
-      "btc_conv": -0.3145,
-      "eth_conv": -0.3883,
-      "sol_conv": -0.1703,
-      "hype_conv": -0.6153,
-      "index_score": -0.258786
-    },
-    {
-      "timestamp": "2026-05-23T02:00:56-04:00",
-      "cohort_rebalanced_at": null,
-      "cohort_rebalanced_timestamp": null,
-      "cohort_net_usd": -566666678.26,
-      "gross_long_usd": 381621054.38,
-      "gross_short_usd": 948287732.63,
-      "L_cohort_total": 3.1471,
-      "cohort_total_equity": 422580150.3,
-      "cohort_num_wallets": 100,
-      "btc_net_usd": -134376503.34,
-      "eth_net_usd": -121609122.44,
-      "sol_net_usd": -3406706.86,
-      "hype_net_usd": -169694353.19,
-      "btc_conv": -0.3137,
-      "eth_conv": -0.3888,
-      "sol_conv": -0.1729,
-      "hype_conv": -0.6043,
-      "index_score": -0.262685
-    },
     {
       "timestamp": "2026-05-23T03:00:36-04:00",
       "cohort_rebalanced_at": null,
@@ -42841,29 +42801,29 @@
       "sol_conv": 0.2408,
       "hype_conv": -0.1914,
       "index_score": -0.029419
+    },
+    {
+      "timestamp": "2026-08-21T02:01:19-04:00",
+      "cohort_rebalanced_at": "2026-08-20",
+      "cohort_rebalanced_timestamp": "2026-08-20T10:55:33-04:00",
+      "cohort_net_usd": -90767843.43,
+      "gross_long_usd": 951320658.64,
+      "gross_short_usd": 1042088502.07,
+      "L_cohort_total": 4.1788,
+      "cohort_total_equity": 477027156.52,
+      "cohort_num_wallets": 100,
+      "btc_net_usd": -100757841.44,
+      "eth_net_usd": 82721564.48,
+      "sol_net_usd": 2519642.12,
+      "hype_net_usd": -147666258.13,
+      "btc_conv": -0.1038,
+      "eth_conv": 0.1574,
+      "sol_conv": 0.2141,
+      "hype_conv": -0.2127,
+      "index_score": -0.030559
     }
   ],
   "recent_24h": [
-    {
-      "timestamp": "2026-08-20T02:00:48-04:00",
-      "cohort_rebalanced_at": "2026-08-17",
-      "cohort_rebalanced_timestamp": "2026-08-17T00:42:30-04:00",
-      "cohort_net_usd": -425933290.22,
-      "gross_long_usd": 525956254.2,
-      "gross_short_usd": 951889544.41,
-      "L_cohort_total": 4.7918,
-      "cohort_total_equity": 308411370.61,
-      "cohort_num_wallets": 100,
-      "btc_net_usd": -141219340.59,
-      "eth_net_usd": -207968558.36,
-      "sol_net_usd": 16493872.69,
-      "hype_net_usd": -131833253.62,
-      "btc_conv": -0.2194,
-      "eth_conv": -0.1733,
-      "sol_conv": 0.3728,
-      "hype_conv": -0.1015,
-      "index_score": -0.412993
-    },
     {
       "timestamp": "2026-08-20T03:00:33-04:00",
       "cohort_rebalanced_at": "2026-08-17",
@@ -43323,10 +43283,30 @@
       "sol_conv": 0.2408,
       "hype_conv": -0.1914,
       "index_score": -0.029419
+    },
+    {
+      "timestamp": "2026-08-21T02:01:19-04:00",
+      "cohort_rebalanced_at": "2026-08-20",
+      "cohort_rebalanced_timestamp": "2026-08-20T10:55:33-04:00",
+      "cohort_net_usd": -90767843.43,
+      "gross_long_usd": 951320658.64,
+      "gross_short_usd": 1042088502.07,
+      "L_cohort_total": 4.1788,
+      "cohort_total_equity": 477027156.52,
+      "cohort_num_wallets": 100,
+      "btc_net_usd": -100757841.44,
+      "eth_net_usd": 82721564.48,
+      "sol_net_usd": 2519642.12,
+      "hype_net_usd": -147666258.13,
+      "btc_conv": -0.1038,
+      "eth_conv": 0.1574,
+      "sol_conv": 0.2141,
+      "hype_conv": -0.2127,
+      "index_score": -0.030559
     }
   ],
   "date_range": {
-    "start": "2026-05-23T01:01:16-04:00",
-    "end": "2026-08-21T01:01:14-04:00"
+    "start": "2026-05-23T03:00:36-04:00",
+    "end": "2026-08-21T02:01:19-04:00"
   }
 }
