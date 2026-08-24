@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-08-24T09:01:01-04:00",
+  "generated_at": "2026-08-24T10:00:46-04:00",
   "ledger_launched_at": "2026-07-21T10:00:00-04:00",
   "timezone": "America/New_York",
   "snapshot_hours_et": [
@@ -9,6 +9,20 @@
   ],
   "disclosure": "Snapshots before the ledger launch are backfilled from recorded hourly aggregate history. Positioning data is descriptive, not predictive. Watch notifications are private and are not part of the public Ledger.",
   "snapshots": [
+    {
+      "observed_at": "2026-08-24T10:00:46-04:00",
+      "backfilled": false,
+      "signum": 0.276729,
+      "restated": false,
+      "regime": "Net Long",
+      "net_usd": 521369442.82,
+      "gross_usd": 1872983183.9,
+      "short_share": 0.3608,
+      "btc_net_usd": 90089989.15,
+      "eth_net_usd": 97525329.83,
+      "sol_net_usd": 39008589.47,
+      "hype_net_usd": 181936108.17
+    },
     {
       "observed_at": "2026-08-23T18:01:12-04:00",
       "backfilled": false,

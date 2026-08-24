@@ -3,7 +3,7 @@
 
    Reads two files written by the generator:
      data/index_latest.json   current snapshot
-     data/history.json        rolling hourly series
+     data/history.json        rolling aggregate series
 
    Everything visible is derived from those at runtime. No figure and no
    sentence is hardcoded: the prose is produced by rule from the numbers
@@ -35,6 +35,7 @@
   function B(x) { return "<b>" + x + "</b>"; }
   function el(id) { return document.getElementById(id); }
   function tstamp(p) { return new Date(p.timestamp).getTime(); }
+  function oneHourChange() { return D.d1hAvailable ? sgn(D.d1h, 4) : "n/a"; }
   function etTime(date, seconds) {
     return date.toLocaleTimeString("en-CA", {
       timeZone: "America/New_York",
@@ -108,7 +109,14 @@
       return want;
     }
 
-    var base24 = comparable(1), base7 = comparable(7), last = H[H.length - 1];
+    var base1 = comparable(1 / 24), base24 = comparable(1), base7 = comparable(7), last = H[H.length - 1];
+    var base1Age = now - tstamp(base1);
+    var reconstructed = H.filter(function (p) {
+      if (!p.cohort_rebalanced_at) return false;
+      return tstamp(p) < new Date(p.cohort_rebalanced_at + "T00:00:00-04:00").getTime();
+    });
+    var reconstructedCoverage = reconstructed.map(function (p) { return +p.cohort_num_wallets; })
+      .filter(function (n) { return isFinite(n) && n > 0; });
     var privateAggregate = idx.assets.filter(function (a) { return a.asset === "OTHER"; })[0];
     ASSETS = idx.assets.filter(function (a) { return a.asset !== "OTHER"; }).map(function (a) {
       var net = +(a.net_usd / 1e6).toFixed(2);
@@ -122,7 +130,8 @@
       generatedAt: new Date(idx.generated_at),
       ageMinutes: (Date.now() - new Date(idx.generated_at).getTime()) / 60000,
       signum: +cur.toFixed(4),
-      d1h: +(cur - s[s.length - 2]).toFixed(4),
+      d1h: +(cur - base1.index_score).toFixed(4),
+      d1hAvailable: base1 !== last && base1Age >= 30 * 60000 && base1Age <= 150 * 60000,
       d24h: +(cur - base24.index_score).toFixed(4),
       d7d: +(cur - base7.index_score).toFixed(4),
       shorterThanPct: Math.round(100 * s.filter(function (x) { return x > cur; }).length / s.length),
@@ -140,6 +149,10 @@
       windowHours: Math.round((now - tstamp(base24)) / 36e5),
       historyDays: Math.min(PUBLIC_HISTORY_DAYS, Math.max(1, Math.ceil((now - tstamp(H[0])) / 864e5))),
       publicWindowDays: PUBLIC_HISTORY_DAYS,
+      historyReconstructed: reconstructed.length > 0,
+      historyCoverageMin: reconstructedCoverage.length ? Math.min.apply(null, reconstructedCoverage) : null,
+      historyCoverageMax: reconstructedCoverage.length ? Math.max.apply(null, reconstructedCoverage) : null,
+      historyEffectiveDate: curCohort,
       trackedHours: Math.max(0, Math.floor((new Date(idx.generated_at).getTime() - TRACKING_STARTED_AT.getTime()) / 36e5))
     };
     chartRange = PUBLIC_HISTORY_DAYS;
@@ -331,7 +344,7 @@
     var zx = ((0 - LO) / (HI - LO)) * W, mx = ((D.signum - LO) / (HI - LO)) * W;
     out += '<rect x="' + (zx - 0.5) + '" y="4" width="1" height="' + (BASE - 1) + '" fill="var(--ink2)" fill-opacity=".5"/>';
     out += '<rect x="' + (mx - 1.5) + '" y="0" width="3" height="' + (BASE + 4) + '" fill="var(--ink)"/>';
-    return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of Signum in the rolling ' + D.publicWindowDays + '-day public window, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
+    return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of retained Signum observations in the rolling ' + D.publicWindowDays + '-day public window, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
   }
 
   var chartMode = "signum", chartRange = 90;
@@ -584,11 +597,11 @@
       '<div class="hgrid"><div>' +
       '<div class="signal-label" data-tip="Signum is the normalized aggregate lean of the Hundred, from −1 (fully short) to +1 (fully long)." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
       '<div class="big n" style="' + heatStyle(D.signum) + '">' + sgn(D.signum).replace(MINUS, "-") + "</div>" +
-      '<div class="bmeta"><span class="n">Δ1h ' + sgn(D.d1h, 4) + "</span> · aggregate lean, −1 to +1</div>" +
+      '<div class="bmeta"><span class="n">Δ1h ' + oneHourChange() + "</span> · aggregate lean, −1 to +1</div>" +
       '<div class="marks">Net exposure <b class="n ' + (D.net < 0 ? "dn" : "up") + '">' + money(D.net) +
       '</b> · updated ' + hh + ' ET<br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
       "</div><div>" +
-      '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every hourly Signum reading in the rolling public window, stacked into buckets. Taller means more hours spent at that level. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.publicWindowDays + '-day public distribution · today marked</span></div>' +
+      '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every retained Signum observation in the rolling public window, stacked into buckets. The reconstructed portion uses one observation per day; live readings are hourly. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.publicWindowDays + '-day public distribution · today marked</span></div>' +
       '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
       '<div class="dcap"><span>Max short ' + D.lo.toFixed(2) + '</span><span class="z" style="left:' + dsv.zpct.toFixed(2) + '%">Neutral</span><span>Max long +' + D.hi.toFixed(2) + "</span></div></div>" +
       '<div class="chips">' +
@@ -610,7 +623,12 @@
       '<div><div class="v n">' + D.publicWindowDays + ' d</div><div class="k">rolling public history</div></div></div>' +
 
       '<div class="wrap"><section class="sec" style="border-top:0" id="chartsec">' +
-      '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">Hourly snapshots with a rolling ' + D.publicWindowDays + '-day public window</div></div>' +
+      '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">' +
+      (D.historyReconstructed
+        ? 'Fixed-cohort reconstruction before ' + esc(D.historyEffectiveDate) + ': daily observations, ' +
+          D.historyCoverageMin + '–' + D.historyCoverageMax + ' of 100 traders observed; dollar totals scaled to 100 · hourly live thereafter'
+        : 'Hourly snapshots with a rolling ' + D.publicWindowDays + '-day public window') +
+      '</div></div>' +
       '<div class="ctabs"><div class="tabs" id="cmode">' +
       Object.keys(MODES).map(function (k, i) { return '<button data-c="' + k + '"' + (i === 0 ? ' class="on"' : "") + ">" + MODES[k].label + "</button>"; }).join("") +
       '</div><div class="tabs" id="crange">' +
@@ -706,7 +724,7 @@
     document.body.classList.toggle("run", !reduced);
     el("app").setAttribute("aria-busy", "false");
     el("wire").innerHTML = etTime(D.generatedAt, true) + " ET · " + D.wallets + "/" + D.totalWallets +
-      " resolved · SIGNUM " + sgn(D.signum, 4) + " · Δ1h " + sgn(D.d1h, 4) + ' <span class="cur"></span>';
+      " resolved · SIGNUM " + sgn(D.signum, 4) + " · Δ1h " + oneHourChange() + ' <span class="cur"></span>';
     wire();
   }
 
