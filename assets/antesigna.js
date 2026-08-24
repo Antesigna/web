@@ -103,18 +103,23 @@
     for (i = H.length - 1; i > 0; i--) {
       if (H[i].cohort_rebalanced_at !== H[i - 1].cohort_rebalanced_at) { rotIdx = i; break; }
     }
+    function isReconstructedPoint(p) {
+      if (!p.cohort_rebalanced_at) return false;
+      return tstamp(p) < new Date(p.cohort_rebalanced_at + "T00:00:00-04:00").getTime();
+    }
     function comparable(daysBack) {
       var want = at(daysBack);
       if (rotIdx > -1 && tstamp(want) < tstamp(H[rotIdx])) return H[rotIdx];
+      /* The fixed-cohort chart is still useful with partial coverage, but a
+         reconstructed subset must not be narrated as organic trader movement
+         against today's complete live cohort. */
+      if (isReconstructedPoint(want)) return H[H.length - 1];
       return want;
     }
 
     var base1 = comparable(1 / 24), base24 = comparable(1), base7 = comparable(7), last = H[H.length - 1];
     var base1Age = now - tstamp(base1);
-    var reconstructed = H.filter(function (p) {
-      if (!p.cohort_rebalanced_at) return false;
-      return tstamp(p) < new Date(p.cohort_rebalanced_at + "T00:00:00-04:00").getTime();
-    });
+    var reconstructed = H.filter(isReconstructedPoint);
     var reconstructedCoverage = reconstructed.map(function (p) { return +p.cohort_num_wallets; })
       .filter(function (n) { return isFinite(n) && n > 0; });
     var privateAggregate = idx.assets.filter(function (a) { return a.asset === "OTHER"; })[0];
