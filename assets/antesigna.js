@@ -26,6 +26,7 @@
     var a = Math.abs(m), s = a >= 1 ? a.toFixed(1) : a.toFixed(2);
     return (m < 0 ? MINUS + "$" : "+$") + s + "M";
   }
+  function movementMoney(value) { return value === 0 ? "less than $0.5M" : money(value / 1e6); }
   function sgn(v, d) {
     d = (d === undefined ? 2 : d);
     return (v < 0 ? MINUS : v > 0 ? "+" : "") + Math.abs(v).toFixed(d);
@@ -79,13 +80,13 @@
   /* ── 2 · derive everything from the two files ──────────────────────── */
   function derive() {
     if (!READ) throw new Error("Read logic did not load");
-    var idx = RAW.index, allH = RAW.history.hourly, cs = idx.cohort_stats;
+    var idx = RAW.index, allH = READ.recordedHistory(RAW.history), cs = idx.cohort_stats;
     var newest = tstamp(allH[allH.length - 1]);
     var H = allH.filter(function (p) {
       return newest - tstamp(p) <= PUBLIC_HISTORY_DAYS * 864e5;
     });
-    var s = H.map(function (p) { return p.index_score; });
-    var now = tstamp(H[H.length - 1]), cur = s[s.length - 1];
+    var s = READ.dailyScores(H);
+    var now = tstamp(H[H.length - 1]), cur = idx.index_score;
 
     function at(daysBack) {
       var t = now - daysBack * 864e5, best = H[0], bd = Infinity;
@@ -104,8 +105,7 @@
       if (H[i].cohort_rebalanced_at !== H[i - 1].cohort_rebalanced_at) { rotIdx = i; break; }
     }
     function isReconstructedPoint(p) {
-      if (!p.cohort_rebalanced_at) return false;
-      return tstamp(p) < new Date(p.cohort_rebalanced_at + "T00:00:00-04:00").getTime();
+      return READ.isReconstructed(p);
     }
     function comparable(daysBack) {
       var want = at(daysBack);
@@ -119,7 +119,7 @@
 
     var base1 = comparable(1 / 24), base24 = comparable(1), base7 = comparable(7), last = H[H.length - 1];
     var base1Age = now - tstamp(base1);
-    var reconstructed = H.filter(isReconstructedPoint);
+    var reconstructed = RAW.history.hourly.filter(isReconstructedPoint);
     var reconstructedCoverage = reconstructed.map(function (p) { return +p.cohort_num_wallets; })
       .filter(function (n) { return isFinite(n) && n > 0; });
     var privateAggregate = idx.assets.filter(function (a) { return a.asset === "OTHER"; })[0];
@@ -135,6 +135,8 @@
       generatedAt: new Date(idx.generated_at),
       ageMinutes: (Date.now() - new Date(idx.generated_at).getTime()) / 60000,
       signum: +cur.toFixed(4),
+      dailyScores: s,
+      cohortAgeDays: Math.max(0, Math.floor((now - Date.parse(idx.cohort_rebalanced_timestamp || idx.cohort_rebalanced_at)) / 864e5)),
       d1h: +(cur - base1.index_score).toFixed(4),
       d1hAvailable: base1 !== last && base1Age >= 30 * 60000 && base1Age <= 150 * 60000,
       d24h: +(cur - base24.index_score).toFixed(4),
@@ -160,7 +162,6 @@
       historyEffectiveDate: curCohort,
       trackedHours: Math.max(0, Math.floor((new Date(idx.generated_at).getTime() - TRACKING_STARTED_AT.getTime()) / 36e5))
     };
-    chartRange = PUBLIC_HISTORY_DAYS;
 
     /* The public publisher exposes fixed aggregate buckets only. The position
        and equity views are intentionally not joinable at wallet level. */
@@ -172,10 +173,12 @@
     EQUITY_BUCKETS = W.equity.slice();
     var P = RAW.profile;
     if (!P || P.schema_version !== 1 || P.privacy !== "aggregate_equity_tiers" ||
-      P.total_wallets !== D.totalWallets || !Array.isArray(P.equity_tiers)) {
+      P.total_wallets !== D.wallets || !Array.isArray(P.equity_tiers)) {
       throw new Error("Unsupported public cohort profile");
     }
     EQUITY_TIERS = P.equity_tiers.slice();
+    D.concentration = P.concentration;
+    D.movement = P.movement;
     var A = RAW.watch;
     if (!A || A.schema_version !== 1 || A.privacy !== "hour_slots_only" ||
       A.window_hours !== 168 || !Array.isArray(A.check_slots) ||
@@ -185,14 +188,15 @@
     WATCH_ACTIVITY = A;
 
     /* chart series */
-    var step = Math.max(1, Math.floor(H.length / 180)), sel = [];
-    for (i = 0; i < H.length; i += step) sel.push(H[i]);
-    if (sel[sel.length - 1] !== H[H.length - 1]) sel.push(H[H.length - 1]);
+    var sel = (chartSource === "recorded" ? H : RAW.history.hourly).slice();
     var M = 1e6, fmtDay = function (p) {
       var d = new Date(p.timestamp);
       return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
     };
     SER = {
+      rows: sel,
+      timestamps: sel.map(tstamp),
+      reconstructed: sel.map(function (p) { return chartSource !== "recorded" && isReconstructedPoint(p); }),
       t: sel.map(fmtDay),
       days: sel.map(function (p) { return (now - tstamp(p)) / 864e5; }),
       signum: sel.map(function (p) { return +p.index_score.toFixed(4); }),
@@ -277,10 +281,10 @@
     if (p < 0 && n >= 0) main = "Crossed from net short to net long — " + span + " — across " + B(tr) + " of the Hundred.";
     else if (p > 0 && n <= 0) main = "Crossed from net long to net short — " + span + " — across " + B(tr) + " of the Hundred.";
     else if (Math.abs(d) < FLAT_M) { main = "Effectively unchanged at " + B(money(n)) + ", held by " + B(tr) + " of the Hundred at a " + B(sgn(tilt, 0) + "%") + " tilt."; statedTilt = true; }
-    else if (n < 0 && d > 0) main = "Shorts trimmed " + span + " across " + B(tr) + " traders.";
-    else if (n < 0 && d < 0) main = "Short deepened " + span + " across " + B(tr) + " traders.";
-    else if (n > 0 && d > 0) main = "Long added to, " + span + ", across " + B(tr) + " traders.";
-    else main = "Long reduced " + span + " across " + B(tr) + " traders.";
+    else if (n < 0 && d > 0) main = "Net short exposure decreased " + span + " across " + B(tr) + " current holders.";
+    else if (n < 0 && d < 0) main = "Net short exposure increased " + span + " across " + B(tr) + " current holders.";
+    else if (n > 0 && d > 0) main = "Net long exposure increased " + span + " across " + B(tr) + " current holders.";
+    else main = "Net long exposure decreased " + span + " across " + B(tr) + " current holders.";
 
     var mod = null;
     if (sym === deepestConviction()) mod = "Still the deepest conviction on the board.";
@@ -300,14 +304,13 @@
   }
 
   function bucketInsight() {
-    var shortCount = POSITION_BUCKETS.filter(function (b) { return b.direction === "short"; })
-      .reduce(function (sum, b) { return sum + b.count; }, 0);
-    var longCount = POSITION_BUCKETS.filter(function (b) { return b.direction === "long"; })
-      .reduce(function (sum, b) { return sum + b.count; }, 0);
+    var shortCount = EQUITY_TIERS.reduce(function (sum, b) { return sum + b.short_count; }, 0);
+    var longCount = EQUITY_TIERS.reduce(function (sum, b) { return sum + b.long_count; }, 0);
+    var flatCount = EQUITY_TIERS.reduce(function (sum, b) { return sum + b.flat_count; }, 0);
     var largest = EQUITY_TIERS.slice().sort(function (a, b) { return b.wallet_count - a.wallet_count; })[0];
     return "Signum is the Hundred’s aggregate lean—not a headcount or a single-market call. Today’s " +
       B(sgn(D.signum)) + " sits alongside " + B(shortCount + " net-short") + " and " + B(longCount +
-      " net-long") + " accounts. The largest equity tier is " + B(largest.label) + " with " +
+      " net-long") + ", plus " + B(flatCount + " near-flat") + " accounts (under $100K net). The largest equity tier is " + B(largest.label) + " with " +
       B(largest.wallet_count) + " accounts. Large long and short exposures can offset, leaving Signum near flat; " +
       '<a href="/method/">see how the measures differ →</a>';
   }
@@ -330,7 +333,7 @@
   /* ── 5 · charts ────────────────────────────────────────────────────── */
   function distSvg() {
     var W = 760, BASE = 58, BINS = 52, LO = D.lo, HI = D.hi, i, b;
-    var c = new Array(BINS).fill(0), src = SER.signum;
+    var c = new Array(BINS).fill(0), src = D.dailyScores;
     for (i = 0; i < src.length; i++) {
       b = Math.min(BINS - 1, Math.max(0, Math.floor(((src[i] - LO) / (HI - LO)) * BINS))); c[b]++;
     }
@@ -352,7 +355,7 @@
     return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of retained Signum observations in the rolling ' + D.publicWindowDays + '-day public window, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
   }
 
-  var chartMode = "signum", chartRange = 90;
+  var chartMode = "signum", chartRange = 30, chartSource = "recorded";
   var MODES = {
     signum: { label: "Signum", zero: true, series: [["signum", "Signum", null]] },
     net: { label: "Net position", zero: true, series: [["net", "Net position", null]] },
@@ -363,7 +366,7 @@
     lev: { label: "Leverage", zero: false, series: [["lev", "Gross leverage", "#F2C14E"]] }
   };
   function chartSvg() {
-    var M = MODES[chartMode], W = 1120, H = 240, PL = 54, PT = 16, PB = 26, i, k;
+    var M = MODES[chartMode], W = Math.max(340, Math.min(1120, window.innerWidth - 52)), H = 280, PL = 54, PT = 20, PB = 26, i, k;
     var idx = [];
     for (i = 0; i < SER.days.length; i++) if (SER.days[i] <= chartRange) idx.push(i);
     if (idx.length < 2) idx = SER.days.map(function (_, i) { return i; });
@@ -372,7 +375,8 @@
     var mn = Math.min.apply(null, all), mx = Math.max.apply(null, all);
     if (M.zero) { mn = Math.min(mn, 0); mx = Math.max(mx, 0); }
     var pad = (mx - mn) * 0.12 || 1; mn -= pad; mx += pad;
-    var X = function (j) { return PL + j / (idx.length - 1) * (W - PL); };
+    var end = SER.timestamps[SER.timestamps.length - 1], start = end - chartRange * 864e5;
+    var X = function (j) { return PL + READ.timeFraction(SER.timestamps[idx[j]], start, end) * (W - PL); };
     var Y = function (v) { return PT + (1 - (v - mn) / (mx - mn)) * (H - PT - PB); };
     var s = "", z = Y(0);
 
@@ -386,31 +390,44 @@
       s += '<rect x="' + PL + '" y="' + (z - 0.5).toFixed(1) + '" width="' + (W - PL) + '" height="1" fill="var(--ink2)" fill-opacity=".5"/>';
 
     M.series.forEach(function (sp, si) {
-      var key = sp[0], col = sp[2], d = "M" + X(0).toFixed(1) + "," + Y(SER[key][idx[0]]).toFixed(1);
-      for (i = 1; i < idx.length; i++)
-        d += " L" + X(i).toFixed(1) + "," + Y(SER[key][idx[i - 1]]).toFixed(1) + " L" + X(i).toFixed(1) + "," + Y(SER[key][idx[i]]).toFixed(1);
-      if (col === null) {
-        var area = d + " L" + X(idx.length - 1).toFixed(1) + "," + z.toFixed(1) + " L" + PL + "," + z.toFixed(1) + " Z";
-        s += '<defs><clipPath id="a' + si + '"><rect x="' + PL + '" y="0" width="' + (W - PL) + '" height="' + z + '"/></clipPath>' +
-          '<clipPath id="b' + si + '"><rect x="' + PL + '" y="' + z + '" width="' + (W - PL) + '" height="' + (H - z) + '"/></clipPath></defs>';
-        s += '<path d="' + area + '" fill="var(--long)" fill-opacity=".13" clip-path="url(#a' + si + ')"/>';
-        s += '<path d="' + area + '" fill="var(--short)" fill-opacity=".13" clip-path="url(#b' + si + ')"/>';
-        s += '<path d="' + d + '" fill="none" stroke="var(--long)" stroke-width="1.7" clip-path="url(#a' + si + ')"/>';
-        s += '<path d="' + d + '" fill="none" stroke="var(--short)" stroke-width="1.7" clip-path="url(#b' + si + ')"/>';
-      } else s += '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="1.7"/>';
+      var key = sp[0], col = sp[2], paths = ["", ""];
+      idx.forEach(function (n, j) {
+        var recon = SER.reconstructed[n], group = recon ? 1 : 0, prev = idx[j - 1];
+        var gap = !j || recon !== SER.reconstructed[prev] ||
+          SER.timestamps[n] - SER.timestamps[prev] > (recon ? 36 : 2.1) * 36e5 ||
+          SER.rows[n].cohort_rebalanced_at !== SER.rows[prev].cohort_rebalanced_at;
+        paths[group] += (gap ? " M" : " L") + X(j).toFixed(1) + "," + Y(SER[key][n]).toFixed(1);
+      });
+      paths.forEach(function (d, group) {
+        if (!d) return;
+        var style = group ? ' stroke-dasharray="5 4" opacity=".65"' : '';
+        if (col === null) {
+          s += '<defs><clipPath id="a' + si + group + '"><rect x="' + PL + '" y="0" width="' + (W - PL) + '" height="' + Math.max(0, z) + '"/></clipPath>' +
+            '<clipPath id="b' + si + group + '"><rect x="' + PL + '" y="' + z + '" width="' + (W - PL) + '" height="' + Math.max(0, H - z) + '"/></clipPath></defs>';
+          s += '<path d="' + d + '" fill="none" stroke="var(--long)" stroke-width="1.7"' + style + ' clip-path="url(#a' + si + group + ')"/>';
+          s += '<path d="' + d + '" fill="none" stroke="var(--short)" stroke-width="1.7"' + style + ' clip-path="url(#b' + si + group + ')"/>';
+        } else s += '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="1.7"' + style + '/>';
+      });
     });
-    [0, Math.floor(idx.length / 3), Math.floor(idx.length * 2 / 3), idx.length - 1].forEach(function (j, n) {
-      s += '<text x="' + X(j).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="' + (n === 0 ? "start" : n === 3 ? "end" : "middle") +
-        '" fill="#6C7488" font-size="9.5" font-family="JetBrains Mono">' + SER.t[idx[j]] + "</text>";
+    [0, 1/3, 2/3, 1].forEach(function (fraction, n) {
+      var label = new Date(start + fraction * (end - start)).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
+      s += '<text x="' + (PL + fraction * (W - PL)).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="' + (n === 0 ? "start" : n === 3 ? "end" : "middle") +
+        '" fill="#6C7488" font-size="10" font-family="JetBrains Mono">' + label + "</text>";
     });
-    return '<svg viewBox="0 0 ' + W + " " + H + '" shape-rendering="crispEdges" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days.">' + s + "</svg>";
+    idx.forEach(function (n, j) {
+      var prev = idx[j - 1];
+      if (j && SER.rows[n].cohort_rebalanced_at !== SER.rows[prev].cohort_rebalanced_at) {
+        s += '<path d="M' + X(j).toFixed(1) + ',16 V254" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"/>';
+      }
+    });
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days. True elapsed time; gaps are not interpolated.">' + s + "</svg>";
   }
   function chartLegend() {
     var M = MODES[chartMode];
-    if (M.series.length < 2) return "";
     return '<div class="clegend">' + M.series.map(function (s) {
       return '<span><i style="background:' + (s[2] || "var(--ink2)") + '"></i>' + s[1] + "</span>";
-    }).join("") + "</div>";
+    }).join("") + '<span>Gold dashes: cohort change · line breaks: missing observations</span>' +
+      (chartSource === "recorded" ? '' : '<span>Dashed series: retrospective estimates, not published signals</span>') + "</div>";
   }
 
   /* Privacy-safe distributions. The 100 bars preserve only the count in each
@@ -561,10 +578,9 @@
     var dsv = distSvg(), hh = etTime(D.generatedAt);
     var stamp = D.generatedAt.toLocaleDateString("en-CA", { timeZone: "America/New_York" }) + " · " + hh;
     var LATEST = latestFeed(), MOVED = movers(), WATCH = watchStatus();
-    var longBars = POSITION_BUCKETS.filter(function (b) { return b.direction === "long"; })
-      .reduce(function (sum, b) { return sum + b.count; }, 0);
-    var shortBars = POSITION_BUCKETS.filter(function (b) { return b.direction === "short"; })
-      .reduce(function (sum, b) { return sum + b.count; }, 0);
+    var longBars = EQUITY_TIERS.reduce(function (sum, b) { return sum + b.long_count; }, 0);
+    var shortBars = EQUITY_TIERS.reduce(function (sum, b) { return sum + b.short_count; }, 0);
+    var flatBars = EQUITY_TIERS.reduce(function (sum, b) { return sum + b.flat_count; }, 0);
 
     el("app").innerHTML =
       '<div class="tape"><div class="tapetrack" id="tt"><div class="thalf">' + tapeHalf() +
@@ -600,21 +616,26 @@
       '<p class="lore"><b>ante signa</b> — “before the standards.” The <em>antesignani</em> were elite legionaries who fought ahead of the line, scouting for what the formation could not yet see.</p>' +
 
       '<div class="hgrid"><div>' +
-      '<div class="signal-label" data-tip="Signum is the normalized aggregate lean of the Hundred, from −1 (fully short) to +1 (fully long)." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
+      '<div class="signal-label" data-tip="SIGNUM weights each market’s net exposure relative to cohort equity by its share of eligible gross exposure. It is not bounded to ±1. The raw perpetual-position formula is unchanged." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
       '<div class="big n" style="' + heatStyle(D.signum) + '">' + sgn(D.signum).replace(MINUS, "-") + "</div>" +
-      '<div class="bmeta"><span class="n">Δ1h ' + oneHourChange() + "</span> · aggregate lean, −1 to +1</div>" +
+      '<div class="bmeta"><span class="n">Δ1h ' + oneHourChange() + "</span> · exposure-weighted lean · unbounded</div>" +
       '<div class="marks">Net exposure <b class="n ' + (D.net < 0 ? "dn" : "up") + '">' + money(D.net) +
       '</b> · updated ' + hh + ' ET<br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
       "</div><div>" +
-      '<div class="lbl" style="margin-bottom:9px"><span data-tip="Every retained Signum observation in the rolling public window, stacked into buckets. The reconstructed portion uses one observation per day; live readings are hourly. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.publicWindowDays + '-day public distribution · today marked</span></div>' +
+      '<div class="lbl" style="margin-bottom:9px"><span data-tip="One recorded reading per Eastern calendar day. No retrospective cohort estimates. Cohort changes remain part of this published record. The white line is now." tabindex="0" role="button" aria-describedby="tip">Recorded daily distribution · ' + D.dailyScores.length + ' days · today marked</span></div>' +
       '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
       '<div class="dcap"><span>Max short ' + D.lo.toFixed(2) + '</span><span class="z" style="left:' + dsv.zpct.toFixed(2) + '%">Neutral</span><span>Max long +' + D.hi.toFixed(2) + "</span></div></div>" +
       '<div class="chips">' +
       '<span class="chip">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
-        "More long than " + (100 - D.shorterThanPct)) + "% of the public window</span>" +
+        "More long than " + (100 - D.shorterThanPct)) + "% of recorded daily samples</span>" +
       (D.daysSinceLong !== null ? '<span class="chip n">Net long last seen <b>' + Math.round(D.daysSinceLong) + "d</b> ago</span>" : "") +
       '<span class="chip"><span data-tip="How many of the tracked markets share the cohort-level lean." tabindex="0" role="button" aria-describedby="tip">Breadth</span> <b>' + D.longMkts + "/" + D.marketsShown + " long</b></span>" +
       '<span class="chip n">Leverage <b>' + D.aggLev.toFixed(2) + "×</b></span></div></div></div>" +
+      '<div class="positioning-context"><div><span class="lbl">Capital</span><b>' + money(D.net) + '</b><span>net perpetual exposure</span></div>' +
+      '<div><span class="lbl">Trader agreement</span><b><span class="up">' + longBars + ' long</span> · <span class="dn">' + shortBars + ' short</span> · ' + flatBars + ' near-flat</b><span>Under $100K net is near-flat; not counted as bullish</span></div>' +
+      '<div><span class="lbl">Cohort &amp; coverage</span><b>' + D.cohortAgeDays + ' days since rebalance · ' + D.wallets + '/' + D.totalWallets + '</b><span>' +
+      (D.cohortAgeDays > 14 ? 'Rebalance overdue; current membership remains live' : 'Accounts resolved this hour; not all hold open exposure') + '</span></div>' +
+      (D.concentration ? '<div><span class="lbl">Concentration</span><b>Top five ≈' + D.concentration.top_five_gross_share_pct_rounded + '% of gross</b><span>' + D.concentration.gross_active_wallets + ' accounts hold at least $250K gross · share rounded to 5 points</span></div>' : '') + '</div>' +
 
       '<div class="cta"><a class="btn b-gold btn-lg" href="#watch">Start the Watch</a>' +
       '<a class="btn b-ghost btn-lg" href="#read">Get the read</a>' +
@@ -629,22 +650,26 @@
 
       '<div class="wrap"><section class="sec" style="border-top:0" id="chartsec">' +
       '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">' +
-      (D.historyReconstructed
+      (chartSource !== "recorded" && D.historyReconstructed
         ? 'Fixed-cohort reconstruction before ' + esc(D.historyEffectiveDate) + ': daily observations, ' +
           D.historyCoverageMin + '–' + D.historyCoverageMax + ' of 100 traders observed; dollar totals scaled to 100 · hourly live thereafter'
-        : 'Hourly snapshots with a rolling ' + D.publicWindowDays + '-day public window') +
+        : 'Recorded observations from the cohort in place at each date · actual time spacing · no retrospective membership rewrite') +
       '</div></div>' +
       '<div class="ctabs"><div class="tabs" id="cmode">' +
-      Object.keys(MODES).map(function (k, i) { return '<button data-c="' + k + '"' + (i === 0 ? ' class="on"' : "") + ">" + MODES[k].label + "</button>"; }).join("") +
+      Object.keys(MODES).map(function (k) { return '<button data-c="' + k + '"' + (k === chartMode ? ' class="on"' : "") + ">" + MODES[k].label + "</button>"; }).join("") +
       '</div><div class="tabs" id="crange">' +
       [30, 60, PUBLIC_HISTORY_DAYS]
         .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
       "</div></div></div>" +
-      '<div id="chart">' + chartSvg() + '</div><div id="clegend">' + chartLegend() + "</div></section></div>" +
+      '<div class="tabs history-source" id="csource"><button data-source="recorded" class="' + (chartSource === "recorded" ? 'on' : '') + '">Recorded history</button><button data-source="reconstructed" class="' + (chartSource === "reconstructed" ? 'on' : '') + '">Reconstruction + live</button></div>' +
+      '<div id="chart" tabindex="0" role="group" aria-label="Inspect chart using pointer or left and right arrow keys">' + chartSvg() + '</div><div id="chart-inspect" class="chart-inspect" aria-live="polite">Hover, tap, or use arrow keys to inspect an observation. Dollar tabs are in millions.</div><div id="clegend">' + chartLegend() + "</div></section></div>" +
 
       '<div class="wrap"><section class="sec"><div class="shead"><h2>What moved</h2>' +
       '<div class="tabs"><button class="on">' + D.windowHours + "H</button></div></div>" +
-      '<div class="ssub">Largest shifts across the Hundred</div><div>' +
+      '<div class="ssub">Net exposure changes across the Hundred. Dollar changes include price moves; they are not evidence of purchases or sales.</div><div>' +
+      (D.movement ? '<div class="callout">Latest ' + D.movement.hours + 'h, same 100 accounts: net quantity changes contributed approximately <b>' + movementMoney(D.movement.quantity_usd_rounded) + '</b>; price marking contributed <b>' + movementMoney(D.movement.price_usd_rounded) + '</b>' +
+        (D.movement.unclassified_usd_rounded ? '; unclassified <b>' + money(D.movement.unclassified_usd_rounded / 1e6) + '</b>' : '') + '. Quantities changed in <b>' + D.movement.changed_accounts + '</b> accounts. Endpoint attribution, rounded to $1M; not a replay of orders or trader intent.</div>' :
+        '<div class="quiet">Quantity-versus-price attribution appears only with two comparable, complete observations and at least three accounts changing quantities.</div>') +
       MOVED.map(function (m) {
         return '<div class="mv"><span class="t">' + esc(m[0]) + '</span><span class="d n ' + (m[1] > 0 ? "up" : "dn") + '">' +
           (m[1] > 0 ? "▲ " : "▼ ") + money(m[1]).replace(/^[+−]/, "") + '</span><span class="c">' + m[2] + "</span></div>";
@@ -674,7 +699,7 @@
       '<button class="on" data-b="position">Position</button><button data-b="equity">Equity</button><button data-b="log">Log</button></div>' +
       '<div id="bars">' + barsSvg() + "</div>" +
       '<div class="bfoot"><span id="bfl">' + D.totalWallets + " anonymous bars ordered by public position band · " + longBars + " long · " + shortBars +
-      ' short</span><span>Aggregate range view</span></div></div></section></div>' +
+      ' short · ' + flatBars + ' near-flat (under $100K net)</span><span>Aggregate range view</span></div></div></section></div>' +
 
       '<div class="wrap"><div class="duo">' +
       '<div><h3>The Ledger</h3><p>Scheduled aggregate positioning snapshots, retained whether the read later looks useful or wrong.</p><a href="/ledger/">Read the Ledger →</a></div>' +
@@ -735,6 +760,33 @@
 
   /* ── 7 · interaction ───────────────────────────────────────────────── */
   function wire() {
+    el("csource").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      chartSource = b.getAttribute("data-source"); derive(); render(); start();
+    });
+    var inspected = SER.rows.length - 1;
+    function inspectChart(index) {
+      var firstVisible = SER.days.findIndex(function (age) { return age <= chartRange; });
+      inspected = Math.max(Math.max(0, firstVisible), Math.min(SER.rows.length - 1, index));
+      var p = SER.rows[inspected], reconstructed = SER.reconstructed[inspected];
+      el("chart-inspect").textContent = new Date(p.timestamp).toLocaleString("en-US", { timeZone: "America/New_York" }) + ' ET · ' +
+        (reconstructed ? 'Reconstructed · ' + p.cohort_num_wallets + '/100 observed · ' : 'Recorded · ') +
+        MODES[chartMode].series.map(function (sp) { return sp[1] + ': ' + SER[sp[0]][inspected].toFixed(chartMode === 'signum' ? 4 : 2) + (chartMode === 'lev' ? '×' : chartMode === 'signum' ? '' : 'M'); }).join(' · ') +
+        ' · cohort ' + (p.cohort_rebalanced_at || 'date unrecorded');
+    }
+    function inspectPointer(e) {
+      var svg = this.querySelector('svg'), box = svg.getBoundingClientRect(), width = svg.viewBox.baseVal.width;
+      var fraction = ((e.clientX - box.left) / box.width * width - 54) / (width - 54);
+      var end = SER.timestamps[SER.timestamps.length - 1], wanted = end - (1 - fraction) * chartRange * 864e5;
+      var nearest = 0;
+      SER.timestamps.forEach(function (time, index) { if (Math.abs(time - wanted) < Math.abs(SER.timestamps[nearest] - wanted)) nearest = index; });
+      inspectChart(nearest);
+    }
+    el("chart").addEventListener("pointermove", inspectPointer);
+    el("chart").addEventListener("pointerdown", inspectPointer);
+    el("chart").addEventListener("keydown", function (e) {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); inspectChart(inspected + (e.key === 'ArrowLeft' ? -1 : 1)); }
+    });
     el("cmode").addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return;
       chartMode = b.getAttribute("data-c");

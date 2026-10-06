@@ -293,4 +293,12 @@ tr:last-child td{border-bottom:0}
 .fnav a{color:var(--ink2)}
 .llc{margin-top:14px;font-size:10.5px;color:var(--ink2)}
 
+.positioning-context{display:grid;grid-template-columns:1fr 1.7fr 1.4fr;gap:18px;margin-top:28px;padding:20px;border:1px solid var(--line);background:var(--panel)}
+.positioning-context>div{display:flex;flex-direction:column;gap:8px;font-size:12px}
+.positioning-context>div>span:last-child{color:var(--ink2);font-size:11px;line-height:1.6}
+.history-source{width:fit-content;margin:12px 0}
+.chart-inspect{min-height:48px;padding:10px 0;color:var(--ink2);font-size:11px;line-height:1.7;font-variant-numeric:tabular-nums}
+#chart svg{width:100%;height:auto;display:block}
+#chart:focus{outline:1px solid var(--gold);outline-offset:4px}
+@media(max-width:700px){.positioning-context{grid-template-columns:1fr}.ctabs{max-width:100%}.ctabs .tabs{flex-wrap:wrap}.history-source button{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

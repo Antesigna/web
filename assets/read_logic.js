@@ -262,7 +262,33 @@
     return Math.round(Math.abs(netMillions) / Math.abs(tilt));
   }
 
+  function isReconstructed(p) {
+    if (!p.cohort_rebalanced_at) return false;
+    var boundary = p.cohort_rebalanced_timestamp || p.cohort_rebalanced_at;
+    var time = typeof boundary === "number" ? boundary * 1000 :
+      Date.parse(boundary.length === 10 ? boundary + "T00:00:00-04:00" : boundary);
+    return Date.parse(p.timestamp) < time;
+  }
+  function recordedHistory(history) {
+    return (history.recorded || history.hourly.filter(function (p) { return !isReconstructed(p); })).slice()
+      .sort(function (a, b) { return Date.parse(a.timestamp) - Date.parse(b.timestamp); });
+  }
+  function dailyScores(rows) {
+    var days = {};
+    rows.forEach(function (p) {
+      var day = new Date(p.timestamp).toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+      if (!days[day] || Date.parse(p.timestamp) > Date.parse(days[day].timestamp)) days[day] = p;
+    });
+    return Object.keys(days).map(function (d) { return days[d].index_score; });
+  }
+  function timeFraction(time, start, end) {
+    return end === start ? 1 : Math.max(0, Math.min(1, (time - start) / (end - start)));
+  }
   return {
+    isReconstructed: isReconstructed,
+    recordedHistory: recordedHistory,
+    dailyScores: dailyScores,
+    timeFraction: timeFraction,
     FLAT_LIMIT: FLAT_LIMIT,
     DEFAULT_BOARD_SORT: DEFAULT_BOARD_SORT,
     regime: regime,

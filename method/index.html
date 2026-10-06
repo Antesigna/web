@@ -42,20 +42,22 @@
       <h2>2. Tracker integrity</h2>
       <p>The Hundred are reconsidered weekly and must pass automated checks for data sufficiency, set stability, structural integrity, and aggregate sanity. If a proposed refresh fails those controls, the previous accepted set remains live.</p>
       <p>Accepted changes are deployed atomically. Movement comparisons are clamped at a cohort change, so selection turnover is not presented as trader activity.</p>
+      <p>Proposals currently require operator approval. An overdue proposal does not stop hourly measurement of the existing set. The dashboard shows membership age and resolved-account coverage separately.</p>
+      <p>The chart defaults to recorded observations using the membership in place at each date. The alternate reconstruction view estimates past positioning of a later-selected cohort, with partial coverage and daily sampling; it is not a record of signals available then. Dollar totals in that reconstruction are scaled estimates. Neither view rewrites the scheduled Ledger. Rarity statistics use one recorded reading per Eastern calendar day, not a mixture of daily and hourly samples.</p>
     </section>
 
     <section class="page-section">
       <h2>3. Metric definitions</h2>
       <p>These measures answer different questions. They are meant to be read together; none is a forecast or a trade instruction.</p>
       <div class="metric-grid">
-        <div class="metric-card"><h3>Signum</h3><p>The primary, normalized read of the Hundred’s aggregate positioning, from −1 to +1. Negative is short-leaning, positive is long-leaning, and values near zero mean overall positioning is closely balanced.</p></div>
+        <div class="metric-card"><h3>Signum</h3><p>The exposure-weighted directional read of the Hundred’s raw perpetual positions. Each market’s net exposure relative to cohort equity is weighted by its share of eligible gross exposure. Negative is short-leaning; positive is long-leaning. It is unbounded, not a −1 to +1 score. A near-zero read can hide disagreement between large books. Spot hedges outside the measured perpetual book are not subtracted from this live formula.</p></div>
         <div class="metric-card"><h3>Net long / short</h3><p>The signed dollar exposure: published long notional less published short notional. It answers “which side has more dollars?” rather than “how balanced is the whole formation?”</p></div>
         <div class="metric-card"><h3>Tilt</h3><p>A market-level measure of directional skew. −100% is wholly short, +100% wholly long, and 0% is balanced. Gross is total long + short notional across the Hundred.</p></div>
         <div class="metric-card"><h3>Conviction</h3><p>The asset’s weighted long-vs-short agreement across the Hundred: +1 is fully long-aligned, −1 fully short-aligned, and 0 balanced.</p></div>
       </div>
       <h3>Why the dashboard can look counterintuitive</h3>
       <ul class="metric-examples">
-        <li><strong>Signum can be near flat while net exposure is large.</strong> Large long and short books can offset one another, leaving a small normalized aggregate lean even when the remaining dollar difference is meaningful.</li>
+        <li><strong>Signum can be near flat while net exposure is large.</strong> Large long and short books can offset one another, leaving a small exposure-weighted lean even when the remaining dollar difference is meaningful. The trader-agreement count treats accounts within ±$100K net as near-flat, not bullish. Concentration shows the largest five books’ combined gross share, coarsely rounded.</li>
         <li><strong>The aggregate can be short while most markets are long.</strong> Breadth counts markets; net exposure measures dollars. A few large short markets can outweigh many smaller long ones.</li>
         <li><strong>BTC can be net long while Signum is flat.</strong> Signum reflects the full tracked formation, not a vote on one asset. A notable market move can be offset elsewhere on the Board.</li>
       </ul>
@@ -64,6 +66,7 @@
     <section class="page-section">
       <h2>4. Cadence and alerts</h2>
       <p>The public dashboard refreshes hourly. The free Telegram feed publishes scheduled reads. The Watch evaluates the complete tracked market universe after each successful refresh and contacts subscribers only when an aggregate regime, net exposure, tilt, or conviction change clears its materiality threshold.</p>
+      <p>Watch comparisons include the prior observation, last delivered alert, and available 6/24-hour baselines. Regime alerts use a buffer and minimum dwell to reduce boundary whipsaw. Dollar exposure changes include price marking; they should not be interpreted as purchases or sales without quantity evidence.</p>
       <p><a href="/ledger/">The Ledger</a> records scheduled aggregate snapshots. The Watch delivers material alerts directly to subscribers.</p>
     </section>
 
