@@ -1,62 +1,54 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T18:14:01-04:00",
+  "generated_at": "2026-10-06T19:19:38-04:00",
   "privacy": "aggregate_equity_tiers",
   "total_wallets": 100,
   "flat_threshold_usd": 100000,
   "equity_tiers": [
     {
       "label": "< $250K",
-      "wallet_count": 19,
+      "wallet_count": 5,
       "short_count": 1,
       "long_count": 3,
-      "flat_count": 15,
-      "equity_usd_rounded": 1000000
+      "flat_count": 1,
+      "equity_usd_rounded": 900000
     },
     {
       "label": "$250K\u2013$1M",
-      "wallet_count": 19,
-      "short_count": 5,
-      "long_count": 13,
+      "wallet_count": 34,
+      "short_count": 8,
+      "long_count": 25,
       "flat_count": 1,
-      "equity_usd_rounded": 12700000
+      "equity_usd_rounded": 20100000
     },
     {
       "label": "$1M\u2013$5M",
-      "wallet_count": 43,
-      "short_count": 7,
-      "long_count": 36,
+      "wallet_count": 48,
+      "short_count": 5,
+      "long_count": 43,
       "flat_count": 0,
-      "equity_usd_rounded": 98000000
+      "equity_usd_rounded": 126500000
     },
     {
       "label": "$5M\u2013$25M",
-      "wallet_count": 18,
-      "short_count": 6,
-      "long_count": 12,
+      "wallet_count": 13,
+      "short_count": 4,
+      "long_count": 9,
       "flat_count": 0,
-      "equity_usd_rounded": 195000000
+      "equity_usd_rounded": 146000000
     },
     {
       "label": "$25M+",
-      "wallet_count": 1,
-      "short_count": 1,
+      "wallet_count": 0,
+      "short_count": 0,
       "long_count": 0,
       "flat_count": 0,
-      "equity_usd_rounded": 150000000
+      "equity_usd_rounded": 0
     }
   ],
   "disclosure": "Direction counts are aggregated by equity tier. Equity totals are coarsely rounded and no tier row identifies a wallet.",
-  "movement": {
-    "hours": 0.8,
-    "accounts_compared": 100,
-    "changed_accounts": 8,
-    "price_usd_rounded": 0,
-    "quantity_usd_rounded": 3000000,
-    "unclassified_usd_rounded": 0
-  },
   "concentration": {
-    "top_five_gross_share_pct_rounded": 45,
-    "gross_active_wallets": 85
+    "top_five_gross_share_pct_rounded": 35,
+    "gross_active_wallets": 99
   }
 }
