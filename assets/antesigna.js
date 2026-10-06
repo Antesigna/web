@@ -138,7 +138,7 @@
       dailyScores: s,
       cohortAgeDays: Math.max(0, Math.floor((now - Date.parse(idx.cohort_rebalanced_timestamp || idx.cohort_rebalanced_at)) / 864e5)),
       d1h: +(cur - base1.index_score).toFixed(4),
-      d1hAvailable: base1 !== last && base1Age >= 30 * 60000 && base1Age <= 150 * 60000,
+      d1hAvailable: base1 !== last && READ.isHourlyInterval(base1Age),
       d24h: +(cur - base24.index_score).toFixed(4),
       d7d: +(cur - base7.index_score).toFixed(4),
       shorterThanPct: Math.round(100 * s.filter(function (x) { return x > cur; }).length / s.length),

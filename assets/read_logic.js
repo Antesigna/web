@@ -284,7 +284,11 @@
   function timeFraction(time, start, end) {
     return end === start ? 1 : Math.max(0, Math.min(1, (time - start) / (end - start)));
   }
+  function isHourlyInterval(milliseconds) {
+    return milliseconds >= 30 * 60000 && milliseconds <= 90 * 60000;
+  }
   return {
+    isHourlyInterval: isHourlyInterval,
     isReconstructed: isReconstructed,
     recordedHistory: recordedHistory,
     dailyScores: dailyScores,
