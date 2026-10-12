@@ -42,8 +42,9 @@
       <h2>2. Tracker integrity</h2>
       <p>The Hundred are reconsidered weekly and must pass automated checks for data sufficiency, set stability, structural integrity, and aggregate sanity. If a proposed refresh fails those controls, the previous accepted set remains live.</p>
       <p>Accepted changes are deployed atomically. Movement comparisons are clamped at a cohort change, so selection turnover is not presented as trader activity.</p>
-      <p>Proposals currently require operator approval. An overdue proposal does not stop hourly measurement of the existing set. The dashboard shows membership age and resolved-account coverage separately.</p>
+      <p>An in-progress or integrity-held proposal does not stop hourly measurement of the existing set. The dashboard shows membership age and resolved-account coverage separately.</p>
       <p>The chart defaults to recorded observations using the membership in place at each date. The alternate reconstruction view estimates past positioning of a later-selected cohort, with partial coverage and daily sampling; it is not a record of signals available then. Dollar totals in that reconstruction are scaled estimates. Neither view rewrites the scheduled Ledger. Rarity statistics use one recorded reading per Eastern calendar day, not a mixture of daily and hourly samples.</p>
+      <p>Weekly cohort maintenance is automatic when fresh inputs and the approved structural and quality checks pass. Large membership-driven changes are labeled provisional and the previous cohort is observed separately for operator review; they do not wait for immediate approval. Missing or invalid evidence blocks deployment. Any later restoration changes membership going forward, never prior published observations. Membership changes must not be read as trades by an unchanged group.</p>
     </section>
 
     <section class="page-section">

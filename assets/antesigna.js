@@ -37,6 +37,7 @@
   function B(x) { return "<b>" + x + "</b>"; }
   function el(id) { return document.getElementById(id); }
   function tstamp(p) { return new Date(p.timestamp).getTime(); }
+  function cohortKey(p) { return p.cohort_rebalanced_timestamp || p.cohort_rebalanced_at; }
   function oneHourChange() { return D.d1hAvailable ? sgn(D.d1h, 4) : "n/a"; }
   function etTime(date, seconds) {
     return date.toLocaleTimeString("en-CA", {
@@ -61,10 +62,12 @@
       fetch("data/history.json" + bust, options).then(okJson),
       fetch("data/proof_ledger.json" + bust, options).then(okJson),
       fetch("data/cohort_profile.json" + bust, options).then(okJson),
-      fetch("data/watch_activity.json" + bust, options).then(okJson)
+      fetch("data/watch_activity.json" + bust, options).then(okJson),
+      fetch("data/cohort_change_latest.json" + bust, options).then(okJson)
     ]).then(function (r) {
       RAW.index = r[0]; RAW.history = r[1]; RAW.ledger = r[2];
       RAW.profile = r[3]; RAW.watch = r[4];
+      RAW.cohort = r[5];
       derive();
       render();
       start();
@@ -117,7 +120,7 @@
        the window to the current cohort's lifetime. Silent by design. */
     var curCohort = H[H.length - 1].cohort_rebalanced_at, rotIdx = -1;
     for (i = H.length - 1; i > 0; i--) {
-      if (H[i].cohort_rebalanced_at !== H[i - 1].cohort_rebalanced_at) { rotIdx = i; break; }
+      if (cohortKey(H[i]) !== cohortKey(H[i - 1])) { rotIdx = i; break; }
     }
     function isReconstructedPoint(p) {
       return READ.isReconstructed(p);
@@ -410,7 +413,7 @@
         var recon = SER.reconstructed[n], group = recon ? 1 : 0, prev = idx[j - 1];
         var gap = !j || recon !== SER.reconstructed[prev] ||
           SER.timestamps[n] - SER.timestamps[prev] > (recon ? 36 : 2.1) * 36e5 ||
-          SER.rows[n].cohort_rebalanced_at !== SER.rows[prev].cohort_rebalanced_at;
+          cohortKey(SER.rows[n]) !== cohortKey(SER.rows[prev]);
         paths[group] += (gap ? " M" : " L") + X(j).toFixed(1) + "," + Y(SER[key][n]).toFixed(1);
       });
       paths.forEach(function (d, group) {
@@ -431,7 +434,7 @@
     });
     idx.forEach(function (n, j) {
       var prev = idx[j - 1];
-      if (j && SER.rows[n].cohort_rebalanced_at !== SER.rows[prev].cohort_rebalanced_at) {
+      if (j && cohortKey(SER.rows[n]) !== cohortKey(SER.rows[prev])) {
         s += '<path d="M' + X(j).toFixed(1) + ',16 V254" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"/>';
       }
     });
@@ -664,6 +667,9 @@
       '<div><div class="v n">' + D.publicWindowDays + ' d</div><div class="k">rolling public history</div></div></div>' +
 
       '<div class="wrap"><section class="sec" style="border-top:0" id="chartsec">' +
+      (RAW.cohort && RAW.cohort.status === "provisional" ? '<div class="callout"><b>Provisional rebalance active.</b> A large, data-validated membership change was applied automatically. The pre-change cohort is tracked separately for review. Cohort changes are not trader activity; recorded history is preserved. The chart shows the latest successful hourly observation.</div>' :
+        RAW.cohort && RAW.cohort.status === "restored" ? '<div class="callout"><b>Previous membership restored.</b> Restoration applies going forward. Earlier published observations remain unchanged.</div>' :
+        RAW.cohort && RAW.cohort.status === "deployed_auto" ? '<div class="quiet">Automatic weekly cohort maintenance · data and quality gates enforced · recorded history preserved</div>' : '') +
       '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">' +
       (chartSource !== "recorded" && D.historyReconstructed
         ? 'Fixed-cohort reconstruction before ' + esc(D.historyEffectiveDate) + ': daily observations, ' +
