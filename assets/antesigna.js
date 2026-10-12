@@ -17,7 +17,8 @@
   var CFG = window.ANTESIGNA_CONFIG || {};
   var READ = window.ANTESIGNA_READ_LOGIC;
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var timers = [];
+  var timers = [], refreshing = false;
+  var REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 
   /* ── 0 · small helpers ─────────────────────────────────────────────── */
   var MINUS = "−", ARR = "→", STALE_MINUTES = 90, PUBLIC_HISTORY_DAYS = 90;
@@ -49,26 +50,40 @@
 
   /* ── 1 · load ──────────────────────────────────────────────────────── */
   function boot() {
-    var bust = "?v=" + Math.floor(Date.now() / 3600000);
+    if (refreshing) return;
+    refreshing = true;
+    var controller = new AbortController();
+    var timeout = setTimeout(function () { controller.abort(); }, 20000);
+    var options = { cache: "no-cache", signal: controller.signal };
+    var bust = "?v=" + Math.floor(Date.now() / REFRESH_INTERVAL_MS);
     Promise.all([
-      fetch("data/index_latest.json" + bust).then(okJson),
-      fetch("data/history.json" + bust).then(okJson),
-      fetch("data/proof_ledger.json" + bust).then(okJson),
-      fetch("data/cohort_profile.json" + bust).then(okJson),
-      fetch("data/watch_activity.json" + bust).then(okJson)
+      fetch("data/index_latest.json" + bust, options).then(okJson),
+      fetch("data/history.json" + bust, options).then(okJson),
+      fetch("data/proof_ledger.json" + bust, options).then(okJson),
+      fetch("data/cohort_profile.json" + bust, options).then(okJson),
+      fetch("data/watch_activity.json" + bust, options).then(okJson)
     ]).then(function (r) {
       RAW.index = r[0]; RAW.history = r[1]; RAW.ledger = r[2];
       RAW.profile = r[3]; RAW.watch = r[4];
       derive();
       render();
       start();
-    }).catch(fail);
+    }).catch(function (error) {
+      controller.abort();
+      fail(error);
+    }).finally(function () {
+      clearTimeout(timeout);
+      refreshing = false;
+    });
   }
   function okJson(r) {
     if (!r.ok) throw new Error(r.status + " " + r.statusText);
     return r.json();
   }
   function fail(e) {
+    // Keep the last successful read visible during a temporary network error.
+    // The independent poll and reconnect handlers will retry automatically.
+    if (RAW.index) return;
     var m = el("app");
     m.innerHTML = '<div class="boot err">Could not load the read.<br>' + esc(e.message) +
       '<br><button class="again" id="retry">Try again</button></div>';
@@ -895,10 +910,8 @@
     }
     if (D.ageMinutes > STALE_MINUTES) {
       cd.textContent = "NEXT —";
-      timers.push(setInterval(boot, 300000));
     } else {
       tick();
-      timers.push(setTimeout(boot, READ.msUntilNextHourlyRefresh(Date.now())));
       if (!reduced) timers.push(setInterval(tick, 1000));
     }
     if (reduced) return;
@@ -912,5 +925,14 @@
 
   }
 
-  document.addEventListener("DOMContentLoaded", boot);
+  document.addEventListener("DOMContentLoaded", function () {
+    // Collection can finish well after :05. Poll throughout the hour, including
+    // after an initial failure, rather than waiting for the next hourly slot.
+    setInterval(boot, REFRESH_INTERVAL_MS);
+    boot();
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") boot();
+  });
+  window.addEventListener("online", boot);
 }());
