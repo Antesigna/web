@@ -384,7 +384,10 @@
     lev: { label: "Leverage", zero: false, series: [["lev", "Gross leverage", "#F2C14E"]] }
   };
   function chartSvg() {
-    var M = MODES[chartMode], W = Math.max(340, Math.min(1120, window.innerWidth - 52)), H = 280, PL = 54, PT = 20, PB = 26, i, k;
+    // Size to the chart column, not the viewport, so labels remain readable.
+    // wire() redraws after mounting; later tab changes use the measured width.
+    var host = el("chart"), measured = host && host.getBoundingClientRect().width;
+    var M = MODES[chartMode], W = Math.max(280, measured || Math.min(1128, window.innerWidth - 52)), H = 240, PL = 54, PT = 20, PB = 26, i, k;
     var idx = [];
     for (i = 0; i < SER.days.length; i++) if (SER.days[i] <= chartRange) idx.push(i);
     if (idx.length < 2) idx = SER.days.map(function (_, i) { return i; });
@@ -435,7 +438,7 @@
     idx.forEach(function (n, j) {
       var prev = idx[j - 1];
       if (j && cohortKey(SER.rows[n]) !== cohortKey(SER.rows[prev])) {
-        s += '<path d="M' + X(j).toFixed(1) + ',16 V254" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"/>';
+        s += '<path d="M' + X(j).toFixed(1) + ',16 V' + (H - PB) + '" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"/>';
       }
     });
     return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days. True elapsed time; gaps are not interpolated.">' + s + "</svg>";
@@ -446,6 +449,27 @@
       return '<span><i style="background:' + (s[2] || "var(--ink2)") + '"></i>' + s[1] + "</span>";
     }).join("") + '<span>Gold dashes: cohort change · line breaks: missing observations</span>' +
       (chartSource === "recorded" ? '' : '<span>Dashed series: retrospective estimates, not published signals</span>') + "</div>";
+  }
+
+  function positioningChart() {
+    return '<section class="positioning-chart" id="chartsec" aria-labelledby="positioning-title">' +
+      '<div class="shead"><h2 id="positioning-title">The Hundred: positioning</h2>' +
+      (RAW.cohort && RAW.cohort.status === "provisional" ? '<a class="chart-state" href="#cohort-notice">Provisional cohort ↓</a>' :
+        RAW.cohort && RAW.cohort.status === "restored" ? '<a class="chart-state" href="#cohort-notice">Membership restored ↓</a>' : '') + '</div>' +
+      '<div class="ctabs"><div class="tabs" id="cmode" aria-label="Chart metric">' +
+      Object.keys(MODES).map(function (k) { return '<button data-c="' + k + '"' + (k === chartMode ? ' class="on"' : "") + ">" + MODES[k].label + "</button>"; }).join("") +
+      '</div><div class="tabs" id="crange" aria-label="Chart time range">' +
+      [30, 60, PUBLIC_HISTORY_DAYS]
+        .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
+      '</div></div>' +
+      '<div class="tabs history-source" id="csource"><button data-source="recorded" class="' + (chartSource === "recorded" ? 'on' : '') + '">Recorded history</button><button data-source="reconstructed" class="' + (chartSource === "reconstructed" ? 'on' : '') + '">Reconstruction + live</button></div>' +
+      '<div id="chart" tabindex="0" role="group" aria-label="Inspect chart using pointer or left and right arrow keys">' + chartSvg() + '</div><div id="chart-inspect" class="chart-inspect" aria-live="polite">Hover, tap, or use arrow keys to inspect an observation. Dollar tabs are in millions.</div><div id="clegend">' + chartLegend() + '</div>' +
+      '<p class="ssub chart-provenance">' +
+      (chartSource !== "recorded" && D.historyReconstructed
+        ? 'Fixed-cohort reconstruction before ' + esc(D.historyEffectiveDate) + ': daily observations, ' +
+          D.historyCoverageMin + '–' + D.historyCoverageMax + ' of 100 traders observed; dollar totals scaled to 100 · hourly live thereafter'
+        : 'Recorded observations from the cohort in place at each date · actual time spacing · no retrospective membership rewrite') +
+      '</p></section>';
   }
 
   /* Privacy-safe distributions. The 100 bars preserve only the count in each
@@ -623,32 +647,24 @@
         : "") +
 
       '<div class="wrap"><section class="hero"><div class="eyeb">' +
-      '<span class="id">Live positioning of 100 screened Hyperliquid traders</span><span class="n">' + stamp + " ET</span></div>" +
-      '<h1 class="product-title">Antesigna — live positioning of 100 screened Hyperliquid traders</h1>' +
+      '<h1 class="id">Live positioning of 100 screened Hyperliquid traders</h1><span class="n">' + stamp + " ET</span></div>" +
+      '<div class="hgrid"><div class="signal-summary">' +
+      '<div class="signal-label" data-tip="SIGNUM weights each market’s net exposure relative to cohort equity by its share of eligible gross exposure. It is not bounded to ±1. The raw perpetual-position formula is unchanged." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
+      '<div class="big n" style="' + heatStyle(D.signum) + '">' + sgn(D.signum).replace(MINUS, "-") + "</div>" +
+      '<div class="bmeta"><span class="n">Δ1h ' + oneHourChange() + "</span> · exposure-weighted lean · unbounded</div>" +
+      '<div class="marks">Net exposure <b class="n ' + (D.net < 0 ? "dn" : "up") + '">' + money(D.net) +
+      '</b> · updated ' + hh + ' ET<br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
       '<h2 class="headline">' + esc(headline()) + "</h2>" +
       '<p class="sub"><b>' + esc(D.lead.detail) + '</b> Across the full board, the Hundred are net <b class="n">' +
       money(D.net) + "</b>, with <b>" + D.grossShortPct + "%</b> of gross exposure short, " +
       (D.longMkts > D.shortMkts ? "yet <b>long in " + D.longMkts + " of " + D.marketsShown + "</b> markets" :
         "and <b>short in " + D.shortMkts + " of " + D.marketsShown + "</b> markets") +
       '. <a href="/method/">Method →</a></p>' +
-      '<p class="lore"><b>ante signa</b> — “before the standards.” The <em>antesignani</em> were elite legionaries who fought ahead of the line, scouting for what the formation could not yet see.</p>' +
-
-      '<div class="hgrid"><div>' +
-      '<div class="signal-label" data-tip="SIGNUM weights each market’s net exposure relative to cohort equity by its share of eligible gross exposure. It is not bounded to ±1. The raw perpetual-position formula is unchanged." tabindex="0" role="button" aria-describedby="tip">SIGNUM</div>' +
-      '<div class="big n" style="' + heatStyle(D.signum) + '">' + sgn(D.signum).replace(MINUS, "-") + "</div>" +
-      '<div class="bmeta"><span class="n">Δ1h ' + oneHourChange() + "</span> · exposure-weighted lean · unbounded</div>" +
-      '<div class="marks">Net exposure <b class="n ' + (D.net < 0 ? "dn" : "up") + '">' + money(D.net) +
-      '</b> · updated ' + hh + ' ET<br><span class="mut">aggregate positions · refreshed hourly</span></div>' +
-      "</div><div>" +
-      '<div class="lbl" style="margin-bottom:9px"><span data-tip="One recorded reading per Eastern calendar day. No retrospective cohort estimates. Cohort changes remain part of this published record. The white line is now." tabindex="0" role="button" aria-describedby="tip">Recorded daily distribution · ' + D.dailyScores.length + ' days · today marked</span></div>' +
-      '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
-      '<div class="dcap"><span>Max short ' + D.lo.toFixed(2) + '</span><span class="z" style="left:' + dsv.zpct.toFixed(2) + '%">Neutral</span><span>Max long +' + D.hi.toFixed(2) + "</span></div></div>" +
-      '<div class="chips">' +
-      '<span class="chip">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
-        "More long than " + (100 - D.shorterThanPct)) + "% of recorded daily samples</span>" +
-      (D.daysSinceLong !== null ? '<span class="chip n">Net long last seen <b>' + Math.round(D.daysSinceLong) + "d</b> ago</span>" : "") +
-      '<span class="chip"><span data-tip="How many of the tracked markets share the cohort-level lean." tabindex="0" role="button" aria-describedby="tip">Breadth</span> <b>' + D.longMkts + "/" + D.marketsShown + " long</b></span>" +
-      '<span class="chip n">Leverage <b>' + D.aggLev.toFixed(2) + "×</b></span></div></div></div>" +
+      '<div class="trust">Positioning only, never advice · Hourly, not real-time</div>' +
+      '</div>' + positioningChart() + '</div>' +
+      (RAW.cohort && RAW.cohort.status === "provisional" ? '<div class="callout" id="cohort-notice"><b>Provisional rebalance active.</b> A large, data-validated membership change was applied automatically. The pre-change cohort is tracked separately for review. Cohort changes are not trader activity; recorded history is preserved. The chart shows the latest successful hourly observation.</div>' :
+        RAW.cohort && RAW.cohort.status === "restored" ? '<div class="callout" id="cohort-notice"><b>Previous membership restored.</b> Restoration applies going forward. Earlier published observations remain unchanged.</div>' :
+        RAW.cohort && RAW.cohort.status === "deployed_auto" ? '<div class="quiet">Automatic weekly cohort maintenance · data and quality gates enforced · recorded history preserved</div>' : '') +
       '<div class="positioning-context"><div><span class="lbl">Capital</span><b>' + money(D.net) + '</b><span>net perpetual exposure</span></div>' +
       '<div><span class="lbl">Trader agreement</span><b><span class="up">' + longBars + ' long</span> · <span class="dn">' + shortBars + ' short</span> · ' + flatBars + ' near-flat</b><span>Under $100K net is near-flat; not counted as bullish</span></div>' +
       '<div><span class="lbl">Cohort &amp; coverage</span><b>' + D.cohortAgeDays + ' days since rebalance · ' + D.wallets + '/' + D.totalWallets + '</b><span>' +
@@ -657,8 +673,7 @@
 
       '<div class="cta"><a class="btn b-gold btn-lg" href="#watch">Start the Watch</a>' +
       '<a class="btn b-ghost btn-lg" href="#read">Get the read</a>' +
-      '<span class="ctan">Free, twice daily. No wallet connection.</span></div>' +
-      '<div class="trust">Positioning only, never advice · Hourly, not real-time</div></section></div>' +
+      '<span class="ctan">Free, twice daily. No wallet connection.</span></div></section></div>' +
 
       '<div class="strip">' +
       '<div><div class="v n">' + D.trackedHours.toLocaleString("en-US") + '</div><div class="k">hours tracked since Jan 17, 2026</div></div>' +
@@ -666,24 +681,17 @@
       '<div><div class="v n">' + D.marketsShown + '</div><div class="k">markets currently held</div></div>' +
       '<div><div class="v n">' + D.publicWindowDays + ' d</div><div class="k">rolling public history</div></div></div>' +
 
-      '<div class="wrap"><section class="sec" style="border-top:0" id="chartsec">' +
-      (RAW.cohort && RAW.cohort.status === "provisional" ? '<div class="callout"><b>Provisional rebalance active.</b> A large, data-validated membership change was applied automatically. The pre-change cohort is tracked separately for review. Cohort changes are not trader activity; recorded history is preserved. The chart shows the latest successful hourly observation.</div>' :
-        RAW.cohort && RAW.cohort.status === "restored" ? '<div class="callout"><b>Previous membership restored.</b> Restoration applies going forward. Earlier published observations remain unchanged.</div>' :
-        RAW.cohort && RAW.cohort.status === "deployed_auto" ? '<div class="quiet">Automatic weekly cohort maintenance · data and quality gates enforced · recorded history preserved</div>' : '') +
-      '<div class="shead"><div><h2>The Hundred: positioning</h2><div class="ssub" style="margin-bottom:0">' +
-      (chartSource !== "recorded" && D.historyReconstructed
-        ? 'Fixed-cohort reconstruction before ' + esc(D.historyEffectiveDate) + ': daily observations, ' +
-          D.historyCoverageMin + '–' + D.historyCoverageMax + ' of 100 traders observed; dollar totals scaled to 100 · hourly live thereafter'
-        : 'Recorded observations from the cohort in place at each date · actual time spacing · no retrospective membership rewrite') +
-      '</div></div>' +
-      '<div class="ctabs"><div class="tabs" id="cmode">' +
-      Object.keys(MODES).map(function (k) { return '<button data-c="' + k + '"' + (k === chartMode ? ' class="on"' : "") + ">" + MODES[k].label + "</button>"; }).join("") +
-      '</div><div class="tabs" id="crange">' +
-      [30, 60, PUBLIC_HISTORY_DAYS]
-        .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
-      "</div></div></div>" +
-      '<div class="tabs history-source" id="csource"><button data-source="recorded" class="' + (chartSource === "recorded" ? 'on' : '') + '">Recorded history</button><button data-source="reconstructed" class="' + (chartSource === "reconstructed" ? 'on' : '') + '">Reconstruction + live</button></div>' +
-      '<div id="chart" tabindex="0" role="group" aria-label="Inspect chart using pointer or left and right arrow keys">' + chartSvg() + '</div><div id="chart-inspect" class="chart-inspect" aria-live="polite">Hover, tap, or use arrow keys to inspect an observation. Dollar tabs are in millions.</div><div id="clegend">' + chartLegend() + "</div></section></div>" +
+      '<div class="wrap"><section class="sec distribution-section" id="distribution" aria-labelledby="distribution-title">' +
+      '<div class="shead"><h2 id="distribution-title">Recorded daily distribution</h2></div>' +
+      '<div class="ssub"><span data-tip="One recorded reading per Eastern calendar day. No retrospective cohort estimates. Cohort changes remain part of this published record. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.dailyScores.length + ' days · today marked · one recorded reading per day</span></div>' +
+      '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
+      '<div class="dcap"><span>Max short ' + D.lo.toFixed(2) + '</span><span class="z" style="left:' + dsv.zpct.toFixed(2) + '%">Neutral</span><span>Max long +' + D.hi.toFixed(2) + "</span></div></div>" +
+      '<div class="chips">' +
+      '<span class="chip">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
+        "More long than " + (100 - D.shorterThanPct)) + "% of recorded daily samples</span>" +
+      (D.daysSinceLong !== null ? '<span class="chip n">Net long last seen <b>' + Math.round(D.daysSinceLong) + "d</b> ago</span>" : "") +
+      '<span class="chip"><span data-tip="How many of the tracked markets share the cohort-level lean." tabindex="0" role="button" aria-describedby="tip">Breadth</span> <b>' + D.longMkts + "/" + D.marketsShown + " long</b></span>" +
+      '<span class="chip n">Leverage <b>' + D.aggLev.toFixed(2) + "×</b></span></div></section></div>" +
 
       '<div class="wrap"><section class="sec"><div class="shead"><h2>What moved</h2>' +
       '<div class="tabs"><button class="on">' + D.windowHours + "H</button></div></div>" +
@@ -781,6 +789,7 @@
 
   /* ── 7 · interaction ───────────────────────────────────────────────── */
   function wire() {
+    el("chart").innerHTML = chartSvg();
     el("csource").addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return;
       chartSource = b.getAttribute("data-source"); derive(); render(); start();
@@ -941,4 +950,7 @@
     if (document.visibilityState === "visible") boot();
   });
   window.addEventListener("online", boot);
+  window.addEventListener("resize", function () {
+    if (el("chart") && SER) el("chart").innerHTML = chartSvg();
+  });
 }());
