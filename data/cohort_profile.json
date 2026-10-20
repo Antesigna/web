@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-19T20:01:34-04:00",
+  "generated_at": "2026-10-19T21:01:45-04:00",
   "privacy": "aggregate_equity_tiers",
   "total_wallets": 100,
   "flat_threshold_usd": 100000,
@@ -11,23 +11,23 @@
       "short_count": 2,
       "long_count": 6,
       "flat_count": 2,
-      "equity_usd_rounded": 1300000
+      "equity_usd_rounded": 1200000
     },
     {
       "label": "$250K\u2013$1M",
-      "wallet_count": 44,
+      "wallet_count": 45,
       "short_count": 15,
-      "long_count": 29,
+      "long_count": 30,
       "flat_count": 0,
-      "equity_usd_rounded": 23000000
+      "equity_usd_rounded": 23700000
     },
     {
       "label": "$1M\u2013$5M",
-      "wallet_count": 39,
+      "wallet_count": 38,
       "short_count": 5,
-      "long_count": 34,
+      "long_count": 33,
       "flat_count": 0,
-      "equity_usd_rounded": 93000000
+      "equity_usd_rounded": 90500000
     },
     {
       "label": "$5M\u2013$25M",
@@ -47,6 +47,14 @@
     }
   ],
   "disclosure": "Direction counts are aggregated by equity tier. Equity totals are coarsely rounded and no tier row identifies a wallet.",
+  "movement": {
+    "hours": 1.0,
+    "accounts_compared": 100,
+    "changed_accounts": 3,
+    "price_usd_rounded": -2000000,
+    "quantity_usd_rounded": 2000000,
+    "unclassified_usd_rounded": 0
+  },
   "concentration": {
     "top_five_gross_share_pct_rounded": 35,
     "gross_active_wallets": 97
