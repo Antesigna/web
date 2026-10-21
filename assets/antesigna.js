@@ -39,13 +39,18 @@
   function tstamp(p) { return new Date(p.timestamp).getTime(); }
   function cohortKey(p) { return p.cohort_rebalanced_timestamp || p.cohort_rebalanced_at; }
   function oneHourChange() { return D.d1hAvailable ? sgn(D.d1h, 4) : "n/a"; }
-  function etTime(date, seconds) {
+  function etTime(date) {
     return date.toLocaleTimeString("en-CA", {
       timeZone: "America/New_York",
       hour12: false,
       hour: "2-digit",
-      minute: "2-digit",
-      second: seconds ? "2-digit" : undefined
+      minute: "2-digit"
+    });
+  }
+  function chartTime(timestamp) {
+    return new Date(timestamp).toLocaleString("en-US", {
+      timeZone: "America/New_York", year: "numeric", month: "numeric", day: "numeric",
+      hour: "numeric", minute: "2-digit"
     });
   }
 
@@ -118,7 +123,7 @@
     /* If the comparison window crosses a cohort rotation the wallet set differs
        at each end, so a delta would measure the swap rather than trading. Clamp
        the window to the current cohort's lifetime. Silent by design. */
-    var curCohort = H[H.length - 1].cohort_rebalanced_at, rotIdx = -1;
+    var rotIdx = -1;
     for (i = H.length - 1; i > 0; i--) {
       if (cohortKey(H[i]) !== cohortKey(H[i - 1])) { rotIdx = i; break; }
     }
@@ -137,9 +142,7 @@
 
     var base1 = comparable(1 / 24), base24 = comparable(1), base7 = comparable(7), last = H[H.length - 1];
     var base1Age = now - tstamp(base1);
-    var reconstructed = RAW.history.hourly.filter(isReconstructedPoint);
-    var reconstructedCoverage = reconstructed.map(function (p) { return +p.cohort_num_wallets; })
-      .filter(function (n) { return isFinite(n) && n > 0; });
+    var reconstructed = RAW.history.hourly.filter(READ.isSimulatedChartPoint);
     var privateAggregate = idx.assets.filter(function (a) { return a.asset === "OTHER"; })[0];
     ASSETS = idx.assets.filter(function (a) { return a.asset !== "OTHER"; }).map(function (a) {
       var net = +(a.net_usd / 1e6).toFixed(2);
@@ -175,9 +178,6 @@
       historyDays: Math.min(PUBLIC_HISTORY_DAYS, Math.max(1, Math.ceil((now - tstamp(H[0])) / 864e5))),
       publicWindowDays: PUBLIC_HISTORY_DAYS,
       historyReconstructed: reconstructed.length > 0,
-      historyCoverageMin: reconstructedCoverage.length ? Math.min.apply(null, reconstructedCoverage) : null,
-      historyCoverageMax: reconstructedCoverage.length ? Math.max.apply(null, reconstructedCoverage) : null,
-      historyEffectiveDate: curCohort,
       trackedHours: Math.max(0, Math.floor((new Date(idx.generated_at).getTime() - TRACKING_STARTED_AT.getTime()) / 36e5))
     };
 
@@ -214,20 +214,19 @@
     SER = {
       rows: sel,
       timestamps: sel.map(tstamp),
-      reconstructed: sel.map(function (p) { return chartSource !== "recorded" && isReconstructedPoint(p); }),
       t: sel.map(fmtDay),
       days: sel.map(function (p) { return (now - tstamp(p)) / 864e5; }),
-      signum: sel.map(function (p) { return +p.index_score.toFixed(4); }),
-      net: sel.map(function (p) { return +(p.cohort_net_usd / M).toFixed(1); }),
-      gl: sel.map(function (p) { return +(p.gross_long_usd / M).toFixed(1); }),
-      gs: sel.map(function (p) { return -+(p.gross_short_usd / M).toFixed(1); }),
-      expo: sel.map(function (p) { return +((p.gross_long_usd + p.gross_short_usd) / M).toFixed(1); }),
-      btc: sel.map(function (p) { return +(p.btc_net_usd / M).toFixed(1); }),
-      eth: sel.map(function (p) { return +(p.eth_net_usd / M).toFixed(1); }),
-      sol: sel.map(function (p) { return +(p.sol_net_usd / M).toFixed(1); }),
-      hype: sel.map(function (p) { return +(p.hype_net_usd / M).toFixed(1); }),
-      eq: sel.map(function (p) { return +(p.cohort_total_equity / M).toFixed(1); }),
-      lev: sel.map(function (p) { return +p.L_cohort_total.toFixed(2); })
+      signum: sel.map(function (p) { return p.index_score; }),
+      net: sel.map(function (p) { return p.cohort_net_usd / M; }),
+      gl: sel.map(function (p) { return p.gross_long_usd / M; }),
+      gs: sel.map(function (p) { return p.gross_short_usd / M; }),
+      expo: sel.map(function (p) { return (p.gross_long_usd + p.gross_short_usd) / M; }),
+      btc: sel.map(function (p) { return p.btc_net_usd / M; }),
+      eth: sel.map(function (p) { return p.eth_net_usd / M; }),
+      sol: sel.map(function (p) { return p.sol_net_usd / M; }),
+      hype: sel.map(function (p) { return p.hype_net_usd / M; }),
+      eq: sel.map(function (p) { return p.cohort_total_equity / M; }),
+      lev: sel.map(function (p) { return p.L_cohort_total; })
     };
 
     /* movers — the four markets the history file carries per-asset */
@@ -373,7 +372,7 @@
     return { svg: '<svg viewBox="-2 0 ' + (W + 4) + ' 66" shape-rendering="crispEdges" role="img" aria-label="Distribution of retained Signum observations in the rolling ' + D.publicWindowDays + '-day public window, with today marked.">' + out + "</svg>", pct: (mx / W) * 100, zpct: (zx / W) * 100 };
   }
 
-  var chartMode = "signum", chartRange = 30, chartSource = "recorded";
+  var chartMode = "signum", chartRange = 30, chartSource = "reconstructed";
   var MODES = {
     signum: { label: "Signum", zero: true, series: [["signum", "Signum", null]] },
     net: { label: "Net position", zero: true, series: [["net", "Net position", null]] },
@@ -397,7 +396,8 @@
     if (M.zero) { mn = Math.min(mn, 0); mx = Math.max(mx, 0); }
     var pad = (mx - mn) * 0.12 || 1; mn -= pad; mx += pad;
     var end = SER.timestamps[SER.timestamps.length - 1], start = end - chartRange * 864e5;
-    var X = function (j) { return PL + READ.timeFraction(SER.timestamps[idx[j]], start, end) * (W - PL); };
+    var Xtime = function (time) { return PL + READ.timeFraction(time, start, end) * (W - PL); };
+    var X = function (j) { return Xtime(SER.timestamps[idx[j]]); };
     var Y = function (v) { return PT + (1 - (v - mn) / (mx - mn)) * (H - PT - PB); };
     var s = "", z = Y(0);
 
@@ -411,35 +411,33 @@
       s += '<rect x="' + PL + '" y="' + (z - 0.5).toFixed(1) + '" width="' + (W - PL) + '" height="1" fill="var(--ink2)" fill-opacity=".5"/>';
 
     M.series.forEach(function (sp, si) {
-      var key = sp[0], col = sp[2], paths = ["", ""];
+      var key = sp[0], col = sp[2], d = "", simulated = chartSource !== "recorded";
       idx.forEach(function (n, j) {
-        var recon = SER.reconstructed[n], group = recon ? 1 : 0, prev = idx[j - 1];
-        var gap = !j || recon !== SER.reconstructed[prev] ||
-          SER.timestamps[n] - SER.timestamps[prev] > (recon ? 36 : 2.1) * 36e5 ||
-          cohortKey(SER.rows[n]) !== cohortKey(SER.rows[prev]);
-        paths[group] += (gap ? " M" : " L") + X(j).toFixed(1) + "," + Y(SER[key][n]).toFixed(1);
+        var prev = idx[j - 1];
+        var gap = !j || SER.timestamps[n] - SER.timestamps[prev] > 2.1 * 36e5 ||
+          READ.chartCohortKey(SER.rows[n], simulated) !== READ.chartCohortKey(SER.rows[prev], simulated);
+        d += (gap ? " M" : " L") + X(j).toFixed(1) + "," + Y(SER[key][n]).toFixed(1);
       });
-      paths.forEach(function (d, group) {
-        if (!d) return;
-        var style = group ? ' stroke-dasharray="5 4" opacity=".65"' : '';
-        if (col === null) {
-          s += '<defs><clipPath id="a' + si + group + '"><rect x="' + PL + '" y="0" width="' + (W - PL) + '" height="' + Math.max(0, z) + '"/></clipPath>' +
-            '<clipPath id="b' + si + group + '"><rect x="' + PL + '" y="' + z + '" width="' + (W - PL) + '" height="' + Math.max(0, H - z) + '"/></clipPath></defs>';
-          s += '<path d="' + d + '" fill="none" stroke="var(--long)" stroke-width="1.7"' + style + ' clip-path="url(#a' + si + group + ')"/>';
-          s += '<path d="' + d + '" fill="none" stroke="var(--short)" stroke-width="1.7"' + style + ' clip-path="url(#b' + si + group + ')"/>';
-        } else s += '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="1.7"' + style + '/>';
-      });
+      if (col === null) {
+        s += '<defs><clipPath id="a' + si + '"><rect x="' + PL + '" y="0" width="' + (W - PL) + '" height="' + Math.max(0, z) + '"/></clipPath>' +
+          '<clipPath id="b' + si + '"><rect x="' + PL + '" y="' + z + '" width="' + (W - PL) + '" height="' + Math.max(0, H - z) + '"/></clipPath></defs>';
+        s += '<path d="' + d + '" fill="none" stroke="var(--long)" stroke-width="1.7" clip-path="url(#a' + si + ')"/>';
+        s += '<path d="' + d + '" fill="none" stroke="var(--short)" stroke-width="1.7" clip-path="url(#b' + si + ')"/>';
+      } else s += '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="1.7"/>';
     });
     [0, 1/3, 2/3, 1].forEach(function (fraction, n) {
       var label = new Date(start + fraction * (end - start)).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
       s += '<text x="' + (PL + fraction * (W - PL)).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="' + (n === 0 ? "start" : n === 3 ? "end" : "middle") +
         '" fill="#6C7488" font-size="10" font-family="JetBrains Mono">' + label + "</text>";
     });
-    idx.forEach(function (n, j) {
-      var prev = idx[j - 1];
-      if (j && cohortKey(SER.rows[n]) !== cohortKey(SER.rows[prev])) {
-        s += '<path d="M' + X(j).toFixed(1) + ',16 V' + (H - PB) + '" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"/>';
-      }
+    // Rebalances occur between hourly observations. Use the event timestamp,
+    // so markers are not shifted to the first sample collected afterward.
+    READ.chartRebalanceMarkers(SER.rows, chartSource !== "recorded").forEach(function (marker) {
+      if (marker.timestamp < start || marker.timestamp > end) return;
+      s += '<path class="rebalance-marker" data-timestamp="' + marker.timestamp +
+        '" d="M' + Xtime(marker.timestamp).toFixed(1) + ',16 V' + (H - PB) +
+        '" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"><title>Rebalance · ' +
+        esc(chartTime(marker.timestamp)) + ' ET</title></path>';
     });
     return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days. True elapsed time; gaps are not interpolated.">' + s + "</svg>";
   }
@@ -447,8 +445,9 @@
     var M = MODES[chartMode];
     return '<div class="clegend">' + M.series.map(function (s) {
       return '<span><i style="background:' + (s[2] || "var(--ink2)") + '"></i>' + s[1] + "</span>";
-    }).join("") + '<span>Gold dashes: cohort change · line breaks: missing observations</span>' +
-      (chartSource === "recorded" ? '' : '<span>Dashed series: retrospective estimates, not published signals</span>') + "</div>";
+    }).join("") + '<span>Gold dashes: rebalance</span>' +
+      (chartSource !== "recorded" && D.historyReconstructed
+        ? '<span><a href="/method/#chart-history">Reconstruction before Oct 6, 7:19 PM ET</a></span>' : '') + "</div>";
   }
 
   function positioningChart() {
@@ -462,14 +461,9 @@
       [30, 60, PUBLIC_HISTORY_DAYS]
         .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
       '</div></div>' +
-      '<div class="tabs history-source" id="csource"><button data-source="recorded" class="' + (chartSource === "recorded" ? 'on' : '') + '">Recorded history</button><button data-source="reconstructed" class="' + (chartSource === "reconstructed" ? 'on' : '') + '">Reconstruction + live</button></div>' +
+      '<div class="tabs history-source" id="csource"><button data-source="reconstructed" class="' + (chartSource === "reconstructed" ? 'on' : '') + '">Historical reconstruction + live</button><button data-source="recorded" class="' + (chartSource === "recorded" ? 'on' : '') + '">Recorded history</button></div>' +
       '<div id="chart" tabindex="0" role="group" aria-label="Inspect chart using pointer or left and right arrow keys">' + chartSvg() + '</div><div id="chart-inspect" class="chart-inspect" aria-live="polite">Hover, tap, or use arrow keys to inspect an observation. Dollar tabs are in millions.</div><div id="clegend">' + chartLegend() + '</div>' +
-      '<p class="ssub chart-provenance">' +
-      (chartSource !== "recorded" && D.historyReconstructed
-        ? 'Fixed-cohort reconstruction before ' + esc(D.historyEffectiveDate) + ': daily observations, ' +
-          D.historyCoverageMin + '–' + D.historyCoverageMax + ' of 100 traders observed; dollar totals scaled to 100 · hourly live thereafter'
-        : 'Recorded observations from the cohort in place at each date · actual time spacing · no retrospective membership rewrite') +
-      '</p></section>';
+      '</section>';
   }
 
   /* Privacy-safe distributions. The 100 bars preserve only the count in each
@@ -782,7 +776,7 @@
 
     document.body.classList.toggle("run", !reduced);
     el("app").setAttribute("aria-busy", "false");
-    el("wire").innerHTML = etTime(D.generatedAt, true) + " ET · " + D.wallets + "/" + D.totalWallets +
+    el("wire").innerHTML = etTime(D.generatedAt) + " ET · " + D.wallets + "/" + D.totalWallets +
       " resolved · SIGNUM " + sgn(D.signum, 4) + " · Δ1h " + oneHourChange() + ' <span class="cur"></span>';
     wire();
   }
@@ -798,9 +792,8 @@
     function inspectChart(index) {
       var firstVisible = SER.days.findIndex(function (age) { return age <= chartRange; });
       inspected = Math.max(Math.max(0, firstVisible), Math.min(SER.rows.length - 1, index));
-      var p = SER.rows[inspected], reconstructed = SER.reconstructed[inspected];
-      el("chart-inspect").textContent = new Date(p.timestamp).toLocaleString("en-US", { timeZone: "America/New_York" }) + ' ET · ' +
-        (reconstructed ? 'Reconstructed · ' + p.cohort_num_wallets + '/100 observed · ' : 'Recorded · ') +
+      var p = SER.rows[inspected];
+      el("chart-inspect").textContent = chartTime(p.timestamp) + ' ET · ' +
         MODES[chartMode].series.map(function (sp) { return sp[1] + ': ' + SER[sp[0]][inspected].toFixed(chartMode === 'signum' ? 4 : 2) + (chartMode === 'lev' ? '×' : chartMode === 'signum' ? '' : 'M'); }).join(' · ') +
         ' · cohort ' + (p.cohort_rebalanced_at || 'date unrecorded');
     }

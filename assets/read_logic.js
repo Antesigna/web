@@ -12,6 +12,7 @@
   var FLAT_LIMIT = 0.05;
   var MAJORS = ["BTC", "ETH", "HYPE", "SOL"];
   var DEFAULT_BOARD_SORT = { key: 5, direction: -1 };
+  var SIMULATION_CUTOFF = "2026-10-06T19:19:38-04:00";
 
   function regime(value) {
     if (value > FLAT_LIMIT) return "long";
@@ -273,6 +274,51 @@
     return (history.recorded || history.hourly.filter(function (p) { return !isReconstructed(p); })).slice()
       .sort(function (a, b) { return Date.parse(a.timestamp) - Date.parse(b.timestamp); });
   }
+  /* Chart-only provenance: do not use the private preview cutoff to select
+     the recorded observations used by live statistics. */
+  function isSimulatedChartPoint(p) {
+    return Date.parse(p.timestamp) < Date.parse(SIMULATION_CUTOFF);
+  }
+  function chartCohortKey(p, simulated) {
+    if (simulated && p.cohort_rebalanced_at) {
+      /* Only the approved October 5/6 handoff shares a key with live data.
+         Later real activations keep their precise keys, even on one date. */
+      var beforeCutoff = isSimulatedChartPoint(p);
+      var activation = exactRebalanceTimestamp(p.cohort_rebalanced_timestamp);
+      var joinedActivation = p.cohort_rebalanced_at === "2026-10-06" &&
+        isFinite(activation) && activation < Date.parse(SIMULATION_CUTOFF);
+      if (joinedActivation || (beforeCutoff && p.cohort_rebalanced_at === "2026-10-06")) return "2026-10-05";
+      if (beforeCutoff) return p.cohort_rebalanced_at;
+    }
+    return p.cohort_rebalanced_timestamp !== null &&
+      p.cohort_rebalanced_timestamp !== undefined &&
+      p.cohort_rebalanced_timestamp !== "" ?
+      p.cohort_rebalanced_timestamp : p.cohort_rebalanced_at;
+  }
+  function exactRebalanceTimestamp(boundary) {
+    if (typeof boundary === "number") return isFinite(boundary) ? boundary * 1000 : NaN;
+    /* A cohort date alone cannot establish its activation time. Requiring an
+       explicit offset also keeps marker positions independent of browser TZ. */
+    if (typeof boundary !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?(?:Z|[+-]\d{2}:\d{2})$/.test(boundary)) return NaN;
+    return Date.parse(boundary);
+  }
+  function chartRebalanceMarkers(rows, simulated) {
+    var seen = new Set(), markers = [];
+    rows.forEach(function (p) {
+      var key = chartCohortKey(p, simulated);
+      if (key === null || key === undefined || seen.has(key)) return;
+      var timestamp = exactRebalanceTimestamp(p.cohort_rebalanced_timestamp);
+      if (!isFinite(timestamp)) timestamp = exactRebalanceTimestamp(p.cohort_rebalanced_at);
+      if (!isFinite(timestamp)) return;
+      seen.add(key);
+      markers.push({
+        timestamp: timestamp,
+        reconstructed: Boolean(simulated) && isSimulatedChartPoint(p)
+      });
+    });
+    return markers;
+  }
   function dailyScores(rows) {
     var days = {};
     rows.forEach(function (p) {
@@ -291,6 +337,10 @@
     isHourlyInterval: isHourlyInterval,
     isReconstructed: isReconstructed,
     recordedHistory: recordedHistory,
+    SIMULATION_CUTOFF: SIMULATION_CUTOFF,
+    isSimulatedChartPoint: isSimulatedChartPoint,
+    chartCohortKey: chartCohortKey,
+    chartRebalanceMarkers: chartRebalanceMarkers,
     dailyScores: dailyScores,
     timeFraction: timeFraction,
     FLAT_LIMIT: FLAT_LIMIT,
