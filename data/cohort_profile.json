@@ -1,25 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T18:01:03-04:00",
+  "generated_at": "2026-10-29T19:00:53-04:00",
   "privacy": "aggregate_equity_tiers",
   "total_wallets": 100,
   "flat_threshold_usd": 100000,
   "equity_tiers": [
     {
       "label": "< $250K",
-      "wallet_count": 15,
-      "short_count": 1,
+      "wallet_count": 16,
+      "short_count": 2,
       "long_count": 9,
       "flat_count": 5,
-      "equity_usd_rounded": 1200000
+      "equity_usd_rounded": 1600000
     },
     {
       "label": "$250K\u2013$1M",
-      "wallet_count": 42,
-      "short_count": 18,
+      "wallet_count": 41,
+      "short_count": 17,
       "long_count": 23,
       "flat_count": 1,
-      "equity_usd_rounded": 22800000
+      "equity_usd_rounded": 21800000
     },
     {
       "label": "$1M\u2013$5M",
@@ -27,7 +27,7 @@
       "short_count": 16,
       "long_count": 19,
       "flat_count": 1,
-      "equity_usd_rounded": 82000000
+      "equity_usd_rounded": 84500000
     },
     {
       "label": "$5M\u2013$25M",
@@ -35,7 +35,7 @@
       "short_count": 2,
       "long_count": 4,
       "flat_count": 0,
-      "equity_usd_rounded": 45000000
+      "equity_usd_rounded": 44000000
     },
     {
       "label": "$25M+",
@@ -50,13 +50,13 @@
   "movement": {
     "hours": 1.0,
     "accounts_compared": 100,
-    "changed_accounts": 29,
-    "price_usd_rounded": 2000000,
-    "quantity_usd_rounded": -84000000,
+    "changed_accounts": 23,
+    "price_usd_rounded": 0,
+    "quantity_usd_rounded": 5000000,
     "unclassified_usd_rounded": 0
   },
   "concentration": {
-    "top_five_gross_share_pct_rounded": 40,
+    "top_five_gross_share_pct_rounded": 35,
     "gross_active_wallets": 93
   }
 }
