@@ -319,6 +319,38 @@
     });
     return markers;
   }
+  /* A modeled interval is aggregate-only chart provenance, not a cohort
+     activation. Keep its schema deliberately narrow so unexpected public
+     metadata never becomes UI copy or a purported rebalance marker. */
+  function chartModeledIntervals(history) {
+    if (!history || !Array.isArray(history.modeled_intervals)) return [];
+    return history.modeled_intervals.map(function (interval) {
+      if (!interval || interval.kind !== "modeled_retrospective" ||
+          interval.method !== "fixed_shadow_book_marked_to_hourly_prices" ||
+          !Number.isInteger(interval.observed_members) || interval.observed_members < 0 ||
+          !Number.isInteger(interval.modeled_members) || interval.modeled_members < 0 ||
+          interval.observed_members + interval.modeled_members !== 100) return null;
+      var start = exactRebalanceTimestamp(interval.start);
+      var end = exactRebalanceTimestamp(interval.end);
+      if (!isFinite(start) || !isFinite(end) || end <= start) return null;
+      return {
+        start: start,
+        end: end,
+        kind: interval.kind,
+        method: interval.method,
+        observed_members: interval.observed_members,
+        modeled_members: interval.modeled_members
+      };
+    }).filter(Boolean).sort(function (a, b) { return a.start - b.start; });
+  }
+  function modeledIntervalAt(intervals, timestamp) {
+    if (!Array.isArray(intervals) || !isFinite(timestamp)) return null;
+    return intervals.find(function (interval) {
+      /* The public interval ends on its final reconstructed observation. A
+         later actual activation has its own timestamp and marker. */
+      return timestamp >= interval.start && timestamp <= interval.end;
+    }) || null;
+  }
   function dailyScores(rows) {
     var days = {};
     rows.forEach(function (p) {
@@ -341,6 +373,8 @@
     isSimulatedChartPoint: isSimulatedChartPoint,
     chartCohortKey: chartCohortKey,
     chartRebalanceMarkers: chartRebalanceMarkers,
+    chartModeledIntervals: chartModeledIntervals,
+    modeledIntervalAt: modeledIntervalAt,
     dailyScores: dailyScores,
     timeFraction: timeFraction,
     FLAT_LIMIT: FLAT_LIMIT,

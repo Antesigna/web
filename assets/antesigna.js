@@ -213,6 +213,7 @@
     };
     SER = {
       rows: sel,
+      modeledIntervals: READ.chartModeledIntervals(RAW.history),
       timestamps: sel.map(tstamp),
       t: sel.map(fmtDay),
       days: sel.map(function (p) { return (now - tstamp(p)) / 864e5; }),
@@ -430,16 +431,31 @@
       s += '<text x="' + (PL + fraction * (W - PL)).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="' + (n === 0 ? "start" : n === 3 ? "end" : "middle") +
         '" fill="#6C7488" font-size="10" font-family="JetBrains Mono">' + label + "</text>";
     });
-    // Rebalances occur between hourly observations. Use the event timestamp,
-    // so markers are not shifted to the first sample collected afterward.
+    var visibleModeled = SER.modeledIntervals.filter(function (interval) {
+      return interval.start <= end && interval.end > start;
+    });
+    visibleModeled.forEach(function (interval) {
+      if (interval.start < start || interval.start > end) return;
+      s += '<path class="rebalance-marker retrospective-rebalance-marker" data-timestamp="' + interval.start +
+        '" data-provenance="modeled_retrospective" d="M' + Xtime(interval.start).toFixed(1) + ',16 V' + (H - PB) +
+        '" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"><title>Rebalance · ' +
+        esc(chartTime(interval.start)) + ' ET</title></path>';
+    });
+    // Actual activations occur between hourly observations. Use the event
+    // timestamp so markers are not shifted to the first sample afterward.
     READ.chartRebalanceMarkers(SER.rows, chartSource !== "recorded").forEach(function (marker) {
       if (marker.timestamp < start || marker.timestamp > end) return;
+      /* Retrospective rows carry the scenario boundary as their cohort key so
+         the line breaks correctly. Do not render that same instant a second
+         time as though it were an actual activation. */
+      if (SER.modeledIntervals.some(function (interval) { return interval.start === marker.timestamp; })) return;
       s += '<path class="rebalance-marker" data-timestamp="' + marker.timestamp +
         '" d="M' + Xtime(marker.timestamp).toFixed(1) + ',16 V' + (H - PB) +
         '" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"><title>Rebalance · ' +
         esc(chartTime(marker.timestamp)) + ' ET</title></path>';
     });
-    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days. True elapsed time; gaps are not interpolated.">' + s + "</svg>";
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days. True elapsed time; gaps are not interpolated.' +
+      (visibleModeled.length ? ' The Monday rebalance boundary is a retrospective reconstruction, not an actual deployment.' : '') + '">' + s + "</svg>";
   }
   function chartLegend() {
     var M = MODES[chartMode];
