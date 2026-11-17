@@ -49,7 +49,7 @@
   function snapshotRow(row) {
     return "<tr><td>" + esc(dateTime(row.observed_at)) +
       '<br><span class="badge ' + (row.backfilled ? "" : "live") + '">' +
-      (row.backfilled ? "Recorded history" : "Live ledger") + "</span>" +
+      (row.backfilled ? "Archive" : "Live ledger") + "</span>" +
       (row.restated ? '<span class="badge" title="Restated after a methodology defect">Restated</span>' : "") +
       "</td>" +
       '<td class="' + (row.signum < 0 ? "dn" : row.signum > 0 ? "up" : "mut") + '">' +

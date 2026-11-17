@@ -454,8 +454,7 @@
         '" stroke="var(--gold)" stroke-dasharray="3 4" opacity=".6"><title>Rebalance · ' +
         esc(chartTime(marker.timestamp)) + ' ET</title></path>';
     });
-    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days. True elapsed time; gaps are not interpolated.' +
-      (visibleModeled.length ? ' The Monday rebalance boundary is a retrospective reconstruction, not an actual deployment.' : '') + '">' + s + "</svg>";
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + MODES[chartMode].label + ' over ' + chartRange + ' days.">' + s + "</svg>";
   }
   function chartLegend() {
     var M = MODES[chartMode];
@@ -669,7 +668,7 @@
       '. <a href="/method/">Method →</a></p>' +
       '<div class="trust">Positioning only, never advice · Hourly, not real-time</div>' +
       '</div>' + positioningChart() + '</div>' +
-      (RAW.cohort && RAW.cohort.status === "provisional" ? '<div class="callout" id="cohort-notice"><b>Provisional rebalance active.</b> A large, data-validated membership change was applied automatically. The pre-change cohort is tracked separately for review. Cohort changes are not trader activity; recorded history is preserved. The chart shows the latest successful hourly observation.</div>' :
+      (RAW.cohort && RAW.cohort.status === "provisional" ? '<div class="callout" id="cohort-notice"><b>Provisional rebalance active.</b> A large, data-validated membership change was applied automatically. The pre-change cohort is tracked separately for review. Cohort changes are not trader activity; earlier published readings remain unchanged. The chart shows the latest successful hourly observation.</div>' :
         RAW.cohort && RAW.cohort.status === "restored" ? '<div class="callout" id="cohort-notice"><b>Previous membership restored.</b> Restoration applies going forward. Earlier published observations remain unchanged.</div>' : '') +
       '<div class="positioning-context"><div><span class="lbl">Capital</span><b>' + money(D.net) + '</b><span>net perpetual exposure</span></div>' +
       '<div><span class="lbl">Trader agreement</span><b><span class="up">' + longBars + ' long</span> · <span class="dn">' + shortBars + ' short</span> · ' + flatBars + ' near-flat</b><span>Under $100K net is near-flat; not counted as bullish</span></div>' +
@@ -688,13 +687,13 @@
       '<div><div class="v n">' + D.publicWindowDays + ' d</div><div class="k">rolling public history</div></div></div>' +
 
       '<div class="wrap"><section class="sec distribution-section" id="distribution" aria-labelledby="distribution-title">' +
-      '<div class="shead"><h2 id="distribution-title">Recorded daily distribution</h2></div>' +
-      '<div class="ssub"><span data-tip="One recorded reading per Eastern calendar day. No retrospective cohort estimates. Cohort changes remain part of this published record. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.dailyScores.length + ' days · today marked · one recorded reading per day</span></div>' +
+      '<div class="shead"><h2 id="distribution-title">Daily distribution</h2></div>' +
+      '<div class="ssub"><span data-tip="One reading per Eastern calendar day. Cohort changes remain part of the public record. The white line is now." tabindex="0" role="button" aria-describedby="tip">' + D.dailyScores.length + ' days · today marked · one reading per day</span></div>' +
       '<div class="dist"><div class="today" style="left:' + dsv.pct.toFixed(2) + '%">Today</div>' + dsv.svg +
       '<div class="dcap"><span>Max short ' + D.lo.toFixed(2) + '</span><span class="z" style="left:' + dsv.zpct.toFixed(2) + '%">Neutral</span><span>Max long +' + D.hi.toFixed(2) + "</span></div></div>" +
       '<div class="chips">' +
       '<span class="chip">' + (D.shorterThanPct >= 50 ? "More short than " + D.shorterThanPct :
-        "More long than " + (100 - D.shorterThanPct)) + "% of recorded daily samples</span>" +
+        "More long than " + (100 - D.shorterThanPct)) + "% of daily samples</span>" +
       (D.daysSinceLong !== null ? '<span class="chip n">Net long last seen <b>' + Math.round(D.daysSinceLong) + "d</b> ago</span>" : "") +
       '<span class="chip"><span data-tip="How many of the tracked markets share the cohort-level lean." tabindex="0" role="button" aria-describedby="tip">Breadth</span> <b>' + D.longMkts + "/" + D.marketsShown + " long</b></span>" +
       '<span class="chip n">Leverage <b>' + D.aggLev.toFixed(2) + "×</b></span></div></section></div>" +
@@ -703,7 +702,7 @@
       '<div class="tabs"><button class="on">' + D.windowHours + "H</button></div></div>" +
       '<div class="ssub">Net exposure changes across the Hundred. Dollar changes include price moves; they are not evidence of purchases or sales.</div><div>' +
       (D.movement ? '<div class="callout">Latest ' + D.movement.hours + 'h, same 100 accounts: net quantity changes contributed approximately <b>' + movementMoney(D.movement.quantity_usd_rounded) + '</b>; price marking contributed <b>' + movementMoney(D.movement.price_usd_rounded) + '</b>' +
-        (D.movement.unclassified_usd_rounded ? '; unclassified <b>' + money(D.movement.unclassified_usd_rounded / 1e6) + '</b>' : '') + '. Quantities changed in <b>' + D.movement.changed_accounts + '</b> accounts. Endpoint attribution, rounded to $1M; not a replay of orders or trader intent.</div>' :
+        (D.movement.unclassified_usd_rounded ? '; unclassified <b>' + money(D.movement.unclassified_usd_rounded / 1e6) + '</b>' : '') + '. Quantities changed in <b>' + D.movement.changed_accounts + '</b> accounts. Values are rounded to $1M and do not identify individual orders or trader intent.</div>' :
         '<div class="quiet">Quantity-versus-price attribution appears only with two comparable, complete observations and at least three accounts changing quantities.</div>') +
       MOVED.map(function (m) {
         return '<div class="mv"><span class="t">' + esc(m[0]) + '</span><span class="d n ' + (m[1] > 0 ? "up" : "dn") + '">' +
