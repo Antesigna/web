@@ -445,9 +445,7 @@
     var M = MODES[chartMode];
     return '<div class="clegend">' + M.series.map(function (s) {
       return '<span><i style="background:' + (s[2] || "var(--ink2)") + '"></i>' + s[1] + "</span>";
-    }).join("") + '<span>Gold dashes: rebalance</span>' +
-      (chartSource !== "recorded" && D.historyReconstructed
-        ? '<span><a href="/method/#chart-history">Reconstruction before Oct 6, 7:19 PM ET</a></span>' : '') + "</div>";
+    }).join("") + '<span>Gold dashes: rebalance</span></div>';
   }
 
   function positioningChart() {
@@ -461,7 +459,7 @@
       [30, 60, PUBLIC_HISTORY_DAYS]
         .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
       '</div></div>' +
-      '<div class="tabs history-source" id="csource"><button data-source="reconstructed" class="' + (chartSource === "reconstructed" ? 'on' : '') + '">Historical reconstruction + live</button><button data-source="recorded" class="' + (chartSource === "recorded" ? 'on' : '') + '">Recorded history</button></div>' +
+      '<div class="tabs history-source" id="csource"><button data-source="reconstructed" class="on">Historical reconstruction + live</button></div>' +
       '<div id="chart" tabindex="0" role="group" aria-label="Inspect chart using pointer or left and right arrow keys">' + chartSvg() + '</div><div id="chart-inspect" class="chart-inspect" aria-live="polite">Hover, tap, or use arrow keys to inspect an observation. Dollar tabs are in millions.</div><div id="clegend">' + chartLegend() + '</div>' +
       '</section>';
   }
@@ -657,8 +655,7 @@
       '<div class="trust">Positioning only, never advice · Hourly, not real-time</div>' +
       '</div>' + positioningChart() + '</div>' +
       (RAW.cohort && RAW.cohort.status === "provisional" ? '<div class="callout" id="cohort-notice"><b>Provisional rebalance active.</b> A large, data-validated membership change was applied automatically. The pre-change cohort is tracked separately for review. Cohort changes are not trader activity; recorded history is preserved. The chart shows the latest successful hourly observation.</div>' :
-        RAW.cohort && RAW.cohort.status === "restored" ? '<div class="callout" id="cohort-notice"><b>Previous membership restored.</b> Restoration applies going forward. Earlier published observations remain unchanged.</div>' :
-        RAW.cohort && RAW.cohort.status === "deployed_auto" ? '<div class="quiet">Automatic weekly cohort maintenance · data and quality gates enforced · recorded history preserved</div>' : '') +
+        RAW.cohort && RAW.cohort.status === "restored" ? '<div class="callout" id="cohort-notice"><b>Previous membership restored.</b> Restoration applies going forward. Earlier published observations remain unchanged.</div>' : '') +
       '<div class="positioning-context"><div><span class="lbl">Capital</span><b>' + money(D.net) + '</b><span>net perpetual exposure</span></div>' +
       '<div><span class="lbl">Trader agreement</span><b><span class="up">' + longBars + ' long</span> · <span class="dn">' + shortBars + ' short</span> · ' + flatBars + ' near-flat</b><span>Under $100K net is near-flat; not counted as bullish</span></div>' +
       '<div><span class="lbl">Cohort &amp; coverage</span><b>' + D.cohortAgeDays + ' days since rebalance · ' + D.wallets + '/' + D.totalWallets + '</b><span>' +
