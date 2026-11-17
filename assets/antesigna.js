@@ -459,7 +459,6 @@
       [30, 60, PUBLIC_HISTORY_DAYS]
         .map(function (r) { return '<button data-r="' + r + '"' + (r === chartRange ? ' class="on"' : "") + ">" + r + "D</button>"; }).join("") +
       '</div></div>' +
-      '<div class="tabs history-source" id="csource"><button data-source="reconstructed" class="on">Historical reconstruction + live</button></div>' +
       '<div id="chart" tabindex="0" role="group" aria-label="Inspect chart using pointer or left and right arrow keys">' + chartSvg() + '</div><div id="chart-inspect" class="chart-inspect" aria-live="polite">Hover, tap, or use arrow keys to inspect an observation. Dollar tabs are in millions.</div><div id="clegend">' + chartLegend() + '</div>' +
       '</section>';
   }
@@ -781,10 +780,6 @@
   /* ── 7 · interaction ───────────────────────────────────────────────── */
   function wire() {
     el("chart").innerHTML = chartSvg();
-    el("csource").addEventListener("click", function (e) {
-      var b = e.target.closest("button"); if (!b) return;
-      chartSource = b.getAttribute("data-source"); derive(); render(); start();
-    });
     var inspected = SER.rows.length - 1;
     function inspectChart(index) {
       var firstVisible = SER.days.findIndex(function (age) { return age <= chartRange; });
